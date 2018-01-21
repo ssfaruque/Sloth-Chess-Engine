@@ -23,11 +23,7 @@ enum BitboardType
 };
 
 
-typedef union
-{
-  uint64_t squares;
-  uint8_t rows[BOARD_LENGTH];
-} Bitboard;
+typedef uint64_t Bitboard;
 
 
 typedef struct
@@ -36,12 +32,14 @@ typedef struct
 } BoardState;
 
 
-void initBitboard(Bitboard* bitboard, uint64_t squares);
+Bitboard createBitboard(uint64_t squares);
 void initBoardState(BoardState* boardState);
-void clearBoardState(BoardState* boardState);
-void printBitboard(Bitboard* bitboard);
+void copyBoardState(BoardState* dst, BoardState* src);
+void printBitboard(Bitboard bitboard);
 void printBoardState(BoardState* boardState);
-void printBitboardRow(Bitboard* bitboard, int row);
+
 
 
 #endif /* bitboard_h */
+
+

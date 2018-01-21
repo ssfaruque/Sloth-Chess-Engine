@@ -4,6 +4,8 @@
 
 #include "chessGame.h"
 
+#include "move.h"
+
 
 void initChessGame(ChessGame* chessGame)
 {
@@ -21,9 +23,10 @@ void runChessGame(ChessGame* chessGame)
 {
   chessGame->running = 1;
   
-  printBoardState(chessGame->boardState);
+  //printBoardState(chessGame->boardState);
   
-  printf("Size of board state is %d bytes\n", (int)sizeof(BoardState));
+  generateSlideUpMoves(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_PAWN_POSITIONS);
+  
 }
 
 
