@@ -151,37 +151,44 @@ Moves* generateSlideLeftMoves(BoardState* boardState, enum BitboardType colorTyp
 
 
 
-Move* generateSlideLeftMove(Bitboard isolatedPiece, BoardState* boardState, enum BitboardType colorType,
+Move generateSlideLeftMove(Bitboard isolatedPiece, BoardState* boardState, enum BitboardType colorType,
                              enum BitboardType pieceType, int offset)
 {
-  Move* move = (Move*) malloc(sizeof(Move));
-  copyBoardState(move, boardState);
-  
-  Bitboard movedPiece = isolatedPiece << offset;
+  Bitboard movedPiece = isolatedPiece <<  offset;
   Bitboard collisions = movedPiece & boardState->boards[colorType];
-  
+ 
   // check for collision with own piece and out of bounds conditions
   if(!collisions && !(movedPiece & 0x0101010101010101))
   {
-    return move;
+    return movedPiece;
   }
   
-  free(move);
-  return NULL;
+  return 0;
 }
 
 
 
-Moves* generateSlideRightMoves(BoardState* boardState, enum PlayerType playerType)
+Moves* generateSlideRightMoves(BoardState* boardState, enum BitboardType colorType,
+                               enum BitboardType pieceType)
 {
   return NULL;
 }
 
 
 
-Moves* generateSlideRightMove(BoardState* boardState, enum PlayerType playerType, int offset)
+Move generateSlideRightMove(Bitboard isolatedPiece, BoardState* boardState, enum BitboardType colorType,
+                              enum BitboardType pieceType, int offset)
 {
-  return NULL;
+  Bitboard movedPiece = isolatedPiece >>  offset;
+  Bitboard collisions = movedPiece & boardState->boards[colorType];
+  
+  // check for collision with own piece and out of bounds conditions
+  if(!collisions && !(movedPiece & 0x8080808080808080))
+  {
+    return movedPiece;
+  }
+  
+  return 0;
 }
 
 
@@ -197,16 +204,27 @@ Moves* generateSlideUpMoves(BoardState* boardState, enum BitboardType colorType,
   
   Bitboard isolatedPiece = isolatedPieces & -isolatedPieces;
   
-  Bitboard movedPiece = generateSlideUpMove(isolatedPiece, boardState, colorType, pieceType, 7);
+  Bitboard movedUp = generateSlideUpMove(isolatedPiece, boardState, colorType, pieceType, 4);
+  
+  Bitboard movedLeft = generateSlideLeftMove(movedUp, boardState, colorType, pieceType, 5);
+  
+  
+  Bitboard movedDown = generateSlideDownMove(movedLeft, boardState, colorType, pieceType, 2);
+  
+  Bitboard movedRight = generateSlideRightMove(movedDown, boardState, colorType, pieceType, 4);
 
   
   printf("Initial board state\n");
   printBoardState(boardState);
   
   
-  if(!movedPiece)
-    updateBoardState(boardState, isolatedPiece, movedPiece, colorType, pieceType);
-  
+  if(movedUp)
+  {
+    updateBoardState(boardState, isolatedPiece, movedUp, colorType, pieceType);
+    updateBoardState(boardState, movedUp, movedLeft, colorType, pieceType);
+    updateBoardState(boardState, movedLeft, movedDown, colorType, pieceType);
+    updateBoardState(boardState, movedDown, movedRight, colorType, pieceType);
+  }
   
   
   
@@ -248,16 +266,27 @@ Bitboard generateSlideUpMove(Bitboard isolatedPiece, BoardState* boardState, enu
 
 
 
-Moves* generateSlideDownMoves(BoardState* boardState, enum PlayerType playerType)
+Moves* generateSlideDownMoves(BoardState* boardState, enum BitboardType colorType,
+                              enum BitboardType pieceType)
 {
   return NULL;
 }
 
 
 
-Moves* generateSlideDownMove(BoardState* boardState, enum PlayerType playerType, int offset)
+Move generateSlideDownMove(Bitboard isolatedPiece, BoardState* boardState, enum BitboardType colorType,
+                             enum BitboardType pieceType, int offset)
 {
-  return NULL;
+  Bitboard movedPiece = isolatedPiece >> (8 * offset);
+  Bitboard collisions = movedPiece & boardState->boards[colorType];
+  
+  // check for collision with own piece and out of bounds conditions
+  if(!collisions && movedPiece)
+  {
+    return movedPiece;
+  }
+  
+  return 0;
 }
 
 

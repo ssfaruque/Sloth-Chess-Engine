@@ -26,7 +26,7 @@ enum PieceType
 };
 
 
-typedef BoardState Move;
+typedef Bitboard Move;
 
 typedef struct
 {
@@ -63,18 +63,30 @@ Moves* generateKingMoves(BoardState* boardState, enum PlayerType playerType);
 
 
 Moves* generateSlideMoves(BoardState* boardState, enum PlayerType playerType);
+
 Moves* generateSlideLeftMoves(BoardState* boardState, enum BitboardType colorType,
                               enum BitboardType pieceType);
-Move* generateSlideLeftMove(Bitboard isolatedPiece, BoardState* boardState, enum BitboardType colorType,
+
+Move generateSlideLeftMove(Bitboard isolatedPiece, BoardState* boardState, enum BitboardType colorType,
                              enum BitboardType pieceType, int offset);
-Moves* generateSlideRightMoves(BoardState* boardState, enum PlayerType playerType);
-Moves* generateSlideRightMove(BoardState* boardState, enum PlayerType playerType, int offset);
+
+Moves* generateSlideRightMoves(BoardState* boardState, enum BitboardType colorType,
+                               enum BitboardType pieceType);
+
+Move generateSlideRightMove(Bitboard isolatedPiece, BoardState* boardState, enum BitboardType colorType,
+                              enum BitboardType pieceType, int offset);
+
 Moves* generateSlideUpMoves(BoardState* boardState, enum BitboardType colorType,
                             enum BitboardType pieceType);
-Bitboard generateSlideUpMove(Bitboard isolatedPiece, BoardState* boardState, enum BitboardType colorType,
+
+Move generateSlideUpMove(Bitboard isolatedPiece, BoardState* boardState, enum BitboardType colorType,
                            enum BitboardType pieceType, int offset);
-Moves* generateSlideDownMoves(BoardState* boardState, enum PlayerType playerType);
-Moves* generateSlideDownMove(BoardState* boardState, enum PlayerType playerType, int offset);
+
+Moves* generateSlideDownMoves(BoardState* boardState, enum BitboardType colorType,
+                              enum BitboardType pieceType);
+
+Move generateSlideDownMove(Bitboard isolatedPiece, BoardState* boardState, enum BitboardType colorType,
+                             enum BitboardType pieceType, int offset);
 
 
 Moves* generateDiagonalMoves(BoardState* boardState, enum PlayerType playerType);
