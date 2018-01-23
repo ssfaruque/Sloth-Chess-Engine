@@ -1,4 +1,12 @@
 
+/********************************************************************************
+ * Copyright (C) 2018 by Sahil Faruque, Delvin Huynh, Henry Tran                *
+ *                                                                              *
+ * Sloth Chess Engine                                                           *
+ *                                                                              *
+ * Description of Chess Engine HERE                                             *
+ ********************************************************************************/
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,24 +25,12 @@ void cleanUpMoves(Moves* moves)
 }
 
 
-void initPossibleMoves(PossibleMoves* possibleMoves)
-{
-  int i;
-  for(i = 0; i < NUM_PIECES; ++i)
-    possibleMoves->possibleMoves[i] = NULL;
-}
 
-
-void cleanUpPossibleMoves(PossibleMoves* possibleMoves)
-{
-  int i;
-  for(i = 0; i < NUM_PIECES; ++i)
-    free(possibleMoves->possibleMoves[i]);
-}
-
-
-void updateBoardState(BoardState* boardState, Bitboard initialPiece, Bitboard movedPiece,
-                      enum BitboardType colorType, enum BitboardType pieceType)
+void updateBoardState(BoardState* boardState,
+                      Bitboard initialPiece,
+                      Bitboard movedPiece,
+                      enum BitboardType colorType,
+                      enum BitboardType pieceType)
 {
   // only quiet moves for now
   boardState->boards[colorType] = ((boardState->boards[colorType] ^ initialPiece) | movedPiece);
@@ -44,59 +40,62 @@ void updateBoardState(BoardState* boardState, Bitboard initialPiece, Bitboard mo
 
 
 
-
-PossibleMoves* generatePossibleMoves(BoardState* boardState, enum PlayerType playerType)
-{
-  PossibleMoves* posibleMoves = (PossibleMoves*) malloc(sizeof(PossibleMoves));
-  posibleMoves->possibleMoves[PIECE_TYPE_PAWN]   = generatePawnMoves(boardState, playerType);
-  posibleMoves->possibleMoves[PIECE_TYPE_ROOK]   = generateRookMoves(boardState, playerType);
-  posibleMoves->possibleMoves[PIECE_TYPE_KNIGHT] = generateKnightMoves(boardState, playerType);
-  posibleMoves->possibleMoves[PIECE_TYPE_BISHOP] = generateBishopMoves(boardState, playerType);
-  posibleMoves->possibleMoves[PIECE_TYPE_QUEEN]  = generateQueenMoves(boardState, playerType);
-  posibleMoves->possibleMoves[PIECE_TYPE_KING]   = generateKingMoves(boardState, playerType);
-  return posibleMoves;
-}
-
-
 /******************************** Generate moves by pieces ********************************/
 
 
-Moves* generatePawnMoves(BoardState* boardState, enum PlayerType playerType)
+Move generateMove(BoardState* boardState,
+                  enum BitboardType colorType,
+                  enum BitboardType pieceType)
 {
-  return NULL;
-}
-
-
-Moves* generateRookMoves(BoardState* boardState, enum PlayerType playerType)
-{
-  return NULL;
-}
-
-
-Moves* generateKnightMoves(BoardState* boardState, enum PlayerType playerType)
-{
-  return NULL;
+  Move move;
+  return move;
 }
 
 
 
-Moves* generateBishopMoves(BoardState* boardState, enum PlayerType playerType)
+
+Move generatePawnMove(BoardState* boardState, enum BitboardType colorType)
 {
-  return NULL;
+  Move move;
+  return move;
+}
+
+
+Move generateRookMove(BoardState* boardState, enum BitboardType colorType)
+{
+  Move move;
+  return move;
+}
+
+
+Move generateKnightMove(BoardState* boardState, enum BitboardType colorType)
+{
+  Move move;
+  return move;
 }
 
 
 
-Moves* generateQueenMoves(BoardState* boardState, enum PlayerType playerType)
+Move generateBishopMove(BoardState* boardState, enum BitboardType colorType)
 {
-  return NULL;
+  Move move;
+  return move;
 }
 
 
 
-Moves* generateKingMoves(BoardState* boardState, enum PlayerType playerType)
+Move generateQueenMove(BoardState* boardState, enum BitboardType colorType)
 {
-  return NULL;
+  Move move;
+  return move;
+}
+
+
+
+Move generateKingMove(BoardState* boardState, enum BitboardType colorType)
+{
+  Move move;
+  return move;
 }
 
 
@@ -107,186 +106,95 @@ Moves* generateKingMoves(BoardState* boardState, enum PlayerType playerType)
 /******************************** Moves pertaining to slides ********************************/
 
 
-Moves* generateSlideMoves(BoardState* boardState, enum PlayerType playerType)
+
+Move generateSlideLeftMove(Bitboard initialPosition,
+                           BoardState* boardState,
+                           enum BitboardType colorType,
+                           enum BitboardType pieceType,
+                           int offset)
 {
-  return NULL;
-}
-
-
-
-Moves* generateSlideLeftMoves(BoardState* boardState, enum BitboardType colorType,
-                              enum BitboardType pieceType)
-{
-  Bitboard isolatedPieces = boardState->boards[colorType] & boardState->boards[pieceType];
-  
-  //while(isolatedPieces)
-  //{
-  //  int offset = 1;
-  
-    Bitboard isolatedPiece = isolatedPieces & -isolatedPieces;
-  
-    Move* move = generateSlideLeftMove(isolatedPiece, boardState, colorType, pieceType, 1);
-  
-  
-  
-  
-  
-    printBoardState(move);
-    
-    
-    
-    //while(move)
-    //{
-      
-    //}
-    
-    
-    
-    // reset ls1b
-  //  isolatedPieces &= isolatedPieces - 1;
-  //}
-  
-  return NULL;
-}
-
-
-
-Move generateSlideLeftMove(Bitboard isolatedPiece, BoardState* boardState, enum BitboardType colorType,
-                             enum BitboardType pieceType, int offset)
-{
-  Bitboard movedPiece = isolatedPiece <<  offset;
+  /*
+  Bitboard movedPiece = initialPosition <<  offset;
   Bitboard collisions = movedPiece & boardState->boards[colorType];
  
   // check for collision with own piece and out of bounds conditions
   if(!collisions && !(movedPiece & 0x0101010101010101))
   {
     return movedPiece;
-  }
+  }*/
   
-  return 0;
+  Move move;
+  return move;
 }
 
 
 
-Moves* generateSlideRightMoves(BoardState* boardState, enum BitboardType colorType,
-                               enum BitboardType pieceType)
+
+Move generateSlideRightMove(Bitboard initialPosition,
+                            BoardState* boardState,
+                            enum BitboardType colorType,
+                            enum BitboardType pieceType,
+                            int offset)
 {
-  return NULL;
-}
-
-
-
-Move generateSlideRightMove(Bitboard isolatedPiece, BoardState* boardState, enum BitboardType colorType,
-                              enum BitboardType pieceType, int offset)
-{
-  Bitboard movedPiece = isolatedPiece >>  offset;
+  /*
+  Bitboard movedPiece = initialPosition >>  offset;
   Bitboard collisions = movedPiece & boardState->boards[colorType];
   
   // check for collision with own piece and out of bounds conditions
   if(!collisions && !(movedPiece & 0x8080808080808080))
   {
     return movedPiece;
-  }
+  }*/
   
-  return 0;
+  Move move;
+  return move;
 }
 
 
 
-Moves* generateSlideUpMoves(BoardState* boardState, enum BitboardType colorType,
-                            enum BitboardType pieceType)
+
+
+Move generateSlideUpMove(Bitboard initialPosition,
+                         BoardState* boardState,
+                         enum BitboardType colorType,
+                         enum BitboardType pieceType,
+                         int offset)
 {
-  Bitboard isolatedPieces = boardState->boards[colorType] & boardState->boards[pieceType];
-  
-  //while(isolatedPieces)
-  //{
-  //  int offset = 1;
-  
-  Bitboard isolatedPiece = isolatedPieces & -isolatedPieces;
-  
-  Bitboard movedUp = generateSlideUpMove(isolatedPiece, boardState, colorType, pieceType, 4);
-  
-  Bitboard movedLeft = generateSlideLeftMove(movedUp, boardState, colorType, pieceType, 5);
-  
-  
-  Bitboard movedDown = generateSlideDownMove(movedLeft, boardState, colorType, pieceType, 2);
-  
-  Bitboard movedRight = generateSlideRightMove(movedDown, boardState, colorType, pieceType, 4);
-
-  
-  printf("Initial board state\n");
-  printBoardState(boardState);
-  
-  
-  if(movedUp)
-  {
-    updateBoardState(boardState, isolatedPiece, movedUp, colorType, pieceType);
-    updateBoardState(boardState, movedUp, movedLeft, colorType, pieceType);
-    updateBoardState(boardState, movedLeft, movedDown, colorType, pieceType);
-    updateBoardState(boardState, movedDown, movedRight, colorType, pieceType);
-  }
-  
-  
-  
-  printf("Piece moved up\n");
-  printBoardState(boardState);
-  
-  
-  
-  //while(move)
-  //{
-  
-  //}
-  
-  
-  
-  // reset ls1b
-  //  isolatedPieces &= isolatedPieces - 1;
-  //}
-  
-  return NULL;
-}
-
-
-
-Bitboard generateSlideUpMove(Bitboard isolatedPiece, BoardState* boardState, enum BitboardType colorType,
-                           enum BitboardType pieceType, int offset)
-{
-  Bitboard movedPiece = isolatedPiece << (8 * offset);
+  /*
+  Bitboard movedPiece = initialPosition << (8 * offset);
   Bitboard collisions = movedPiece & boardState->boards[colorType];
   
   // check for collision with own piece and out of bounds conditions
   if(!collisions && movedPiece)
   {
     return movedPiece;
-  }
+  }*/
   
-  return 0;
+  Move move;
+  return move;
 }
 
 
 
-Moves* generateSlideDownMoves(BoardState* boardState, enum BitboardType colorType,
-                              enum BitboardType pieceType)
+
+Move generateSlideDownMove(Bitboard initialPosition,
+                           BoardState* boardState,
+                           enum BitboardType colorType,
+                           enum BitboardType pieceType,
+                           int offset)
 {
-  return NULL;
-}
-
-
-
-Move generateSlideDownMove(Bitboard isolatedPiece, BoardState* boardState, enum BitboardType colorType,
-                             enum BitboardType pieceType, int offset)
-{
-  Bitboard movedPiece = isolatedPiece >> (8 * offset);
+  /*
+  Bitboard movedPiece = initialPosition >> (8 * offset);
   Bitboard collisions = movedPiece & boardState->boards[colorType];
   
   // check for collision with own piece and out of bounds conditions
   if(!collisions && movedPiece)
   {
     return movedPiece;
-  }
+  }*/
   
-  return 0;
+  Move move;
+  return move;
 }
 
 
@@ -299,65 +207,54 @@ Move generateSlideDownMove(Bitboard isolatedPiece, BoardState* boardState, enum 
 
 
 
-Moves* generateDiagonalMoves(BoardState* boardState, enum PlayerType playerType)
+Move generateDiagonalUpRightMove(Bitboard initialPosition,
+                                   BoardState* boardState,
+                                   enum BitboardType colorType,
+                                   enum BitboardType pieceType,
+                                   int offset)
 {
-  return NULL;
+  Move move;
+  return move;
 }
 
 
 
-Moves* generateDiagonalUpRightMoves(BoardState* boardState, enum PlayerType playerType)
+
+Move generateDiagonalUpLeftMove(Bitboard initialPosition,
+                                  BoardState* boardState,
+                                  enum BitboardType colorType,
+                                  enum BitboardType pieceType,
+                                  int offset)
 {
-  return NULL;
+  Move move;
+  return move;
 }
 
 
 
-Moves* generateDiagonalUpRightMove(BoardState* boardState, enum PlayerType playerType, int offset)
+
+
+Move generateDiagonalDownRightMove(Bitboard initialPosition,
+                                     BoardState* boardState,
+                                     enum BitboardType colorType,
+                                     enum BitboardType pieceType,
+                                     int offset)
 {
-  return NULL;
+  Move move;
+  return move;
 }
 
 
 
-Moves* generateDiagonalUpLeftMoves(BoardState* boardState, enum PlayerType playerType)
+
+Move generateDiagonalDownLeftMove(Bitboard initialPosition,
+                                    BoardState* boardState,
+                                    enum BitboardType colorType,
+                                    enum BitboardType pieceType,
+                                    int offset)
 {
-  return NULL;
-}
-
-
-
-Moves* generateDiagonalUpLeftMove(BoardState* boardState, enum PlayerType playerType, int offset)
-{
-  return NULL;
-}
-
-
-
-Moves* generateDiagonalDownRightMoves(BoardState* boardState, enum PlayerType playerType)
-{
-  return NULL;
-}
-
-
-
-Moves* generateDiagonalDownRightMove(BoardState* boardState, enum PlayerType playerType, int offset)
-{
-  return NULL;
-}
-
-
-
-Moves* generateDiagonalDownLeftMoves(BoardState* boardState, enum PlayerType playerType)
-{
-  return NULL;
-}
-
-
-
-Moves* generateDiagonalDownLeftMove(BoardState* boardState, enum PlayerType playerType, int offset)
-{
-  return NULL;
+  Move move;
+  return move;
 }
 
 
@@ -366,17 +263,19 @@ Moves* generateDiagonalDownLeftMove(BoardState* boardState, enum PlayerType play
 
 
 
-Moves* generateStepMoves(BoardState* boardState, enum PlayerType playerType)
+
+
+
+
+
+Move generateLMove(Bitboard initialPosition,
+                    BoardState* boardState,
+                    enum BitboardType colorType,
+                    enum BitboardType pieceType,
+                    int offset)
 {
-  return NULL;
-}
-
-
-
-
-Moves* generateLMoves(BoardState* boardState, enum PlayerType playerType)
-{
-  return NULL;
+  Move move;
+  return move;
 }
 
 

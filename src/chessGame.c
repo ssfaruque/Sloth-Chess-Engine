@@ -1,9 +1,16 @@
 
+/********************************************************************************
+ * Copyright (C) 2018 by Sahil Faruque, Delvin Huynh, Henry Tran                *
+ *                                                                              *
+ * Sloth Chess Engine                                                           *
+ *                                                                              *
+ * Description of Chess Engine HERE                                             *
+ ********************************************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "chessGame.h"
-
 #include "move.h"
 
 
@@ -22,11 +29,7 @@ void initChessGame(ChessGame* chessGame)
 void runChessGame(ChessGame* chessGame)
 {
   chessGame->running = 1;
-  
-  //printBoardState(chessGame->boardState);
-  
-  generateSlideUpMoves(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_PAWN_POSITIONS);
-  
+  printBoardState(chessGame->boardState);
 }
 
 

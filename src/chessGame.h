@@ -1,4 +1,12 @@
 
+/********************************************************************************
+ * Copyright (C) 2018 by Sahil Faruque, Delvin Huynh, Henry Tran                *
+ *                                                                              *
+ * Sloth Chess Engine                                                           *
+ *                                                                              *
+ * A Chess AI that can play chess                                               *
+ ********************************************************************************/
+
 #ifndef chessGame_h
 #define chessGame_h
 

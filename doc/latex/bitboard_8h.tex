@@ -1,0 +1,364 @@
+\section{bitboard.\+h File Reference}
+\label{bitboard_8h}\index{bitboard.\+h@{bitboard.\+h}}
+
+
+Defines mini A\+P\+I for bitboard and boardstate data structures.  
+
+
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct {\bf Board\+State}
+\begin{DoxyCompactList}\small\item\em \doxyref{Board\+State}{p.}{struct_board_state} contains an array of 8 Bitboards. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define {\bf B\+O\+A\+R\+D\+\_\+\+L\+E\+N\+G\+T\+H}~8
+\begin{DoxyCompactList}\small\item\em Length of a chess board. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef uint64\+\_\+t {\bf Bitboard}
+\begin{DoxyCompactList}\small\item\em Bitboard is a 64 bit int representing the 64 squares on a chess board. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum {\bf Bitboard\+Type} \{ \\*
+{\bf B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+W\+H\+I\+T\+E\+\_\+\+P\+I\+E\+C\+E\+S\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}, 
+{\bf B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+B\+L\+A\+C\+K\+\_\+\+P\+I\+E\+C\+E\+S\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}, 
+{\bf B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+P\+A\+W\+N\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}, 
+{\bf B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+R\+O\+O\+K\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}, 
+\\*
+{\bf B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+K\+N\+I\+G\+H\+T\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}, 
+{\bf B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+B\+I\+S\+H\+O\+P\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}, 
+{\bf B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+Q\+U\+E\+E\+N\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}, 
+{\bf B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+K\+I\+N\+G\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}, 
+\\*
+{\bf N\+U\+M\+\_\+\+B\+I\+T\+B\+O\+A\+R\+D\+S}
+ \}\begin{DoxyCompactList}\small\item\em Type of Bitboard. \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bf Bitboard} {\bf create\+Bitboard} (uint64\+\_\+t squares)
+\begin{DoxyCompactList}\small\item\em Creates a new Bitboard. \end{DoxyCompactList}\item 
+void {\bf init\+Board\+State} ({\bf Board\+State} $\ast$board\+State)
+\begin{DoxyCompactList}\small\item\em Initializes a board\+State to the starting representation of a new chess game. \end{DoxyCompactList}\item 
+void {\bf copy\+Board\+State} ({\bf Board\+State} $\ast$dst, {\bf Board\+State} $\ast$src)
+\begin{DoxyCompactList}\small\item\em Copies all 8 Bitboards from one \doxyref{Board\+State}{p.}{struct_board_state} to another \doxyref{Board\+State}{p.}{struct_board_state} ~\newline
+ Creates a deep copy. \end{DoxyCompactList}\item 
+void {\bf print\+Bitboard} ({\bf Bitboard} bitboard)
+\begin{DoxyCompactList}\small\item\em Prints out the entire Bitboard in a chess board representation. \end{DoxyCompactList}\item 
+void {\bf print\+Board\+State} ({\bf Board\+State} $\ast$board\+State)
+\begin{DoxyCompactList}\small\item\em Prints out each of the 8 Bitboards in the \doxyref{Board\+State}{p.}{struct_board_state} struct with their corresponding titles. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Defines mini A\+P\+I for bitboard and boardstate data structures. 
+
+\begin{DoxyAuthor}{Author}
+Sahil Faruque 
+
+Delvin Huynh 
+
+Henry Tran 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+21 Jan 2018 
+\end{DoxyDate}
+\begin{DoxyRefDesc}{Bug}
+\item[{\bf Bug}]No known bugs\end{DoxyRefDesc}
+
+
+\subsection{Macro Definition Documentation}
+\index{bitboard.\+h@{bitboard.\+h}!B\+O\+A\+R\+D\+\_\+\+L\+E\+N\+G\+T\+H@{B\+O\+A\+R\+D\+\_\+\+L\+E\+N\+G\+T\+H}}
+\index{B\+O\+A\+R\+D\+\_\+\+L\+E\+N\+G\+T\+H@{B\+O\+A\+R\+D\+\_\+\+L\+E\+N\+G\+T\+H}!bitboard.\+h@{bitboard.\+h}}
+\subsubsection[{B\+O\+A\+R\+D\+\_\+\+L\+E\+N\+G\+T\+H}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+O\+A\+R\+D\+\_\+\+L\+E\+N\+G\+T\+H~8}\label{bitboard_8h_a9243453a6acb1c175dafd899adbfa77b}
+
+
+Length of a chess board. 
+
+
+
+Definition at line 33 of file bitboard.\+h.
+
+
+
+\subsection{Typedef Documentation}
+\index{bitboard.\+h@{bitboard.\+h}!Bitboard@{Bitboard}}
+\index{Bitboard@{Bitboard}!bitboard.\+h@{bitboard.\+h}}
+\subsubsection[{Bitboard}]{\setlength{\rightskip}{0pt plus 5cm}typedef uint64\+\_\+t {\bf Bitboard}}\label{bitboard_8h_a02916927ece38442d002be9b8b576f1a}
+
+
+Bitboard is a 64 bit int representing the 64 squares on a chess board. 
+
+Each Bitboard describes a certain aspect of the entire game ~\newline
+ For example, a Bitboard could represent all of the white pieces or all of the pawns 
+
+Definition at line 63 of file bitboard.\+h.
+
+
+
+\subsection{Enumeration Type Documentation}
+\index{bitboard.\+h@{bitboard.\+h}!Bitboard\+Type@{Bitboard\+Type}}
+\index{Bitboard\+Type@{Bitboard\+Type}!bitboard.\+h@{bitboard.\+h}}
+\subsubsection[{Bitboard\+Type}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Bitboard\+Type}}\label{bitboard_8h_a60c006128fb6fdeb5f3156d0077f0f09}
+
+
+Type of Bitboard. 
+
+Each Bitboard\+Type constant corresponds to a specific index in the ~\newline
+ array of Bitboards in the \doxyref{Board\+State}{p.}{struct_board_state} struct except for N\+U\+M\+\_\+\+B\+I\+T\+B\+O\+A\+R\+D\+S \begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+W\+H\+I\+T\+E\+\_\+\+P\+I\+E\+C\+E\+S\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S@{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+W\+H\+I\+T\+E\+\_\+\+P\+I\+E\+C\+E\+S\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}!bitboard.\+h@{bitboard.\+h}}\index{bitboard.\+h@{bitboard.\+h}!B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+W\+H\+I\+T\+E\+\_\+\+P\+I\+E\+C\+E\+S\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S@{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+W\+H\+I\+T\+E\+\_\+\+P\+I\+E\+C\+E\+S\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}}\item[{\em 
+B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+W\+H\+I\+T\+E\+\_\+\+P\+I\+E\+C\+E\+S\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S\label{bitboard_8h_a60c006128fb6fdeb5f3156d0077f0f09a2e4d5fb9af4731cbade457e63ee1415b}
+}]\index{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+B\+L\+A\+C\+K\+\_\+\+P\+I\+E\+C\+E\+S\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S@{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+B\+L\+A\+C\+K\+\_\+\+P\+I\+E\+C\+E\+S\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}!bitboard.\+h@{bitboard.\+h}}\index{bitboard.\+h@{bitboard.\+h}!B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+B\+L\+A\+C\+K\+\_\+\+P\+I\+E\+C\+E\+S\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S@{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+B\+L\+A\+C\+K\+\_\+\+P\+I\+E\+C\+E\+S\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}}\item[{\em 
+B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+B\+L\+A\+C\+K\+\_\+\+P\+I\+E\+C\+E\+S\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S\label{bitboard_8h_a60c006128fb6fdeb5f3156d0077f0f09ab6d05a719200c6d83221cfb2221a04e0}
+}]\index{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+P\+A\+W\+N\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S@{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+P\+A\+W\+N\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}!bitboard.\+h@{bitboard.\+h}}\index{bitboard.\+h@{bitboard.\+h}!B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+P\+A\+W\+N\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S@{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+P\+A\+W\+N\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}}\item[{\em 
+B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+P\+A\+W\+N\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S\label{bitboard_8h_a60c006128fb6fdeb5f3156d0077f0f09a3a6e22c668553ec221c5395c449a5793}
+}]\index{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+R\+O\+O\+K\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S@{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+R\+O\+O\+K\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}!bitboard.\+h@{bitboard.\+h}}\index{bitboard.\+h@{bitboard.\+h}!B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+R\+O\+O\+K\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S@{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+R\+O\+O\+K\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}}\item[{\em 
+B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+R\+O\+O\+K\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S\label{bitboard_8h_a60c006128fb6fdeb5f3156d0077f0f09ab429c78541402769629b577059ca6f4c}
+}]\index{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+K\+N\+I\+G\+H\+T\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S@{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+K\+N\+I\+G\+H\+T\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}!bitboard.\+h@{bitboard.\+h}}\index{bitboard.\+h@{bitboard.\+h}!B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+K\+N\+I\+G\+H\+T\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S@{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+K\+N\+I\+G\+H\+T\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}}\item[{\em 
+B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+K\+N\+I\+G\+H\+T\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S\label{bitboard_8h_a60c006128fb6fdeb5f3156d0077f0f09a6b9f6cbdad4845cfb59f41a694e0579c}
+}]\index{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+B\+I\+S\+H\+O\+P\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S@{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+B\+I\+S\+H\+O\+P\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}!bitboard.\+h@{bitboard.\+h}}\index{bitboard.\+h@{bitboard.\+h}!B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+B\+I\+S\+H\+O\+P\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S@{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+B\+I\+S\+H\+O\+P\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}}\item[{\em 
+B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+B\+I\+S\+H\+O\+P\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S\label{bitboard_8h_a60c006128fb6fdeb5f3156d0077f0f09a92be66cd5a90aa3de6d948bad1c7026e}
+}]\index{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+Q\+U\+E\+E\+N\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S@{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+Q\+U\+E\+E\+N\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}!bitboard.\+h@{bitboard.\+h}}\index{bitboard.\+h@{bitboard.\+h}!B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+Q\+U\+E\+E\+N\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S@{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+Q\+U\+E\+E\+N\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}}\item[{\em 
+B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+Q\+U\+E\+E\+N\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S\label{bitboard_8h_a60c006128fb6fdeb5f3156d0077f0f09aa993e03369937b79f1402646df8dc26e}
+}]\index{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+K\+I\+N\+G\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S@{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+K\+I\+N\+G\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}!bitboard.\+h@{bitboard.\+h}}\index{bitboard.\+h@{bitboard.\+h}!B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+K\+I\+N\+G\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S@{B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+K\+I\+N\+G\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S}}\item[{\em 
+B\+O\+A\+R\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+L\+L\+\_\+\+K\+I\+N\+G\+\_\+\+P\+O\+S\+I\+T\+I\+O\+N\+S\label{bitboard_8h_a60c006128fb6fdeb5f3156d0077f0f09ae2f44538fc23ed8a434834a991aa456e}
+}]\index{N\+U\+M\+\_\+\+B\+I\+T\+B\+O\+A\+R\+D\+S@{N\+U\+M\+\_\+\+B\+I\+T\+B\+O\+A\+R\+D\+S}!bitboard.\+h@{bitboard.\+h}}\index{bitboard.\+h@{bitboard.\+h}!N\+U\+M\+\_\+\+B\+I\+T\+B\+O\+A\+R\+D\+S@{N\+U\+M\+\_\+\+B\+I\+T\+B\+O\+A\+R\+D\+S}}\item[{\em 
+N\+U\+M\+\_\+\+B\+I\+T\+B\+O\+A\+R\+D\+S\label{bitboard_8h_a60c006128fb6fdeb5f3156d0077f0f09a3fbf380637675db95ebc112b25cbdfdb}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 42 of file bitboard.\+h.
+
+
+
+\subsection{Function Documentation}
+\index{bitboard.\+h@{bitboard.\+h}!copy\+Board\+State@{copy\+Board\+State}}
+\index{copy\+Board\+State@{copy\+Board\+State}!bitboard.\+h@{bitboard.\+h}}
+\subsubsection[{copy\+Board\+State(\+Board\+State $\ast$dst, Board\+State $\ast$src)}]{\setlength{\rightskip}{0pt plus 5cm}void copy\+Board\+State (
+\begin{DoxyParamCaption}
+\item[{{\bf Board\+State} $\ast$}]{dst, }
+\item[{{\bf Board\+State} $\ast$}]{src}
+\end{DoxyParamCaption}
+)}\label{bitboard_8h_afc4fde51dec787a891205121c9a8467e}
+
+
+Copies all 8 Bitboards from one \doxyref{Board\+State}{p.}{struct_board_state} to another \doxyref{Board\+State}{p.}{struct_board_state} ~\newline
+ Creates a deep copy. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & The destination \doxyref{Board\+State}{p.}{struct_board_state} (Where we are copying to) \\
+\hline
+{\em src} & The source \doxyref{Board\+State}{p.}{struct_board_state} (Where we are copying from) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+Definition at line 88 of file bitboard.\+c.
+
+\index{bitboard.\+h@{bitboard.\+h}!create\+Bitboard@{create\+Bitboard}}
+\index{create\+Bitboard@{create\+Bitboard}!bitboard.\+h@{bitboard.\+h}}
+\subsubsection[{create\+Bitboard(uint64\+\_\+t squares)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Bitboard} create\+Bitboard (
+\begin{DoxyParamCaption}
+\item[{uint64\+\_\+t}]{squares}
+\end{DoxyParamCaption}
+)}\label{bitboard_8h_a5a8e5a26277021bc8520339c75cb3d28}
+
+
+Creates a new Bitboard. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em squares} & A 64 bit integer representing all 64 squares of the chess board \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A bitboard with the squares filled with 0s and 1s as specified by the input 
+\end{DoxyReturn}
+
+
+Definition at line 68 of file bitboard.\+c.
+
+\index{bitboard.\+h@{bitboard.\+h}!init\+Board\+State@{init\+Board\+State}}
+\index{init\+Board\+State@{init\+Board\+State}!bitboard.\+h@{bitboard.\+h}}
+\subsubsection[{init\+Board\+State(\+Board\+State $\ast$board\+State)}]{\setlength{\rightskip}{0pt plus 5cm}void init\+Board\+State (
+\begin{DoxyParamCaption}
+\item[{{\bf Board\+State} $\ast$}]{board\+State}
+\end{DoxyParamCaption}
+)}\label{bitboard_8h_a1cfea0df95c88f167854350808a5e3a9}
+
+
+Initializes a board\+State to the starting representation of a new chess game. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em board\+State} & The \doxyref{Board\+State}{p.}{struct_board_state} we want to initialize \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+Definition at line 74 of file bitboard.\+c.
+
+\index{bitboard.\+h@{bitboard.\+h}!print\+Bitboard@{print\+Bitboard}}
+\index{print\+Bitboard@{print\+Bitboard}!bitboard.\+h@{bitboard.\+h}}
+\subsubsection[{print\+Bitboard(\+Bitboard bitboard)}]{\setlength{\rightskip}{0pt plus 5cm}void print\+Bitboard (
+\begin{DoxyParamCaption}
+\item[{{\bf Bitboard}}]{bitboard}
+\end{DoxyParamCaption}
+)}\label{bitboard_8h_a404dc769afa40b36044dd3b532caac21}
+
+
+Prints out the entire Bitboard in a chess board representation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitboard} & The Bitboard that we want to print \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void
+\end{DoxyReturn}
+\begin{DoxyVerb}Example of printing out the Bitboard of all black pieces starting out
+
+8 |1|1|1|1|1|1|1|1|
+7 |1|1|1|1|1|1|1|1|
+6 |0|0|0|0|0|0|0|0|
+5 |0|0|0|0|0|0|0|0|
+4 |0|0|0|0|0|0|0|0|
+3 |0|0|0|0|0|0|0|0|
+2 |0|0|0|0|0|0|0|0|
+1 |0|0|0|0|0|0|0|0|
+   a b c d e f g h\end{DoxyVerb}
+ 
+
+Definition at line 17 of file bitboard.\+c.
+
+\index{bitboard.\+h@{bitboard.\+h}!print\+Board\+State@{print\+Board\+State}}
+\index{print\+Board\+State@{print\+Board\+State}!bitboard.\+h@{bitboard.\+h}}
+\subsubsection[{print\+Board\+State(\+Board\+State $\ast$board\+State)}]{\setlength{\rightskip}{0pt plus 5cm}void print\+Board\+State (
+\begin{DoxyParamCaption}
+\item[{{\bf Board\+State} $\ast$}]{board\+State}
+\end{DoxyParamCaption}
+)}\label{bitboard_8h_a8f2f359e98e1b80ecc319ff543090b0a}
+
+
+Prints out each of the 8 Bitboards in the \doxyref{Board\+State}{p.}{struct_board_state} struct with their corresponding titles. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em board\+State} & The \doxyref{Board\+State}{p.}{struct_board_state} that we want to print out \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void \begin{DoxyVerb}Example of printing out the entire BoardState at the start of the game
+
+--- Printing out board state ---
+
+All White Pieces
+8 |0|0|0|0|0|0|0|0|
+7 |0|0|0|0|0|0|0|0|
+6 |0|0|0|0|0|0|0|0|
+5 |0|0|0|0|0|0|0|0|
+4 |0|0|0|0|0|0|0|0|
+3 |0|0|0|0|0|0|0|0|
+2 |1|1|1|1|1|1|1|1|
+1 |1|1|1|1|1|1|1|1|
+   a b c d e f g h
+
+All Black Pieces
+8 |1|1|1|1|1|1|1|1|
+7 |1|1|1|1|1|1|1|1|
+6 |0|0|0|0|0|0|0|0|
+5 |0|0|0|0|0|0|0|0|
+4 |0|0|0|0|0|0|0|0|
+3 |0|0|0|0|0|0|0|0|
+2 |0|0|0|0|0|0|0|0|
+1 |0|0|0|0|0|0|0|0|
+   a b c d e f g h
+
+All Pawn Positions
+8 |0|0|0|0|0|0|0|0|
+7 |1|1|1|1|1|1|1|1|
+6 |0|0|0|0|0|0|0|0|
+5 |0|0|0|0|0|0|0|0|
+4 |0|0|0|0|0|0|0|0|
+3 |0|0|0|0|0|0|0|0|
+2 |1|1|1|1|1|1|1|1|
+1 |0|0|0|0|0|0|0|0|
+   a b c d e f g h
+
+All Rook Positions
+8 |1|0|0|0|0|0|0|1|
+7 |0|0|0|0|0|0|0|0|
+6 |0|0|0|0|0|0|0|0|
+5 |0|0|0|0|0|0|0|0|
+4 |0|0|0|0|0|0|0|0|
+3 |0|0|0|0|0|0|0|0|
+2 |0|0|0|0|0|0|0|0|
+1 |1|0|0|0|0|0|0|1|
+   a b c d e f g h
+
+All Knight Positions
+8 |0|1|0|0|0|0|1|0|
+7 |0|0|0|0|0|0|0|0|
+6 |0|0|0|0|0|0|0|0|
+5 |0|0|0|0|0|0|0|0|
+4 |0|0|0|0|0|0|0|0|
+3 |0|0|0|0|0|0|0|0|
+2 |0|0|0|0|0|0|0|0|
+1 |0|1|0|0|0|0|1|0|
+   a b c d e f g h
+
+All Bishop Positions
+8 |0|0|1|0|0|1|0|0|
+7 |0|0|0|0|0|0|0|0|
+6 |0|0|0|0|0|0|0|0|
+5 |0|0|0|0|0|0|0|0|
+4 |0|0|0|0|0|0|0|0|
+3 |0|0|0|0|0|0|0|0|
+2 |0|0|0|0|0|0|0|0|
+1 |0|0|1|0|0|1|0|0|
+   a b c d e f g h
+
+All Queen Positions
+8 |0|0|0|1|0|0|0|0|
+7 |0|0|0|0|0|0|0|0|
+6 |0|0|0|0|0|0|0|0|
+5 |0|0|0|0|0|0|0|0|
+4 |0|0|0|0|0|0|0|0|
+3 |0|0|0|0|0|0|0|0|
+2 |0|0|0|0|0|0|0|0|
+1 |0|0|0|1|0|0|0|0|
+   a b c d e f g h
+
+All King Positions
+8 |0|0|0|0|1|0|0|0|
+7 |0|0|0|0|0|0|0|0|
+6 |0|0|0|0|0|0|0|0|
+5 |0|0|0|0|0|0|0|0|
+4 |0|0|0|0|0|0|0|0|
+3 |0|0|0|0|0|0|0|0|
+2 |0|0|0|0|0|0|0|0|
+1 |0|0|0|0|1|0|0|0|
+   a b c d e f g h
+
+--------------------------------\end{DoxyVerb}
+ 
+\end{DoxyReturn}
+
+
+Definition at line 39 of file bitboard.\+c.
+

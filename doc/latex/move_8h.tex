@@ -1,0 +1,726 @@
+\section{move.\+h File Reference}
+\label{move_8h}\index{move.\+h@{move.\+h}}
+
+
+All necessary logic for move generation.  
+
+
+{\ttfamily \#include \char`\"{}bitboard.\+h\char`\"{}}\\*
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct {\bf Move}
+\begin{DoxyCompactList}\small\item\em \doxyref{Move}{p.}{struct_move} contains two Bitboards (one for initial position and one for moved position). \end{DoxyCompactList}\item 
+struct {\bf Moves}
+\begin{DoxyCompactList}\small\item\em \doxyref{Moves}{p.}{struct_moves} contains two arrays of type \doxyref{Move}{p.}{struct_move} (One for quiet moves and another for capture moves). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum {\bf Player\+Type} \{ {\bf P\+L\+A\+Y\+E\+R\+\_\+\+T\+Y\+P\+E\+\_\+\+W\+H\+I\+T\+E}, 
+{\bf P\+L\+A\+Y\+E\+R\+\_\+\+T\+Y\+P\+E\+\_\+\+B\+L\+A\+C\+K}
+ \}\begin{DoxyCompactList}\small\item\em The color of the player (white or black). \end{DoxyCompactList}
+\item 
+enum {\bf Piece\+Type} \{ \\*
+{\bf P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+P\+A\+W\+N}, 
+{\bf P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+O\+O\+K}, 
+{\bf P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+K\+N\+I\+G\+H\+T}, 
+{\bf P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+B\+I\+S\+H\+O\+P}, 
+\\*
+{\bf P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+Q\+U\+E\+E\+N}, 
+{\bf P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+K\+I\+N\+G}, 
+{\bf N\+U\+M\+\_\+\+P\+I\+E\+C\+E\+S}
+ \}\begin{DoxyCompactList}\small\item\em Type of chess piece (pawn, rook, knight, bishop, queen, or king). \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void {\bf init\+Moves} ({\bf Moves} $\ast$moves)
+\begin{DoxyCompactList}\small\item\em Initializes the member variables of \doxyref{Moves}{p.}{struct_moves} to all N\+U\+L\+L. \end{DoxyCompactList}\item 
+void {\bf clean\+Up\+Moves} ({\bf Moves} $\ast$moves)
+\begin{DoxyCompactList}\small\item\em Cleans up all of the resources used by the \doxyref{Moves}{p.}{struct_moves} struct. \end{DoxyCompactList}\item 
+void {\bf update\+Board\+State} ({\bf Board\+State} $\ast$board\+State, {\bf Bitboard} initial\+Piece, {\bf Bitboard} moved\+Piece, enum {\bf Bitboard\+Type} color\+Type, enum {\bf Bitboard\+Type} piece\+Type)
+\begin{DoxyCompactList}\small\item\em Updates the state of all Bitboards necessary after a move by the computer. has been performed. \end{DoxyCompactList}\item 
+{\bf Move} {\bf generate\+Move} ({\bf Board\+State} $\ast$board\+State, enum {\bf Bitboard\+Type} color\+Type, enum {\bf Bitboard\+Type} piece\+Type)
+\begin{DoxyCompactList}\small\item\em Generates a move recursively in the tree in accordance to D\+F\+S. \end{DoxyCompactList}\item 
+{\bf Move} {\bf generate\+Pawn\+Move} ({\bf Board\+State} $\ast$board\+State, enum {\bf Bitboard\+Type} color\+Type)
+\begin{DoxyCompactList}\small\item\em Generates a move for a pawn of a specific color. recursively in the tree in accordance to D\+F\+S. \end{DoxyCompactList}\item 
+{\bf Move} {\bf generate\+Rook\+Move} ({\bf Board\+State} $\ast$board\+State, enum {\bf Bitboard\+Type} color\+Type)
+\begin{DoxyCompactList}\small\item\em Generates a move for a rook of a specific color. recursively in the tree in accordance to D\+F\+S. \end{DoxyCompactList}\item 
+{\bf Move} {\bf generate\+Knight\+Move} ({\bf Board\+State} $\ast$board\+State, enum {\bf Bitboard\+Type} color\+Type)
+\begin{DoxyCompactList}\small\item\em Generates a move for a knight of a specific color. recursively in the tree in accordance to D\+F\+S. \end{DoxyCompactList}\item 
+{\bf Move} {\bf generate\+Bishop\+Move} ({\bf Board\+State} $\ast$board\+State, enum {\bf Bitboard\+Type} color\+Type)
+\begin{DoxyCompactList}\small\item\em Generates a move for a bishop of a specific color. recursively in the tree in accordance to D\+F\+S. \end{DoxyCompactList}\item 
+{\bf Move} {\bf generate\+Queen\+Move} ({\bf Board\+State} $\ast$board\+State, enum {\bf Bitboard\+Type} color\+Type)
+\begin{DoxyCompactList}\small\item\em Generates a move for a queen of a specific color. recursively in the tree in accordance to D\+F\+S. \end{DoxyCompactList}\item 
+{\bf Move} {\bf generate\+King\+Move} ({\bf Board\+State} $\ast$board\+State, enum {\bf Bitboard\+Type} color\+Type)
+\begin{DoxyCompactList}\small\item\em Generates a move for a king of a specific color. recursively in the tree in accordance to D\+F\+S. \end{DoxyCompactList}\item 
+{\bf Move} {\bf generate\+Slide\+Left\+Move} ({\bf Bitboard} initial\+Position, {\bf Board\+State} $\ast$board\+State, enum {\bf Bitboard\+Type} color\+Type, enum {\bf Bitboard\+Type} piece\+Type, int offset)
+\begin{DoxyCompactList}\small\item\em Generates a move that slides left for a piece. \end{DoxyCompactList}\item 
+{\bf Move} {\bf generate\+Slide\+Right\+Move} ({\bf Bitboard} initial\+Position, {\bf Board\+State} $\ast$board\+State, enum {\bf Bitboard\+Type} color\+Type, enum {\bf Bitboard\+Type} piece\+Type, int offset)
+\begin{DoxyCompactList}\small\item\em Generates a move that slides right for a piece. \end{DoxyCompactList}\item 
+{\bf Move} {\bf generate\+Slide\+Up\+Move} ({\bf Bitboard} initial\+Position, {\bf Board\+State} $\ast$board\+State, enum {\bf Bitboard\+Type} color\+Type, enum {\bf Bitboard\+Type} piece\+Type, int offset)
+\begin{DoxyCompactList}\small\item\em Generates a move that slides up for a piece. \end{DoxyCompactList}\item 
+{\bf Move} {\bf generate\+Slide\+Down\+Move} ({\bf Bitboard} initial\+Position, {\bf Board\+State} $\ast$board\+State, enum {\bf Bitboard\+Type} color\+Type, enum {\bf Bitboard\+Type} piece\+Type, int offset)
+\begin{DoxyCompactList}\small\item\em Generates a move that slides down for a piece. \end{DoxyCompactList}\item 
+{\bf Move} {\bf generate\+Diagonal\+Up\+Right\+Move} ({\bf Bitboard} initial\+Position, {\bf Board\+State} $\ast$board\+State, enum {\bf Bitboard\+Type} color\+Type, enum {\bf Bitboard\+Type} piece\+Type, int offset)
+\begin{DoxyCompactList}\small\item\em Generates a move that moves diagonally (up, right). \end{DoxyCompactList}\item 
+{\bf Move} {\bf generate\+Diagonal\+Up\+Left\+Move} ({\bf Bitboard} initial\+Position, {\bf Board\+State} $\ast$board\+State, enum {\bf Bitboard\+Type} color\+Type, enum {\bf Bitboard\+Type} piece\+Type, int offset)
+\begin{DoxyCompactList}\small\item\em Generates a move that moves diagonally (up, left). \end{DoxyCompactList}\item 
+{\bf Move} {\bf generate\+Diagonal\+Down\+Right\+Move} ({\bf Bitboard} initial\+Position, {\bf Board\+State} $\ast$board\+State, enum {\bf Bitboard\+Type} color\+Type, enum {\bf Bitboard\+Type} piece\+Type, int offset)
+\begin{DoxyCompactList}\small\item\em Generates a move that moves diagonally (down, right). \end{DoxyCompactList}\item 
+{\bf Move} {\bf generate\+Diagonal\+Down\+Left\+Move} ({\bf Bitboard} initial\+Position, {\bf Board\+State} $\ast$board\+State, enum {\bf Bitboard\+Type} color\+Type, enum {\bf Bitboard\+Type} piece\+Type, int offset)
+\begin{DoxyCompactList}\small\item\em Generates a move that moves diagonally (down, left). \end{DoxyCompactList}\item 
+{\bf Move} {\bf generate\+L\+Move} ({\bf Bitboard} initial\+Position, {\bf Board\+State} $\ast$board\+State, enum {\bf Bitboard\+Type} color\+Type, enum {\bf Bitboard\+Type} piece\+Type, int offset)
+\begin{DoxyCompactList}\small\item\em Generates a move that moves in an L shape manner (e.\+g. up 2, left 1 or right 2, down 1). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+All necessary logic for move generation. 
+
+\begin{DoxyAuthor}{Author}
+Sahil Faruque 
+
+Delvin Huynh 
+
+Henry Tran 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+21 Jan 2018 
+\end{DoxyDate}
+
+
+\subsection{Enumeration Type Documentation}
+\index{move.\+h@{move.\+h}!Piece\+Type@{Piece\+Type}}
+\index{Piece\+Type@{Piece\+Type}!move.\+h@{move.\+h}}
+\subsubsection[{Piece\+Type}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Piece\+Type}}\label{move_8h_a12ed9719bbdf7bc596ff7a6f4bf3f021}
+
+
+Type of chess piece (pawn, rook, knight, bishop, queen, or king). 
+
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+P\+A\+W\+N@{P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+P\+A\+W\+N}!move.\+h@{move.\+h}}\index{move.\+h@{move.\+h}!P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+P\+A\+W\+N@{P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+P\+A\+W\+N}}\item[{\em 
+P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+P\+A\+W\+N\label{move_8h_a12ed9719bbdf7bc596ff7a6f4bf3f021a4875ae94c47d81af90a51961a6caabec}
+}]\index{P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+O\+O\+K@{P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+O\+O\+K}!move.\+h@{move.\+h}}\index{move.\+h@{move.\+h}!P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+O\+O\+K@{P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+O\+O\+K}}\item[{\em 
+P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+O\+O\+K\label{move_8h_a12ed9719bbdf7bc596ff7a6f4bf3f021a93cabf116be15374a9a641cd8f623a43}
+}]\index{P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+K\+N\+I\+G\+H\+T@{P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+K\+N\+I\+G\+H\+T}!move.\+h@{move.\+h}}\index{move.\+h@{move.\+h}!P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+K\+N\+I\+G\+H\+T@{P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+K\+N\+I\+G\+H\+T}}\item[{\em 
+P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+K\+N\+I\+G\+H\+T\label{move_8h_a12ed9719bbdf7bc596ff7a6f4bf3f021a51428e44ad69ccd4be0d0bd3616faa57}
+}]\index{P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+B\+I\+S\+H\+O\+P@{P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+B\+I\+S\+H\+O\+P}!move.\+h@{move.\+h}}\index{move.\+h@{move.\+h}!P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+B\+I\+S\+H\+O\+P@{P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+B\+I\+S\+H\+O\+P}}\item[{\em 
+P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+B\+I\+S\+H\+O\+P\label{move_8h_a12ed9719bbdf7bc596ff7a6f4bf3f021a91eec7439aedb9d91629ad07bf6efd2d}
+}]\index{P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+Q\+U\+E\+E\+N@{P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+Q\+U\+E\+E\+N}!move.\+h@{move.\+h}}\index{move.\+h@{move.\+h}!P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+Q\+U\+E\+E\+N@{P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+Q\+U\+E\+E\+N}}\item[{\em 
+P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+Q\+U\+E\+E\+N\label{move_8h_a12ed9719bbdf7bc596ff7a6f4bf3f021a8e092f622c3a3dabf1c945d109dc15e1}
+}]\index{P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+K\+I\+N\+G@{P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+K\+I\+N\+G}!move.\+h@{move.\+h}}\index{move.\+h@{move.\+h}!P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+K\+I\+N\+G@{P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+K\+I\+N\+G}}\item[{\em 
+P\+I\+E\+C\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+K\+I\+N\+G\label{move_8h_a12ed9719bbdf7bc596ff7a6f4bf3f021a82c47cd2cef21eedbff086b6b25c4e01}
+}]\index{N\+U\+M\+\_\+\+P\+I\+E\+C\+E\+S@{N\+U\+M\+\_\+\+P\+I\+E\+C\+E\+S}!move.\+h@{move.\+h}}\index{move.\+h@{move.\+h}!N\+U\+M\+\_\+\+P\+I\+E\+C\+E\+S@{N\+U\+M\+\_\+\+P\+I\+E\+C\+E\+S}}\item[{\em 
+N\+U\+M\+\_\+\+P\+I\+E\+C\+E\+S\label{move_8h_a12ed9719bbdf7bc596ff7a6f4bf3f021a283fc5c83b15a5092cd6500aa4c8c0d1}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 40 of file move.\+h.
+
+\index{move.\+h@{move.\+h}!Player\+Type@{Player\+Type}}
+\index{Player\+Type@{Player\+Type}!move.\+h@{move.\+h}}
+\subsubsection[{Player\+Type}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Player\+Type}}\label{move_8h_abe590f3c9109f404f003d5d7e4f0fccf}
+
+
+The color of the player (white or black). 
+
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{P\+L\+A\+Y\+E\+R\+\_\+\+T\+Y\+P\+E\+\_\+\+W\+H\+I\+T\+E@{P\+L\+A\+Y\+E\+R\+\_\+\+T\+Y\+P\+E\+\_\+\+W\+H\+I\+T\+E}!move.\+h@{move.\+h}}\index{move.\+h@{move.\+h}!P\+L\+A\+Y\+E\+R\+\_\+\+T\+Y\+P\+E\+\_\+\+W\+H\+I\+T\+E@{P\+L\+A\+Y\+E\+R\+\_\+\+T\+Y\+P\+E\+\_\+\+W\+H\+I\+T\+E}}\item[{\em 
+P\+L\+A\+Y\+E\+R\+\_\+\+T\+Y\+P\+E\+\_\+\+W\+H\+I\+T\+E\label{move_8h_abe590f3c9109f404f003d5d7e4f0fccfa1e1ca00ad057e83684bd651a8a06e790}
+}]\index{P\+L\+A\+Y\+E\+R\+\_\+\+T\+Y\+P\+E\+\_\+\+B\+L\+A\+C\+K@{P\+L\+A\+Y\+E\+R\+\_\+\+T\+Y\+P\+E\+\_\+\+B\+L\+A\+C\+K}!move.\+h@{move.\+h}}\index{move.\+h@{move.\+h}!P\+L\+A\+Y\+E\+R\+\_\+\+T\+Y\+P\+E\+\_\+\+B\+L\+A\+C\+K@{P\+L\+A\+Y\+E\+R\+\_\+\+T\+Y\+P\+E\+\_\+\+B\+L\+A\+C\+K}}\item[{\em 
+P\+L\+A\+Y\+E\+R\+\_\+\+T\+Y\+P\+E\+\_\+\+B\+L\+A\+C\+K\label{move_8h_abe590f3c9109f404f003d5d7e4f0fccfa4ecdcd64cadf09e6e1155935f6a67b47}
+}]\end{description}
+\end{Desc}
+
+
+Definition at line 30 of file move.\+h.
+
+
+
+\subsection{Function Documentation}
+\index{move.\+h@{move.\+h}!clean\+Up\+Moves@{clean\+Up\+Moves}}
+\index{clean\+Up\+Moves@{clean\+Up\+Moves}!move.\+h@{move.\+h}}
+\subsubsection[{clean\+Up\+Moves(\+Moves $\ast$moves)}]{\setlength{\rightskip}{0pt plus 5cm}void clean\+Up\+Moves (
+\begin{DoxyParamCaption}
+\item[{{\bf Moves} $\ast$}]{moves}
+\end{DoxyParamCaption}
+)}\label{move_8h_ae24f7227c943575e2ffaed2cc99b77b2}
+
+
+Cleans up all of the resources used by the \doxyref{Moves}{p.}{struct_moves} struct. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em moves} & The \doxyref{Moves}{p.}{struct_moves} struct we want to clean up \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+Definition at line 22 of file move.\+c.
+
+\index{move.\+h@{move.\+h}!generate\+Bishop\+Move@{generate\+Bishop\+Move}}
+\index{generate\+Bishop\+Move@{generate\+Bishop\+Move}!move.\+h@{move.\+h}}
+\subsubsection[{generate\+Bishop\+Move(\+Board\+State $\ast$board\+State, enum Bitboard\+Type color\+Type)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Move} generate\+Bishop\+Move (
+\begin{DoxyParamCaption}
+\item[{{\bf Board\+State} $\ast$}]{board\+State, }
+\item[{enum {\bf Bitboard\+Type}}]{color\+Type}
+\end{DoxyParamCaption}
+)}\label{move_8h_a87a36430c0e2af69f523663536367dce}
+
+
+Generates a move for a bishop of a specific color. recursively in the tree in accordance to D\+F\+S. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em board\+State} & The current state of the game \\
+\hline
+{\em color\+Type} & The color that the player is playing as \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The move that is going to be made 
+\end{DoxyReturn}
+
+
+Definition at line 79 of file move.\+c.
+
+\index{move.\+h@{move.\+h}!generate\+Diagonal\+Down\+Left\+Move@{generate\+Diagonal\+Down\+Left\+Move}}
+\index{generate\+Diagonal\+Down\+Left\+Move@{generate\+Diagonal\+Down\+Left\+Move}!move.\+h@{move.\+h}}
+\subsubsection[{generate\+Diagonal\+Down\+Left\+Move(\+Bitboard initial\+Position, Board\+State $\ast$board\+State, enum Bitboard\+Type color\+Type, enum Bitboard\+Type piece\+Type, int offset)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Move} generate\+Diagonal\+Down\+Left\+Move (
+\begin{DoxyParamCaption}
+\item[{{\bf Bitboard}}]{initial\+Position, }
+\item[{{\bf Board\+State} $\ast$}]{board\+State, }
+\item[{enum {\bf Bitboard\+Type}}]{color\+Type, }
+\item[{enum {\bf Bitboard\+Type}}]{piece\+Type, }
+\item[{int}]{offset}
+\end{DoxyParamCaption}
+)}\label{move_8h_a184db220cfbc411b171406eb8afa9852}
+
+
+Generates a move that moves diagonally (down, left). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em initial\+Position} & The Bitboard containing only the initial position of a specfiic piece \\
+\hline
+{\em board\+State} & The current state of the game \\
+\hline
+{\em color\+Type} & The color that the player is playing as \\
+\hline
+{\em piece\+Type} & The piece that we are interested in \\
+\hline
+{\em offset} & How many squares we want to move the piece by \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The \doxyref{Move}{p.}{struct_move} struct containing the information needed to make a move 
+\end{DoxyReturn}
+
+
+Definition at line 250 of file move.\+c.
+
+\index{move.\+h@{move.\+h}!generate\+Diagonal\+Down\+Right\+Move@{generate\+Diagonal\+Down\+Right\+Move}}
+\index{generate\+Diagonal\+Down\+Right\+Move@{generate\+Diagonal\+Down\+Right\+Move}!move.\+h@{move.\+h}}
+\subsubsection[{generate\+Diagonal\+Down\+Right\+Move(\+Bitboard initial\+Position, Board\+State $\ast$board\+State, enum Bitboard\+Type color\+Type, enum Bitboard\+Type piece\+Type, int offset)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Move} generate\+Diagonal\+Down\+Right\+Move (
+\begin{DoxyParamCaption}
+\item[{{\bf Bitboard}}]{initial\+Position, }
+\item[{{\bf Board\+State} $\ast$}]{board\+State, }
+\item[{enum {\bf Bitboard\+Type}}]{color\+Type, }
+\item[{enum {\bf Bitboard\+Type}}]{piece\+Type, }
+\item[{int}]{offset}
+\end{DoxyParamCaption}
+)}\label{move_8h_a03c58971b6cf2ece40445761d37ee616}
+
+
+Generates a move that moves diagonally (down, right). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em initial\+Position} & The Bitboard containing only the initial position of a specfiic piece \\
+\hline
+{\em board\+State} & The current state of the game \\
+\hline
+{\em color\+Type} & The color that the player is playing as \\
+\hline
+{\em piece\+Type} & The piece that we are interested in \\
+\hline
+{\em offset} & How many squares we want to move the piece by \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The \doxyref{Move}{p.}{struct_move} struct containing the information needed to make a move 
+\end{DoxyReturn}
+
+
+Definition at line 237 of file move.\+c.
+
+\index{move.\+h@{move.\+h}!generate\+Diagonal\+Up\+Left\+Move@{generate\+Diagonal\+Up\+Left\+Move}}
+\index{generate\+Diagonal\+Up\+Left\+Move@{generate\+Diagonal\+Up\+Left\+Move}!move.\+h@{move.\+h}}
+\subsubsection[{generate\+Diagonal\+Up\+Left\+Move(\+Bitboard initial\+Position, Board\+State $\ast$board\+State, enum Bitboard\+Type color\+Type, enum Bitboard\+Type piece\+Type, int offset)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Move} generate\+Diagonal\+Up\+Left\+Move (
+\begin{DoxyParamCaption}
+\item[{{\bf Bitboard}}]{initial\+Position, }
+\item[{{\bf Board\+State} $\ast$}]{board\+State, }
+\item[{enum {\bf Bitboard\+Type}}]{color\+Type, }
+\item[{enum {\bf Bitboard\+Type}}]{piece\+Type, }
+\item[{int}]{offset}
+\end{DoxyParamCaption}
+)}\label{move_8h_acbc7e2d5a925fb79e96e9e4ad4ee726b}
+
+
+Generates a move that moves diagonally (up, left). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em initial\+Position} & The Bitboard containing only the initial position of a specfiic piece \\
+\hline
+{\em board\+State} & The current state of the game \\
+\hline
+{\em color\+Type} & The color that the player is playing as \\
+\hline
+{\em piece\+Type} & The piece that we are interested in \\
+\hline
+{\em offset} & How many squares we want to move the piece by \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The \doxyref{Move}{p.}{struct_move} struct containing the information needed to make a move 
+\end{DoxyReturn}
+
+
+Definition at line 223 of file move.\+c.
+
+\index{move.\+h@{move.\+h}!generate\+Diagonal\+Up\+Right\+Move@{generate\+Diagonal\+Up\+Right\+Move}}
+\index{generate\+Diagonal\+Up\+Right\+Move@{generate\+Diagonal\+Up\+Right\+Move}!move.\+h@{move.\+h}}
+\subsubsection[{generate\+Diagonal\+Up\+Right\+Move(\+Bitboard initial\+Position, Board\+State $\ast$board\+State, enum Bitboard\+Type color\+Type, enum Bitboard\+Type piece\+Type, int offset)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Move} generate\+Diagonal\+Up\+Right\+Move (
+\begin{DoxyParamCaption}
+\item[{{\bf Bitboard}}]{initial\+Position, }
+\item[{{\bf Board\+State} $\ast$}]{board\+State, }
+\item[{enum {\bf Bitboard\+Type}}]{color\+Type, }
+\item[{enum {\bf Bitboard\+Type}}]{piece\+Type, }
+\item[{int}]{offset}
+\end{DoxyParamCaption}
+)}\label{move_8h_ab2dcc1be94a074d3464dcf7ae3449f65}
+
+
+Generates a move that moves diagonally (up, right). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em initial\+Position} & The Bitboard containing only the initial position of a specfiic piece \\
+\hline
+{\em board\+State} & The current state of the game \\
+\hline
+{\em color\+Type} & The color that the player is playing as \\
+\hline
+{\em piece\+Type} & The piece that we are interested in \\
+\hline
+{\em offset} & How many squares we want to move the piece by \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The \doxyref{Move}{p.}{struct_move} struct containing the information needed to make a move 
+\end{DoxyReturn}
+
+
+Definition at line 210 of file move.\+c.
+
+\index{move.\+h@{move.\+h}!generate\+King\+Move@{generate\+King\+Move}}
+\index{generate\+King\+Move@{generate\+King\+Move}!move.\+h@{move.\+h}}
+\subsubsection[{generate\+King\+Move(\+Board\+State $\ast$board\+State, enum Bitboard\+Type color\+Type)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Move} generate\+King\+Move (
+\begin{DoxyParamCaption}
+\item[{{\bf Board\+State} $\ast$}]{board\+State, }
+\item[{enum {\bf Bitboard\+Type}}]{color\+Type}
+\end{DoxyParamCaption}
+)}\label{move_8h_a5f5378b2cbedffd3ad45e5ca8f08efe8}
+
+
+Generates a move for a king of a specific color. recursively in the tree in accordance to D\+F\+S. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em board\+State} & The current state of the game \\
+\hline
+{\em color\+Type} & The color that the player is playing as \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The move that is going to be made 
+\end{DoxyReturn}
+
+
+Definition at line 95 of file move.\+c.
+
+\index{move.\+h@{move.\+h}!generate\+Knight\+Move@{generate\+Knight\+Move}}
+\index{generate\+Knight\+Move@{generate\+Knight\+Move}!move.\+h@{move.\+h}}
+\subsubsection[{generate\+Knight\+Move(\+Board\+State $\ast$board\+State, enum Bitboard\+Type color\+Type)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Move} generate\+Knight\+Move (
+\begin{DoxyParamCaption}
+\item[{{\bf Board\+State} $\ast$}]{board\+State, }
+\item[{enum {\bf Bitboard\+Type}}]{color\+Type}
+\end{DoxyParamCaption}
+)}\label{move_8h_a0c76a78d3fed22f118c6bbec53493cca}
+
+
+Generates a move for a knight of a specific color. recursively in the tree in accordance to D\+F\+S. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em board\+State} & The current state of the game \\
+\hline
+{\em color\+Type} & The color that the player is playing as \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The move that is going to be made 
+\end{DoxyReturn}
+
+
+Definition at line 71 of file move.\+c.
+
+\index{move.\+h@{move.\+h}!generate\+L\+Move@{generate\+L\+Move}}
+\index{generate\+L\+Move@{generate\+L\+Move}!move.\+h@{move.\+h}}
+\subsubsection[{generate\+L\+Move(\+Bitboard initial\+Position, Board\+State $\ast$board\+State, enum Bitboard\+Type color\+Type, enum Bitboard\+Type piece\+Type, int offset)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Move} generate\+L\+Move (
+\begin{DoxyParamCaption}
+\item[{{\bf Bitboard}}]{initial\+Position, }
+\item[{{\bf Board\+State} $\ast$}]{board\+State, }
+\item[{enum {\bf Bitboard\+Type}}]{color\+Type, }
+\item[{enum {\bf Bitboard\+Type}}]{piece\+Type, }
+\item[{int}]{offset}
+\end{DoxyParamCaption}
+)}\label{move_8h_a41b499758b6aadb38df431fb94f1bf47}
+
+
+Generates a move that moves in an L shape manner (e.\+g. up 2, left 1 or right 2, down 1). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em initial\+Position} & The Bitboard containing only the initial position of a specfiic piece \\
+\hline
+{\em board\+State} & The current state of the game \\
+\hline
+{\em color\+Type} & The color that the player is playing as \\
+\hline
+{\em piece\+Type} & The piece that we are interested in \\
+\hline
+{\em offset} & How many squares we want to move the piece by \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The \doxyref{Move}{p.}{struct_move} struct containing the information needed to make a move 
+\end{DoxyReturn}
+
+
+Definition at line 271 of file move.\+c.
+
+\index{move.\+h@{move.\+h}!generate\+Move@{generate\+Move}}
+\index{generate\+Move@{generate\+Move}!move.\+h@{move.\+h}}
+\subsubsection[{generate\+Move(\+Board\+State $\ast$board\+State, enum Bitboard\+Type color\+Type, enum Bitboard\+Type piece\+Type)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Move} generate\+Move (
+\begin{DoxyParamCaption}
+\item[{{\bf Board\+State} $\ast$}]{board\+State, }
+\item[{enum {\bf Bitboard\+Type}}]{color\+Type, }
+\item[{enum {\bf Bitboard\+Type}}]{piece\+Type}
+\end{DoxyParamCaption}
+)}\label{move_8h_a5826e96ae10bbb4e3df9d83e1e7ef67c}
+
+
+Generates a move recursively in the tree in accordance to D\+F\+S. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em board\+State} & The current state of the game \\
+\hline
+{\em color\+Type} & The color that the player is playing as \\
+\hline
+{\em piece\+Type} & The piece that we are interested in \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The move that is going to be made 
+\end{DoxyReturn}
+
+
+Definition at line 46 of file move.\+c.
+
+\index{move.\+h@{move.\+h}!generate\+Pawn\+Move@{generate\+Pawn\+Move}}
+\index{generate\+Pawn\+Move@{generate\+Pawn\+Move}!move.\+h@{move.\+h}}
+\subsubsection[{generate\+Pawn\+Move(\+Board\+State $\ast$board\+State, enum Bitboard\+Type color\+Type)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Move} generate\+Pawn\+Move (
+\begin{DoxyParamCaption}
+\item[{{\bf Board\+State} $\ast$}]{board\+State, }
+\item[{enum {\bf Bitboard\+Type}}]{color\+Type}
+\end{DoxyParamCaption}
+)}\label{move_8h_a1f33e2d8167c0607e2382fe92ab6cfa2}
+
+
+Generates a move for a pawn of a specific color. recursively in the tree in accordance to D\+F\+S. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em board\+State} & The current state of the game \\
+\hline
+{\em color\+Type} & The color that the player is playing as \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The move that is going to be made 
+\end{DoxyReturn}
+
+
+Definition at line 57 of file move.\+c.
+
+\index{move.\+h@{move.\+h}!generate\+Queen\+Move@{generate\+Queen\+Move}}
+\index{generate\+Queen\+Move@{generate\+Queen\+Move}!move.\+h@{move.\+h}}
+\subsubsection[{generate\+Queen\+Move(\+Board\+State $\ast$board\+State, enum Bitboard\+Type color\+Type)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Move} generate\+Queen\+Move (
+\begin{DoxyParamCaption}
+\item[{{\bf Board\+State} $\ast$}]{board\+State, }
+\item[{enum {\bf Bitboard\+Type}}]{color\+Type}
+\end{DoxyParamCaption}
+)}\label{move_8h_a38aec53bb0681ac2189b8ba4b8c34626}
+
+
+Generates a move for a queen of a specific color. recursively in the tree in accordance to D\+F\+S. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em board\+State} & The current state of the game \\
+\hline
+{\em color\+Type} & The color that the player is playing as \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The move that is going to be made 
+\end{DoxyReturn}
+
+
+Definition at line 87 of file move.\+c.
+
+\index{move.\+h@{move.\+h}!generate\+Rook\+Move@{generate\+Rook\+Move}}
+\index{generate\+Rook\+Move@{generate\+Rook\+Move}!move.\+h@{move.\+h}}
+\subsubsection[{generate\+Rook\+Move(\+Board\+State $\ast$board\+State, enum Bitboard\+Type color\+Type)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Move} generate\+Rook\+Move (
+\begin{DoxyParamCaption}
+\item[{{\bf Board\+State} $\ast$}]{board\+State, }
+\item[{enum {\bf Bitboard\+Type}}]{color\+Type}
+\end{DoxyParamCaption}
+)}\label{move_8h_a7320844e6259374d064a801642c0bdc7}
+
+
+Generates a move for a rook of a specific color. recursively in the tree in accordance to D\+F\+S. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em board\+State} & The current state of the game \\
+\hline
+{\em color\+Type} & The color that the player is playing as \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The move that is going to be made 
+\end{DoxyReturn}
+
+
+Definition at line 64 of file move.\+c.
+
+\index{move.\+h@{move.\+h}!generate\+Slide\+Down\+Move@{generate\+Slide\+Down\+Move}}
+\index{generate\+Slide\+Down\+Move@{generate\+Slide\+Down\+Move}!move.\+h@{move.\+h}}
+\subsubsection[{generate\+Slide\+Down\+Move(\+Bitboard initial\+Position, Board\+State $\ast$board\+State, enum Bitboard\+Type color\+Type, enum Bitboard\+Type piece\+Type, int offset)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Move} generate\+Slide\+Down\+Move (
+\begin{DoxyParamCaption}
+\item[{{\bf Bitboard}}]{initial\+Position, }
+\item[{{\bf Board\+State} $\ast$}]{board\+State, }
+\item[{enum {\bf Bitboard\+Type}}]{color\+Type, }
+\item[{enum {\bf Bitboard\+Type}}]{piece\+Type, }
+\item[{int}]{offset}
+\end{DoxyParamCaption}
+)}\label{move_8h_a72df1da944379e2b36249662ae0f3b6f}
+
+
+Generates a move that slides down for a piece. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em initial\+Position} & The Bitboard containing only the initial position of a specfiic piece \\
+\hline
+{\em board\+State} & The current state of the game \\
+\hline
+{\em color\+Type} & The color that the player is playing as \\
+\hline
+{\em piece\+Type} & The piece that we are interested in \\
+\hline
+{\em offset} & How many squares we want to move the piece by \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The \doxyref{Move}{p.}{struct_move} struct containing the information needed to make a move 
+\end{DoxyReturn}
+
+
+Definition at line 180 of file move.\+c.
+
+\index{move.\+h@{move.\+h}!generate\+Slide\+Left\+Move@{generate\+Slide\+Left\+Move}}
+\index{generate\+Slide\+Left\+Move@{generate\+Slide\+Left\+Move}!move.\+h@{move.\+h}}
+\subsubsection[{generate\+Slide\+Left\+Move(\+Bitboard initial\+Position, Board\+State $\ast$board\+State, enum Bitboard\+Type color\+Type, enum Bitboard\+Type piece\+Type, int offset)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Move} generate\+Slide\+Left\+Move (
+\begin{DoxyParamCaption}
+\item[{{\bf Bitboard}}]{initial\+Position, }
+\item[{{\bf Board\+State} $\ast$}]{board\+State, }
+\item[{enum {\bf Bitboard\+Type}}]{color\+Type, }
+\item[{enum {\bf Bitboard\+Type}}]{piece\+Type, }
+\item[{int}]{offset}
+\end{DoxyParamCaption}
+)}\label{move_8h_a5ff2f83627b749057ab52d54b9677a28}
+
+
+Generates a move that slides left for a piece. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em initial\+Position} & The Bitboard containing only the initial position of a specfiic piece \\
+\hline
+{\em board\+State} & The current state of the game \\
+\hline
+{\em color\+Type} & The color that the player is playing as \\
+\hline
+{\em piece\+Type} & The piece that we are interested in \\
+\hline
+{\em offset} & How many squares we want to move the piece by \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The \doxyref{Move}{p.}{struct_move} struct containing the information needed to make a move 
+\end{DoxyReturn}
+
+
+Definition at line 110 of file move.\+c.
+
+\index{move.\+h@{move.\+h}!generate\+Slide\+Right\+Move@{generate\+Slide\+Right\+Move}}
+\index{generate\+Slide\+Right\+Move@{generate\+Slide\+Right\+Move}!move.\+h@{move.\+h}}
+\subsubsection[{generate\+Slide\+Right\+Move(\+Bitboard initial\+Position, Board\+State $\ast$board\+State, enum Bitboard\+Type color\+Type, enum Bitboard\+Type piece\+Type, int offset)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Move} generate\+Slide\+Right\+Move (
+\begin{DoxyParamCaption}
+\item[{{\bf Bitboard}}]{initial\+Position, }
+\item[{{\bf Board\+State} $\ast$}]{board\+State, }
+\item[{enum {\bf Bitboard\+Type}}]{color\+Type, }
+\item[{enum {\bf Bitboard\+Type}}]{piece\+Type, }
+\item[{int}]{offset}
+\end{DoxyParamCaption}
+)}\label{move_8h_ad4d46ea6e35da56c61b63e1d8017ba72}
+
+
+Generates a move that slides right for a piece. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em initial\+Position} & The Bitboard containing only the initial position of a specfiic piece \\
+\hline
+{\em board\+State} & The current state of the game \\
+\hline
+{\em color\+Type} & The color that the player is playing as \\
+\hline
+{\em piece\+Type} & The piece that we are interested in \\
+\hline
+{\em offset} & How many squares we want to move the piece by \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The \doxyref{Move}{p.}{struct_move} struct containing the information needed to make a move 
+\end{DoxyReturn}
+
+
+Definition at line 133 of file move.\+c.
+
+\index{move.\+h@{move.\+h}!generate\+Slide\+Up\+Move@{generate\+Slide\+Up\+Move}}
+\index{generate\+Slide\+Up\+Move@{generate\+Slide\+Up\+Move}!move.\+h@{move.\+h}}
+\subsubsection[{generate\+Slide\+Up\+Move(\+Bitboard initial\+Position, Board\+State $\ast$board\+State, enum Bitboard\+Type color\+Type, enum Bitboard\+Type piece\+Type, int offset)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Move} generate\+Slide\+Up\+Move (
+\begin{DoxyParamCaption}
+\item[{{\bf Bitboard}}]{initial\+Position, }
+\item[{{\bf Board\+State} $\ast$}]{board\+State, }
+\item[{enum {\bf Bitboard\+Type}}]{color\+Type, }
+\item[{enum {\bf Bitboard\+Type}}]{piece\+Type, }
+\item[{int}]{offset}
+\end{DoxyParamCaption}
+)}\label{move_8h_a6be2dd987f98b16477ae31ef7f35cd58}
+
+
+Generates a move that slides up for a piece. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em initial\+Position} & The Bitboard containing only the initial position of a specfiic piece \\
+\hline
+{\em board\+State} & The current state of the game \\
+\hline
+{\em color\+Type} & The color that the player is playing as \\
+\hline
+{\em piece\+Type} & The piece that we are interested in \\
+\hline
+{\em offset} & How many squares we want to move the piece by \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The \doxyref{Move}{p.}{struct_move} struct containing the information needed to make a move 
+\end{DoxyReturn}
+
+
+Definition at line 157 of file move.\+c.
+
+\index{move.\+h@{move.\+h}!init\+Moves@{init\+Moves}}
+\index{init\+Moves@{init\+Moves}!move.\+h@{move.\+h}}
+\subsubsection[{init\+Moves(\+Moves $\ast$moves)}]{\setlength{\rightskip}{0pt plus 5cm}void init\+Moves (
+\begin{DoxyParamCaption}
+\item[{{\bf Moves} $\ast$}]{moves}
+\end{DoxyParamCaption}
+)}\label{move_8h_aab41284d2984f4582826cfd71e6e12be}
+
+
+Initializes the member variables of \doxyref{Moves}{p.}{struct_moves} to all N\+U\+L\+L. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em moves} & The \doxyref{Moves}{p.}{struct_moves} struct we want to initialize \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+Definition at line 17 of file move.\+c.
+
+\index{move.\+h@{move.\+h}!update\+Board\+State@{update\+Board\+State}}
+\index{update\+Board\+State@{update\+Board\+State}!move.\+h@{move.\+h}}
+\subsubsection[{update\+Board\+State(\+Board\+State $\ast$board\+State, Bitboard initial\+Piece, Bitboard moved\+Piece, enum Bitboard\+Type color\+Type, enum Bitboard\+Type piece\+Type)}]{\setlength{\rightskip}{0pt plus 5cm}void update\+Board\+State (
+\begin{DoxyParamCaption}
+\item[{{\bf Board\+State} $\ast$}]{board\+State, }
+\item[{{\bf Bitboard}}]{initial\+Piece, }
+\item[{{\bf Bitboard}}]{moved\+Piece, }
+\item[{enum {\bf Bitboard\+Type}}]{color\+Type, }
+\item[{enum {\bf Bitboard\+Type}}]{piece\+Type}
+\end{DoxyParamCaption}
+)}\label{move_8h_a2a359e0a54d3aec1dc195fea341179c6}
+
+
+Updates the state of all Bitboards necessary after a move by the computer. has been performed. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em board\+State} & The \doxyref{Board\+State}{p.}{struct_board_state} that we want to update \\
+\hline
+{\em initial\+Piece} & The Bitboard that only contains the piece we want to move that has not moved yet \\
+\hline
+{\em moved\+Piece} & The Bitboard that only contains the piece that has moved \\
+\hline
+{\em color\+Type} & The color of the piece that we want to move \\
+\hline
+{\em piece\+Type} & The type of piece that we want to move \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+Definition at line 29 of file move.\+c.
+

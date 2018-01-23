@@ -1,4 +1,12 @@
 
+/********************************************************************************
+ * Copyright (C) 2018 by Sahil Faruque, Delvin Huynh, Henry Tran                *
+ *                                                                              *
+ * Sloth Chess Engine                                                           *
+ *                                                                              *
+ * Description of Chess Engine HERE                                             *
+ ********************************************************************************/
+
 #include "slothChessEngine.h"
 
 

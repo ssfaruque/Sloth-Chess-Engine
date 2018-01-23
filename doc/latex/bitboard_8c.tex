@@ -1,0 +1,245 @@
+\section{bitboard.\+c File Reference}
+\label{bitboard_8c}\index{bitboard.\+c@{bitboard.\+c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}bitboard.\+h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void {\bf print\+Bitboard} ({\bf Bitboard} bitboard)
+\begin{DoxyCompactList}\small\item\em Prints out the entire Bitboard in a chess board representation. \end{DoxyCompactList}\item 
+void {\bf print\+Board\+State} ({\bf Board\+State} $\ast$board\+State)
+\begin{DoxyCompactList}\small\item\em Prints out each of the 8 Bitboards in the \doxyref{Board\+State}{p.}{struct_board_state} struct with their corresponding titles. \end{DoxyCompactList}\item 
+{\bf Bitboard} {\bf create\+Bitboard} (uint64\+\_\+t squares)
+\begin{DoxyCompactList}\small\item\em Creates a new Bitboard. \end{DoxyCompactList}\item 
+void {\bf init\+Board\+State} ({\bf Board\+State} $\ast$board\+State)
+\begin{DoxyCompactList}\small\item\em Initializes a board\+State to the starting representation of a new chess game. \end{DoxyCompactList}\item 
+void {\bf copy\+Board\+State} ({\bf Board\+State} $\ast$dst, {\bf Board\+State} $\ast$src)
+\begin{DoxyCompactList}\small\item\em Copies all 8 Bitboards from one \doxyref{Board\+State}{p.}{struct_board_state} to another \doxyref{Board\+State}{p.}{struct_board_state} ~\newline
+ Creates a deep copy. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\index{bitboard.\+c@{bitboard.\+c}!copy\+Board\+State@{copy\+Board\+State}}
+\index{copy\+Board\+State@{copy\+Board\+State}!bitboard.\+c@{bitboard.\+c}}
+\subsubsection[{copy\+Board\+State(\+Board\+State $\ast$dst, Board\+State $\ast$src)}]{\setlength{\rightskip}{0pt plus 5cm}void copy\+Board\+State (
+\begin{DoxyParamCaption}
+\item[{{\bf Board\+State} $\ast$}]{dst, }
+\item[{{\bf Board\+State} $\ast$}]{src}
+\end{DoxyParamCaption}
+)}\label{bitboard_8c_afc4fde51dec787a891205121c9a8467e}
+
+
+Copies all 8 Bitboards from one \doxyref{Board\+State}{p.}{struct_board_state} to another \doxyref{Board\+State}{p.}{struct_board_state} ~\newline
+ Creates a deep copy. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & The destination \doxyref{Board\+State}{p.}{struct_board_state} (Where we are copying to) \\
+\hline
+{\em src} & The source \doxyref{Board\+State}{p.}{struct_board_state} (Where we are copying from) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+Definition at line 88 of file bitboard.\+c.
+
+\index{bitboard.\+c@{bitboard.\+c}!create\+Bitboard@{create\+Bitboard}}
+\index{create\+Bitboard@{create\+Bitboard}!bitboard.\+c@{bitboard.\+c}}
+\subsubsection[{create\+Bitboard(uint64\+\_\+t squares)}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Bitboard} create\+Bitboard (
+\begin{DoxyParamCaption}
+\item[{uint64\+\_\+t}]{squares}
+\end{DoxyParamCaption}
+)}\label{bitboard_8c_a5a8e5a26277021bc8520339c75cb3d28}
+
+
+Creates a new Bitboard. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em squares} & A 64 bit integer representing all 64 squares of the chess board \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A bitboard with the squares filled with 0s and 1s as specified by the input 
+\end{DoxyReturn}
+
+
+Definition at line 68 of file bitboard.\+c.
+
+\index{bitboard.\+c@{bitboard.\+c}!init\+Board\+State@{init\+Board\+State}}
+\index{init\+Board\+State@{init\+Board\+State}!bitboard.\+c@{bitboard.\+c}}
+\subsubsection[{init\+Board\+State(\+Board\+State $\ast$board\+State)}]{\setlength{\rightskip}{0pt plus 5cm}void init\+Board\+State (
+\begin{DoxyParamCaption}
+\item[{{\bf Board\+State} $\ast$}]{board\+State}
+\end{DoxyParamCaption}
+)}\label{bitboard_8c_a1cfea0df95c88f167854350808a5e3a9}
+
+
+Initializes a board\+State to the starting representation of a new chess game. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em board\+State} & The \doxyref{Board\+State}{p.}{struct_board_state} we want to initialize \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+Definition at line 74 of file bitboard.\+c.
+
+\index{bitboard.\+c@{bitboard.\+c}!print\+Bitboard@{print\+Bitboard}}
+\index{print\+Bitboard@{print\+Bitboard}!bitboard.\+c@{bitboard.\+c}}
+\subsubsection[{print\+Bitboard(\+Bitboard bitboard)}]{\setlength{\rightskip}{0pt plus 5cm}void print\+Bitboard (
+\begin{DoxyParamCaption}
+\item[{{\bf Bitboard}}]{bitboard}
+\end{DoxyParamCaption}
+)}\label{bitboard_8c_a404dc769afa40b36044dd3b532caac21}
+
+
+Prints out the entire Bitboard in a chess board representation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitboard} & The Bitboard that we want to print \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void
+\end{DoxyReturn}
+\begin{DoxyVerb}Example of printing out the Bitboard of all black pieces starting out
+
+8 |1|1|1|1|1|1|1|1|
+7 |1|1|1|1|1|1|1|1|
+6 |0|0|0|0|0|0|0|0|
+5 |0|0|0|0|0|0|0|0|
+4 |0|0|0|0|0|0|0|0|
+3 |0|0|0|0|0|0|0|0|
+2 |0|0|0|0|0|0|0|0|
+1 |0|0|0|0|0|0|0|0|
+   a b c d e f g h\end{DoxyVerb}
+ 
+
+Definition at line 17 of file bitboard.\+c.
+
+\index{bitboard.\+c@{bitboard.\+c}!print\+Board\+State@{print\+Board\+State}}
+\index{print\+Board\+State@{print\+Board\+State}!bitboard.\+c@{bitboard.\+c}}
+\subsubsection[{print\+Board\+State(\+Board\+State $\ast$board\+State)}]{\setlength{\rightskip}{0pt plus 5cm}void print\+Board\+State (
+\begin{DoxyParamCaption}
+\item[{{\bf Board\+State} $\ast$}]{board\+State}
+\end{DoxyParamCaption}
+)}\label{bitboard_8c_a8f2f359e98e1b80ecc319ff543090b0a}
+
+
+Prints out each of the 8 Bitboards in the \doxyref{Board\+State}{p.}{struct_board_state} struct with their corresponding titles. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em board\+State} & The \doxyref{Board\+State}{p.}{struct_board_state} that we want to print out \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void \begin{DoxyVerb}Example of printing out the entire BoardState at the start of the game
+
+--- Printing out board state ---
+
+All White Pieces
+8 |0|0|0|0|0|0|0|0|
+7 |0|0|0|0|0|0|0|0|
+6 |0|0|0|0|0|0|0|0|
+5 |0|0|0|0|0|0|0|0|
+4 |0|0|0|0|0|0|0|0|
+3 |0|0|0|0|0|0|0|0|
+2 |1|1|1|1|1|1|1|1|
+1 |1|1|1|1|1|1|1|1|
+   a b c d e f g h
+
+All Black Pieces
+8 |1|1|1|1|1|1|1|1|
+7 |1|1|1|1|1|1|1|1|
+6 |0|0|0|0|0|0|0|0|
+5 |0|0|0|0|0|0|0|0|
+4 |0|0|0|0|0|0|0|0|
+3 |0|0|0|0|0|0|0|0|
+2 |0|0|0|0|0|0|0|0|
+1 |0|0|0|0|0|0|0|0|
+   a b c d e f g h
+
+All Pawn Positions
+8 |0|0|0|0|0|0|0|0|
+7 |1|1|1|1|1|1|1|1|
+6 |0|0|0|0|0|0|0|0|
+5 |0|0|0|0|0|0|0|0|
+4 |0|0|0|0|0|0|0|0|
+3 |0|0|0|0|0|0|0|0|
+2 |1|1|1|1|1|1|1|1|
+1 |0|0|0|0|0|0|0|0|
+   a b c d e f g h
+
+All Rook Positions
+8 |1|0|0|0|0|0|0|1|
+7 |0|0|0|0|0|0|0|0|
+6 |0|0|0|0|0|0|0|0|
+5 |0|0|0|0|0|0|0|0|
+4 |0|0|0|0|0|0|0|0|
+3 |0|0|0|0|0|0|0|0|
+2 |0|0|0|0|0|0|0|0|
+1 |1|0|0|0|0|0|0|1|
+   a b c d e f g h
+
+All Knight Positions
+8 |0|1|0|0|0|0|1|0|
+7 |0|0|0|0|0|0|0|0|
+6 |0|0|0|0|0|0|0|0|
+5 |0|0|0|0|0|0|0|0|
+4 |0|0|0|0|0|0|0|0|
+3 |0|0|0|0|0|0|0|0|
+2 |0|0|0|0|0|0|0|0|
+1 |0|1|0|0|0|0|1|0|
+   a b c d e f g h
+
+All Bishop Positions
+8 |0|0|1|0|0|1|0|0|
+7 |0|0|0|0|0|0|0|0|
+6 |0|0|0|0|0|0|0|0|
+5 |0|0|0|0|0|0|0|0|
+4 |0|0|0|0|0|0|0|0|
+3 |0|0|0|0|0|0|0|0|
+2 |0|0|0|0|0|0|0|0|
+1 |0|0|1|0|0|1|0|0|
+   a b c d e f g h
+
+All Queen Positions
+8 |0|0|0|1|0|0|0|0|
+7 |0|0|0|0|0|0|0|0|
+6 |0|0|0|0|0|0|0|0|
+5 |0|0|0|0|0|0|0|0|
+4 |0|0|0|0|0|0|0|0|
+3 |0|0|0|0|0|0|0|0|
+2 |0|0|0|0|0|0|0|0|
+1 |0|0|0|1|0|0|0|0|
+   a b c d e f g h
+
+All King Positions
+8 |0|0|0|0|1|0|0|0|
+7 |0|0|0|0|0|0|0|0|
+6 |0|0|0|0|0|0|0|0|
+5 |0|0|0|0|0|0|0|0|
+4 |0|0|0|0|0|0|0|0|
+3 |0|0|0|0|0|0|0|0|
+2 |0|0|0|0|0|0|0|0|
+1 |0|0|0|0|1|0|0|0|
+   a b c d e f g h
+
+--------------------------------\end{DoxyVerb}
+ 
+\end{DoxyReturn}
+
+
+Definition at line 39 of file bitboard.\+c.
+
