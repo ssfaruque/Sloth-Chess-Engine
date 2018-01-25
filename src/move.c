@@ -308,6 +308,180 @@ Move generateLMove(Bitboard initialPosition,
 }
 
 
+
+Move generateUpUpRight(Bitboard initialPosition,
+                       BoardState* boardState,
+                       enum BitboardType colorType,
+                       enum BitboardType pieceType)
+{
+  Move move = {initialPosition, 0};
+  
+  if(initialPosition & 0x0101010101010101)
+    move.movedPosition = 0;
+  
+  else
+    move.movedPosition = initialPosition << 15;
+  
+  if(move.movedPosition & boardState->boards[colorType])
+    move.movedPosition = 0;
+  
+  return move;
+}
+
+
+Move generateUpRightRight(Bitboard initialPosition,
+                          BoardState* boardState,
+                          enum BitboardType colorType,
+                          enum BitboardType pieceType)
+{
+  Move move = {initialPosition, 0};
+  
+  if(initialPosition & 0x0303030303030303)
+    move.movedPosition = 0;
+  
+  else
+    move.movedPosition = initialPosition << 6;
+  
+  if(move.movedPosition & boardState->boards[colorType])
+    move.movedPosition = 0;
+  
+  return move;
+}
+
+
+Move generateDownRightRight(Bitboard initialPosition,
+                          BoardState* boardState,
+                          enum BitboardType colorType,
+                          enum BitboardType pieceType)
+{
+  Move move = {initialPosition, 0};
+  
+  if(initialPosition & 0x0303030303030303)
+    move.movedPosition = 0;
+  
+  else
+    move.movedPosition = initialPosition >> 10;
+  
+  if(move.movedPosition & boardState->boards[colorType])
+    move.movedPosition = 0;
+  
+  return move;
+}
+
+
+
+
+Move generateDownDownRight(Bitboard initialPosition,
+                           BoardState* boardState,
+                           enum BitboardType colorType,
+                           enum BitboardType pieceType)
+{
+  Move move = {initialPosition, 0};
+  
+  if(initialPosition & 0x0101010101010101)
+    move.movedPosition = 0;
+  
+  else
+    move.movedPosition = initialPosition >> 17;
+  
+  if(move.movedPosition & boardState->boards[colorType])
+    move.movedPosition = 0;
+  
+  return move;
+}
+
+
+
+Move generateDownDownLeft(Bitboard initialPosition,
+                          BoardState* boardState,
+                          enum BitboardType colorType,
+                          enum BitboardType pieceType)
+{
+  Move move = {initialPosition, 0};
+  
+  if(initialPosition & 0x8080808080808080)
+    move.movedPosition = 0;
+  
+  else
+    move.movedPosition = initialPosition >> 15;
+  
+  if(move.movedPosition & boardState->boards[colorType])
+    move.movedPosition = 0;
+  
+  return move;
+}
+
+
+Move generateDownLeftLeft(Bitboard initialPosition,
+                          BoardState* boardState,
+                          enum BitboardType colorType,
+                          enum BitboardType pieceType)
+{
+  Move move = {initialPosition, 0};
+  
+  if(initialPosition & 0xc0c0c0c0c0c0c0c0)
+    move.movedPosition = 0;
+  
+  else
+    move.movedPosition = initialPosition >> 6;
+  
+  if(move.movedPosition & boardState->boards[colorType])
+    move.movedPosition = 0;
+  
+  return move;
+}
+
+
+Move generateUpLeftLeft(Bitboard initialPosition,
+                        BoardState* boardState,
+                        enum BitboardType colorType,
+                        enum BitboardType pieceType)
+{
+  Move move = {initialPosition, 0};
+  
+  if(initialPosition & 0xc0c0c0c0c0c0c0c0)
+    move.movedPosition = 0;
+  
+  else
+    move.movedPosition = initialPosition << 10;
+  
+  if(move.movedPosition & boardState->boards[colorType])
+    move.movedPosition = 0;
+  
+  return move;
+}
+
+
+
+Move generateUpUpLeft(Bitboard initialPosition,
+                      BoardState* boardState,
+                      enum BitboardType colorType,
+                      enum BitboardType pieceType)
+{
+  Move move = {initialPosition, 0};
+  
+  if(initialPosition & 0x8080808080808080)
+    move.movedPosition = 0;
+  
+  else
+    move.movedPosition = initialPosition << 17;
+  
+  if(move.movedPosition & boardState->boards[colorType])
+    move.movedPosition = 0;
+  
+  return move;
+}
+
+
+
+
+
+
+
+
+
+
+
 int findCol(Bitboard initialPosition)
 {
   // if piece is in left half of the board

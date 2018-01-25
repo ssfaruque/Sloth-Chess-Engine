@@ -362,6 +362,53 @@ Move generateLMove(Bitboard initialPosition,
                     enum BitboardType pieceType,
                     int offset);
 
+
+
+Move generateUpUpRight(Bitboard initialPosition,
+                       BoardState* boardState,
+                       enum BitboardType colorType,
+                       enum BitboardType pieceType);
+
+
+Move generateUpRightRight(Bitboard initialPosition,
+                          BoardState* boardState,
+                          enum BitboardType colorType,
+                          enum BitboardType pieceType);
+
+
+Move generateDownRightRight(Bitboard initialPosition,
+                            BoardState* boardState,
+                            enum BitboardType colorType,
+                            enum BitboardType pieceType);
+
+Move generateDownDownRight(Bitboard initialPosition,
+                           BoardState* boardState,
+                           enum BitboardType colorType,
+                           enum BitboardType pieceType);
+
+
+Move generateDownDownLeft(Bitboard initialPosition,
+                          BoardState* boardState,
+                          enum BitboardType colorType,
+                          enum BitboardType pieceType);
+
+
+Move generateDownLeftLeft(Bitboard initialPosition,
+                          BoardState* boardState,
+                          enum BitboardType colorType,
+                          enum BitboardType pieceType);
+
+
+Move generateUpLeftLeft(Bitboard initialPosition,
+                        BoardState* boardState,
+                        enum BitboardType colorType,
+                        enum BitboardType pieceType);
+
+Move generateUpUpLeft(Bitboard initialPosition,
+                      BoardState* boardState,
+                      enum BitboardType colorType,
+                      enum BitboardType pieceType);
+
 /**************************************************************************************************/
 
 
