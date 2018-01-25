@@ -113,21 +113,20 @@ Move generateSlideLeftMove(Bitboard initialPosition,
                            enum BitboardType pieceType,
                            int offset)
 {
-  /*
-  Bitboard movedPiece = initialPosition <<  offset;
-  Bitboard collisions = movedPiece & boardState->boards[colorType];
- 
-  // check for collision with own piece and out of bounds conditions
-  if(!collisions && !(movedPiece & 0x0101010101010101))
-  {
-    return movedPiece;
-  }*/
+  Move move = {initialPosition, 0};
+  int col = findCol(initialPosition);
   
-  Move move;
+  // if not out of bounds
+  if(!(offset > col - 1))
+  {
+    move.movedPosition = initialPosition << offset;
+    
+    if(move.movedPosition & boardState->boards[colorType])
+      move.movedPosition = 0;
+  }
+  
   return move;
 }
-
-
 
 
 Move generateSlideRightMove(Bitboard initialPosition,
@@ -136,17 +135,18 @@ Move generateSlideRightMove(Bitboard initialPosition,
                             enum BitboardType pieceType,
                             int offset)
 {
-  /*
-  Bitboard movedPiece = initialPosition >>  offset;
-  Bitboard collisions = movedPiece & boardState->boards[colorType];
+  Move move = {initialPosition, 0};
+  int col = findCol(initialPosition);
   
-  // check for collision with own piece and out of bounds conditions
-  if(!collisions && !(movedPiece & 0x8080808080808080))
+  // if not out of bounds
+  if(!(offset > BOARD_LENGTH - col))
   {
-    return movedPiece;
-  }*/
+    move.movedPosition = initialPosition >> offset;
+    
+    if(move.movedPosition & boardState->boards[colorType])
+      move.movedPosition = 0;
+  }
   
-  Move move;
   return move;
 }
 
@@ -160,21 +160,16 @@ Move generateSlideUpMove(Bitboard initialPosition,
                          enum BitboardType pieceType,
                          int offset)
 {
-  /*
-  Bitboard movedPiece = initialPosition << (8 * offset);
-  Bitboard collisions = movedPiece & boardState->boards[colorType];
+  Move move = {initialPosition, 0};
+  move.movedPosition  = move.movedPosition << (8 * offset);
   
-  // check for collision with own piece and out of bounds conditions
-  if(!collisions && movedPiece)
-  {
-    return movedPiece;
-  }*/
+  // if not out of bounds and does not collide with own pieces
+  if(move.movedPosition != 0 && !(move.movedPosition & boardState->boards[colorType]))
+    return move;
   
-  Move move;
+  move.movedPosition = 0;
   return move;
 }
-
-
 
 
 Move generateSlideDownMove(Bitboard initialPosition,
@@ -183,17 +178,14 @@ Move generateSlideDownMove(Bitboard initialPosition,
                            enum BitboardType pieceType,
                            int offset)
 {
-  /*
-  Bitboard movedPiece = initialPosition >> (8 * offset);
-  Bitboard collisions = movedPiece & boardState->boards[colorType];
+  Move move = {initialPosition, 0};
+  move.movedPosition  = move.movedPosition >> (8 * offset);
   
-  // check for collision with own piece and out of bounds conditions
-  if(!collisions && movedPiece)
-  {
-    return movedPiece;
-  }*/
+  // if not out of bounds and does not collide with own pieces
+  if(move.movedPosition != 0 && !(move.movedPosition & boardState->boards[colorType]))
+    return move;
   
-  Move move;
+  move.movedPosition = 0;
   return move;
 }
 
@@ -208,12 +200,23 @@ Move generateSlideDownMove(Bitboard initialPosition,
 
 
 Move generateDiagonalUpRightMove(Bitboard initialPosition,
-                                   BoardState* boardState,
-                                   enum BitboardType colorType,
-                                   enum BitboardType pieceType,
-                                   int offset)
+                                 BoardState* boardState,
+                                 enum BitboardType colorType,
+                                 enum BitboardType pieceType,
+                                 int offset)
 {
-  Move move;
+  Move move = {initialPosition, 0};
+  int col = findCol(initialPosition);
+  
+  // if not out of bounds horizontally
+  if(!(offset > BOARD_LENGTH - col))
+  {
+    move.movedPosition = initialPosition << (7 * offset);
+    
+    if(move.movedPosition & boardState->boards[colorType])
+      move.movedPosition = 0;
+  }
+  
   return move;
 }
 
@@ -226,7 +229,18 @@ Move generateDiagonalUpLeftMove(Bitboard initialPosition,
                                   enum BitboardType pieceType,
                                   int offset)
 {
-  Move move;
+  Move move = {initialPosition, 0};
+  int col = findCol(initialPosition);
+  
+  // if not out of bounds horizontally
+  if(!(offset > col - 1))
+  {
+    move.movedPosition = initialPosition << (9 * offset);
+    
+    if(move.movedPosition & boardState->boards[colorType])
+      move.movedPosition = 0;
+  }
+  
   return move;
 }
 
@@ -240,7 +254,18 @@ Move generateDiagonalDownRightMove(Bitboard initialPosition,
                                      enum BitboardType pieceType,
                                      int offset)
 {
-  Move move;
+  Move move = {initialPosition, 0};
+  int col = findCol(initialPosition);
+  
+  // if not out of bounds horizontally
+  if(!(offset > BOARD_LENGTH - col))
+  {
+    move.movedPosition = initialPosition >> (7 * offset);
+    
+    if(move.movedPosition & boardState->boards[colorType])
+      move.movedPosition = 0;
+  }
+  
   return move;
 }
 
@@ -253,19 +278,23 @@ Move generateDiagonalDownLeftMove(Bitboard initialPosition,
                                     enum BitboardType pieceType,
                                     int offset)
 {
-  Move move;
+  Move move = {initialPosition, 0};
+  int col = findCol(initialPosition);
+  
+  // if not out of bounds horizontally
+  if(!(offset > col - 1))
+  {
+    move.movedPosition = initialPosition >> (9 * offset);
+    
+    if(move.movedPosition & boardState->boards[colorType])
+      move.movedPosition = 0;
+  }
+  
   return move;
 }
 
 
 /******************************************************************************************/
-
-
-
-
-
-
-
 
 
 Move generateLMove(Bitboard initialPosition,
@@ -279,6 +308,60 @@ Move generateLMove(Bitboard initialPosition,
 }
 
 
+int findCol(Bitboard initialPosition)
+{
+  // if piece is in left half of the board
+  if(initialPosition & 0xf0f0f0f0f0f0f0f0)
+  {
+    // if 2 left most columns
+    if(initialPosition & 0xc0c0c0c0c0c0c0c0)
+    {
+      // if left most column
+      if(initialPosition & 0x8080808080808080)
+        return 1;
+      
+      // else in 2nd column from left
+      else
+        return 2;
+    }
+    
+    // else in 3rd and 4th columns from the left
+    else
+    {
+      // if in 3rd column from left
+      if(initialPosition & 0x2020202020202020)
+        return 3;
+      
+      // else in 4th column from left
+      else
+        return 4;
+    }
+  }
+  
+  // else piece is in right hand of the board
+  else
+  {
+    // if in 2 right most columns
+    if(initialPosition & 0x0303030303030303)
+    {
+      if(initialPosition & 0x0202020202020202)
+        return 7;
+      
+      else
+        return 8;
+    }
+    
+    // else in 3rd and 4th columns from the right
+    else
+    {
+      if(initialPosition & 0x0808080808080808)
+        return 5;
+      
+      else
+        return 6;
+    }
+  }
+}
 
 
 

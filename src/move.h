@@ -364,4 +364,17 @@ Move generateLMove(Bitboard initialPosition,
 
 /**************************************************************************************************/
 
+
+
+
+/**
+ *  @brief Finds which column the piece is located in
+ *  @param initialPosition
+ *  @return The column that the isolated piece is located in
+ */
+int findCol(Bitboard initialPosition);
+
+
+
+
 #endif /* move_h */
