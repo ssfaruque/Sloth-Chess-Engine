@@ -354,7 +354,8 @@ Move generateDiagonalDownLeftMove(Bitboard initialPosition,
  *  @param colorType The color that the player is playing as
  *  @param pieceType The piece that we are interested in
  *  @param offset How many squares we want to move the piece by
- *  @return The Move struct containing the information needed to make a move
+ *  @return The Move struct containing the information needed to make a move,
+ *          movedPosition field will be 0 if cannot make this particular move
  */
 Move generateLMove(Bitboard initialPosition,
                     BoardState* boardState,
@@ -363,54 +364,130 @@ Move generateLMove(Bitboard initialPosition,
                     int offset);
 
 
-
+/**
+ *  @brief Generates a move that moves twice up and once to the right
+ *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
+ *  @param boardState The current state of the game
+ *  @param colorType The color that the player is playing as
+ *  @param pieceType The piece that we are interested in
+ *  @return The Move struct containing the information needed to make a move,
+ *          movedPosition field will be 0 if cannot make this particular move
+ */
 Move generateUpUpRight(Bitboard initialPosition,
                        BoardState* boardState,
                        enum BitboardType colorType,
                        enum BitboardType pieceType);
 
 
+/**
+ *  @brief Generates a move that moves once up and twice to the right
+ *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
+ *  @param boardState The current state of the game
+ *  @param colorType The color that the player is playing as
+ *  @param pieceType The piece that we are interested in
+ *  @return The Move struct containing the information needed to make a move,
+ *          movedPosition field will be 0 if cannot make this particular move
+ */
 Move generateUpRightRight(Bitboard initialPosition,
                           BoardState* boardState,
                           enum BitboardType colorType,
                           enum BitboardType pieceType);
 
 
+
+/**
+ *  @brief Generates a move that moves once down and twice to the right
+ *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
+ *  @param boardState The current state of the game
+ *  @param colorType The color that the player is playing as
+ *  @param pieceType The piece that we are interested in
+ *  @return The Move struct containing the information needed to make a move,
+ *          movedPosition field will be 0 if cannot make this particular move
+ */
 Move generateDownRightRight(Bitboard initialPosition,
                             BoardState* boardState,
                             enum BitboardType colorType,
                             enum BitboardType pieceType);
 
+
+/**
+ *  @brief Generates a move that moves twice down and once to the right
+ *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
+ *  @param boardState The current state of the game
+ *  @param colorType The color that the player is playing as
+ *  @param pieceType The piece that we are interested in
+ *  @return The Move struct containing the information needed to make a move,
+ *          movedPosition field will be 0 if cannot make this particular move
+ */
 Move generateDownDownRight(Bitboard initialPosition,
                            BoardState* boardState,
                            enum BitboardType colorType,
                            enum BitboardType pieceType);
 
 
+
+/**
+ *  @brief Generates a move that moves twice down and once to the left
+ *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
+ *  @param boardState The current state of the game
+ *  @param colorType The color that the player is playing as
+ *  @param pieceType The piece that we are interested in
+ *  @return The Move struct containing the information needed to make a move,
+ *          movedPosition field will be 0 if cannot make this particular move
+ */
 Move generateDownDownLeft(Bitboard initialPosition,
                           BoardState* boardState,
                           enum BitboardType colorType,
                           enum BitboardType pieceType);
 
 
+
+/**
+ *  @brief Generates a move that moves once down and twice to the left
+ *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
+ *  @param boardState The current state of the game
+ *  @param colorType The color that the player is playing as
+ *  @param pieceType The piece that we are interested in
+ *  @return The Move struct containing the information needed to make a move,
+ *          movedPosition field will be 0 if cannot make this particular move
+ */
 Move generateDownLeftLeft(Bitboard initialPosition,
                           BoardState* boardState,
                           enum BitboardType colorType,
                           enum BitboardType pieceType);
 
 
+
+/**
+ *  @brief Generates a move that moves once up and twice to the left
+ *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
+ *  @param boardState The current state of the game
+ *  @param colorType The color that the player is playing as
+ *  @param pieceType The piece that we are interested in
+ *  @return The Move struct containing the information needed to make a move,
+ *          movedPosition field will be 0 if cannot make this particular move
+ */
 Move generateUpLeftLeft(Bitboard initialPosition,
                         BoardState* boardState,
                         enum BitboardType colorType,
                         enum BitboardType pieceType);
 
+
+/**
+ *  @brief Generates a move that moves twice up and once to the left
+ *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
+ *  @param boardState The current state of the game
+ *  @param colorType The color that the player is playing as
+ *  @param pieceType The piece that we are interested in
+ *  @return The Move struct containing the information needed to make a move,
+ *          movedPosition field will be 0 if cannot make this particular move
+ */
 Move generateUpUpLeft(Bitboard initialPosition,
                       BoardState* boardState,
                       enum BitboardType colorType,
                       enum BitboardType pieceType);
 
 /**************************************************************************************************/
-
 
 
 
