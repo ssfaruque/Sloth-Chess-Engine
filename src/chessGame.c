@@ -12,6 +12,8 @@
 
 #include "chessGame.h"
 #include "move.h"
+#include "eval.h"
+
 
 
 void initChessGame(ChessGame* chessGame)
@@ -29,7 +31,12 @@ void initChessGame(ChessGame* chessGame)
 void runChessGame(ChessGame* chessGame)
 {
   chessGame->running = 1;
-  printBoardState(chessGame->boardState);
+  Bitboard board = chessGame->boardState->boards[BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS] & chessGame->boardState->boards[BOARD_TYPE_ALL_KING_POSITIONS];
+  
+  
+  printf("Weight = %d\n", weights[3]);
+  
+ 
 }
 
 

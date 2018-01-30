@@ -24,6 +24,10 @@
 
 #include "bitboard.h"
 
+
+#define MAX_RECURSION_DEPTH 3
+
+
 /**
  @brief The color of the player (white or black).
  */
@@ -58,6 +62,7 @@ typedef struct
                                  the initial position of the specific piece */
   Bitboard movedPosition; /**< The Bitboard containing all 0s except for a 1 in the spot of
                                the new moved position of the specific piece */
+  int boardEval;
 } Move;
 
 
@@ -73,6 +78,8 @@ typedef struct
                            move one piece from one square to another square and captures an opponent's
                            piece (the piece that is captured is the opponent's piece that has the 
                            same initial position as the player's moved position) */
+  int numQuietMoves;
+  int numCaptureMoves;
 } Moves;
 
 
@@ -127,7 +134,7 @@ void updateBoardState(BoardState* boardState,
  */
 Move generateMove(BoardState* boardState,
                   enum BitboardType colorType,
-                  enum BitboardType pieceType);
+                  int recurseDepth);
 
 
 /**
@@ -137,7 +144,9 @@ Move generateMove(BoardState* boardState,
  *  @param colorType The color that the player is playing as
  *  @return The move that is going to be made
  */
-Move generatePawnMove(BoardState* boardState, enum BitboardType colorType);
+Moves* generatePawnMoves(BoardState* boardState,
+                       Bitboard isolatedPiece,
+                       enum BitboardType colorType);
 
 
 /**
@@ -147,7 +156,9 @@ Move generatePawnMove(BoardState* boardState, enum BitboardType colorType);
  *  @param colorType The color that the player is playing as
  *  @return The move that is going to be made
  */
-Move generateRookMove(BoardState* boardState, enum BitboardType colorType);
+Moves* generateRookMoves(BoardState* boardState,
+                       Bitboard isolatedPiece,
+                       enum BitboardType colorType);
 
 
 
@@ -158,7 +169,9 @@ Move generateRookMove(BoardState* boardState, enum BitboardType colorType);
  *  @param colorType The color that the player is playing as
  *  @return The move that is going to be made
  */
-Move generateKnightMove(BoardState* boardState, enum BitboardType colorType);
+Moves* generateKnightMoves(BoardState* boardState,
+                         Bitboard isolatedPiece,
+                         enum BitboardType colorType);
 
 
 /**
@@ -168,7 +181,9 @@ Move generateKnightMove(BoardState* boardState, enum BitboardType colorType);
  *  @param colorType The color that the player is playing as
  *  @return The move that is going to be made
  */
-Move generateBishopMove(BoardState* boardState, enum BitboardType colorType);
+Moves* generateBishopMoves(BoardState* boardState,
+                         Bitboard isolatedPiece,
+                         enum BitboardType colorType);
 
 
 /**
@@ -178,7 +193,9 @@ Move generateBishopMove(BoardState* boardState, enum BitboardType colorType);
  *  @param colorType The color that the player is playing as
  *  @return The move that is going to be made
  */
-Move generateQueenMove(BoardState* boardState, enum BitboardType colorType);
+Moves* generateQueenMoves(BoardState* boardState,
+                        Bitboard isolatedPiece,
+                        enum BitboardType colorType);
 
 
 /**
@@ -188,7 +205,9 @@ Move generateQueenMove(BoardState* boardState, enum BitboardType colorType);
  *  @param colorType The color that the player is playing as
  *  @return The move that is going to be made
  */
-Move generateKingMove(BoardState* boardState, enum BitboardType colorType);
+Moves* generateKingMoves(BoardState* boardState,
+                       Bitboard isolatedPiece,
+                       enum BitboardType colorType);
 
 
 /***********************************************************************************************/
@@ -498,6 +517,9 @@ Move generateUpUpLeft(Bitboard initialPosition,
  */
 int findCol(Bitboard initialPosition);
 
+
+
+int isKingInCheck(BoardState* boardState, enum BitboardType colorType);
 
 
 

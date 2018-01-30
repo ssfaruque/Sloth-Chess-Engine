@@ -35,6 +35,7 @@ typedef struct
 {
   BoardState* boardState;         /**< The current state of the game  */
   enum PlayerType playerType;     /**< The color that the chess engine is currently playing as  */
+  int turn;
 } SlothChessEngine;
 
 

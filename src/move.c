@@ -12,12 +12,24 @@
 #include <stdlib.h>
 
 #include "move.h"
+#include "eval.h"
+
+
+typedef Moves* (*moveGeneration)(BoardState* boardState,
+                               Bitboard isolatedPiece,
+                               enum BitboardType colorType);
+
+moveGeneration possibleMoves[] = {generatePawnMoves,   generateRookMoves,
+                                  generateKnightMoves, generateBishopMoves,
+                                  generateQueenMoves,  generateKingMoves};
+
 
 
 void initMoves(Moves* moves)
 {
   moves->quietMoves = moves->captureMoves = NULL;
 }
+
 
 void cleanUpMoves(Moves* moves)
 {
@@ -43,59 +55,195 @@ void updateBoardState(BoardState* boardState,
 /******************************** Generate moves by pieces ********************************/
 
 
+
 Move generateMove(BoardState* boardState,
+                  
                   enum BitboardType colorType,
-                  enum BitboardType pieceType)
+                  int recurseDepth)
 {
-  Move move;
+  Move move = {0, 0, 0};
+  
+  int i;
+  
+  for(i = 0; i < NUM_PIECES; ++i)
+  {
+    int pieceType = i + 2;
+    
+    Bitboard piecesBoard = (boardState->boards[colorType] & boardState->boards[pieceType]);
+    
+    while(piecesBoard)
+    {
+      Bitboard isolatedPiece = piecesBoard & -piecesBoard;
+      
+      Moves* moves = possibleMoves[i](boardState, isolatedPiece, colorType);
+      
+      int moveNum;
+      
+      for(moveNum = 0; moveNum < moves->numQuietMoves; ++moveNum)
+      {
+        updateBoardState(boardState, moves->quietMoves[moveNum].initialPosition,
+                         moves->quietMoves[moveNum].movedPosition, colorType, pieceType);
+        
+        
+        if(recurseDepth == MAX_RECURSION_DEPTH)
+        {
+          int evaluation = eval(boardState);
+          
+          // maximize score
+          if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
+          {
+            if(evaluation > move.boardEval)
+            {
+              move = moves->quietMoves[moveNum];
+              move.boardEval = evaluation;
+            }
+          }
+          
+          // minimize score
+          else if(colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
+          {
+            if(evaluation < move.boardEval)
+            {
+              move = moves->quietMoves[moveNum];
+              move.boardEval = evaluation;
+            }
+          }
+          
+          updateBoardState(boardState, moves->quietMoves[moveNum].movedPosition,
+                           moves->quietMoves[moveNum].initialPosition, colorType, pieceType);
+          
+          continue;
+        }
+        
+        move = generateMove(boardState, !colorType, recurseDepth + 1);
+        
+        updateBoardState(boardState, moves->quietMoves[moveNum].movedPosition,
+                         moves->quietMoves[moveNum].initialPosition, colorType, pieceType);
+      }
+      
+      
+      for(moveNum = 0; moveNum < moves->numCaptureMoves; ++moveNum)
+      {
+        updateBoardState(boardState, moves->captureMoves[moveNum].initialPosition,
+                         moves->captureMoves[moveNum].movedPosition, colorType, pieceType);
+        
+        
+        if(recurseDepth == MAX_RECURSION_DEPTH)
+        {
+          int evaluation = eval(boardState);
+          
+          // maximize score
+          if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
+          {
+            if(evaluation > move.boardEval)
+            {
+              move = moves->quietMoves[moveNum];
+              move.boardEval = evaluation;
+            }
+          }
+          
+          // minimize score
+          else if(colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
+          {
+            if(evaluation < move.boardEval)
+            {
+              move = moves->quietMoves[moveNum];
+              move.boardEval = evaluation;
+            }
+          }
+          
+          updateBoardState(boardState, moves->captureMoves[moveNum].movedPosition,
+                           moves->captureMoves[moveNum].initialPosition, colorType, pieceType);
+          
+          continue;
+        }
+        
+        move = generateMove(boardState, !colorType, recurseDepth + 1);
+        
+        updateBoardState(boardState, moves->captureMoves[moveNum].movedPosition,
+                         moves->captureMoves[moveNum].initialPosition, colorType, pieceType);
+      }
+      
+   
+      // done with moves, free the possible moves
+    
+      
+      piecesBoard &= piecesBoard - 1; // reset ls1b
+    }
+   
+  }
+  
   return move;
 }
 
 
 
-
-Move generatePawnMove(BoardState* boardState, enum BitboardType colorType)
+Moves* generatePawnMoves(BoardState* boardState,
+                         Bitboard isolatedPiece,
+                         enum BitboardType colorType)
 {
-  Move move;
-  return move;
+  // en passant, and move 2 spaces for first turn later on
+  
+  Moves* moves = (Moves*) malloc(sizeof(Moves) * 50);
+  int moveNum = 0;
+  
+  
+  if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
+  {
+    
+  }
+  
+  
+  else if(colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
+  {
+    
+  }
+  
+  return moves;
 }
 
 
-Move generateRookMove(BoardState* boardState, enum BitboardType colorType)
+Moves* generateRookMoves(BoardState* boardState,
+                       Bitboard isolatedPiece,
+                       enum BitboardType colorType)
 {
-  Move move;
-  return move;
+  return NULL;
 }
 
 
-Move generateKnightMove(BoardState* boardState, enum BitboardType colorType)
+Moves* generateKnightMoves(BoardState* boardState,
+                         Bitboard isolatedPiece,
+                         enum BitboardType colorType)
 {
-  Move move;
-  return move;
-}
-
-
-
-Move generateBishopMove(BoardState* boardState, enum BitboardType colorType)
-{
-  Move move;
-  return move;
+  return NULL;
 }
 
 
 
-Move generateQueenMove(BoardState* boardState, enum BitboardType colorType)
+Moves* generateBishopMoves(BoardState* boardState,
+                         Bitboard isolatedPiece,
+                         enum BitboardType colorType)
 {
-  Move move;
-  return move;
+  return NULL;
 }
 
 
 
-Move generateKingMove(BoardState* boardState, enum BitboardType colorType)
+Moves* generateQueenMoves(BoardState* boardState,
+                        Bitboard isolatedPiece,
+                        enum BitboardType colorType)
 {
-  Move move;
-  return move;
+  return NULL;
+}
+
+
+
+Moves* generateKingMoves(BoardState* boardState,
+                       Bitboard isolatedPiece,
+                       enum BitboardType colorType)
+{
+
+  return NULL;
 }
 
 
@@ -297,6 +445,10 @@ Move generateDiagonalDownLeftMove(Bitboard initialPosition,
 /******************************************************************************************/
 
 
+/******************************** Moves pertaining to L moves ********************************/
+
+
+
 Move generateLMove(Bitboard initialPosition,
                     BoardState* boardState,
                     enum BitboardType colorType,
@@ -473,12 +625,7 @@ Move generateUpUpLeft(Bitboard initialPosition,
 }
 
 
-
-
-
-
-
-
+/******************************************************************************************/
 
 
 
@@ -535,6 +682,13 @@ int findCol(Bitboard initialPosition)
         return 6;
     }
   }
+}
+
+
+int isKingInCheck(BoardState* boardState, enum BitboardType colorType)
+{
+  
+  return 0;
 }
 
 
