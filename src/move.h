@@ -76,7 +76,7 @@ typedef struct
                          another piece (the player does not capture an opponent's piece) */
   Move* captureMoves; /**< The array containing all of the capture moves which are moves that
                            move one piece from one square to another square and captures an opponent's
-                           piece (the piece that is captured is the opponent's piece that has the 
+                           piece (the piece that is captured is the opponent's piece that has the
                            same initial position as the player's moved position) */
   int numQuietMoves;
   int numCaptureMoves;
@@ -297,14 +297,13 @@ Move generateSlideDownMove(Bitboard initialPosition,
  *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
  *  @param boardState The current state of the game
  *  @param colorType The color that the player is playing as
- *  @param pieceType The piece that we are interested in
+
  *  @param offset How many squares we want to move the piece by
  *  @return The Move struct containing the information needed to make a move
  */
 Move generateDiagonalUpRightMove(Bitboard initialPosition,
                                    BoardState* boardState,
                                    enum BitboardType colorType,
-                                   enum BitboardType pieceType,
                                    int offset);
 
 
@@ -314,14 +313,13 @@ Move generateDiagonalUpRightMove(Bitboard initialPosition,
  *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
  *  @param boardState The current state of the game
  *  @param colorType The color that the player is playing as
- *  @param pieceType The piece that we are interested in
+
  *  @param offset How many squares we want to move the piece by
  *  @return The Move struct containing the information needed to make a move
  */
 Move generateDiagonalUpLeftMove(Bitboard initialPosition,
                                   BoardState* boardState,
                                   enum BitboardType colorType,
-                                  enum BitboardType pieceType,
                                   int offset);
 
 
@@ -331,14 +329,13 @@ Move generateDiagonalUpLeftMove(Bitboard initialPosition,
  *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
  *  @param boardState The current state of the game
  *  @param colorType The color that the player is playing as
- *  @param pieceType The piece that we are interested in
+
  *  @param offset How many squares we want to move the piece by
  *  @return The Move struct containing the information needed to make a move
  */
 Move generateDiagonalDownRightMove(Bitboard initialPosition,
                                      BoardState* boardState,
                                      enum BitboardType colorType,
-                                     enum BitboardType pieceType,
                                      int offset);
 
 
@@ -348,14 +345,13 @@ Move generateDiagonalDownRightMove(Bitboard initialPosition,
  *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
  *  @param boardState The current state of the game
  *  @param colorType The color that the player is playing as
- *  @param pieceType The piece that we are interested in
+
  *  @param offset How many squares we want to move the piece by
  *  @return The Move struct containing the information needed to make a move
  */
 Move generateDiagonalDownLeftMove(Bitboard initialPosition,
                                     BoardState* boardState,
                                     enum BitboardType colorType,
-                                    enum BitboardType pieceType,
                                     int offset);
 
 
@@ -388,14 +384,14 @@ Move generateLMove(Bitboard initialPosition,
  *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
  *  @param boardState The current state of the game
  *  @param colorType The color that the player is playing as
- *  @param pieceType The piece that we are interested in
+
  *  @return The Move struct containing the information needed to make a move,
  *          movedPosition field will be 0 if cannot make this particular move
  */
 Move generateUpUpRight(Bitboard initialPosition,
                        BoardState* boardState,
-                       enum BitboardType colorType,
-                       enum BitboardType pieceType);
+                       enum BitboardType colorType
+                    );
 
 
 /**
@@ -403,14 +399,14 @@ Move generateUpUpRight(Bitboard initialPosition,
  *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
  *  @param boardState The current state of the game
  *  @param colorType The color that the player is playing as
- *  @param pieceType The piece that we are interested in
+
  *  @return The Move struct containing the information needed to make a move,
  *          movedPosition field will be 0 if cannot make this particular move
  */
 Move generateUpRightRight(Bitboard initialPosition,
                           BoardState* boardState,
-                          enum BitboardType colorType,
-                          enum BitboardType pieceType);
+                          enum BitboardType colorType
+                          );
 
 
 
@@ -419,14 +415,14 @@ Move generateUpRightRight(Bitboard initialPosition,
  *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
  *  @param boardState The current state of the game
  *  @param colorType The color that the player is playing as
- *  @param pieceType The piece that we are interested in
+
  *  @return The Move struct containing the information needed to make a move,
  *          movedPosition field will be 0 if cannot make this particular move
  */
 Move generateDownRightRight(Bitboard initialPosition,
                             BoardState* boardState,
-                            enum BitboardType colorType,
-                            enum BitboardType pieceType);
+                            enum BitboardType colorType
+                            );
 
 
 /**
@@ -434,14 +430,14 @@ Move generateDownRightRight(Bitboard initialPosition,
  *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
  *  @param boardState The current state of the game
  *  @param colorType The color that the player is playing as
- *  @param pieceType The piece that we are interested in
+
  *  @return The Move struct containing the information needed to make a move,
  *          movedPosition field will be 0 if cannot make this particular move
  */
 Move generateDownDownRight(Bitboard initialPosition,
                            BoardState* boardState,
-                           enum BitboardType colorType,
-                           enum BitboardType pieceType);
+                           enum BitboardType colorType
+                           );
 
 
 
@@ -450,14 +446,14 @@ Move generateDownDownRight(Bitboard initialPosition,
  *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
  *  @param boardState The current state of the game
  *  @param colorType The color that the player is playing as
- *  @param pieceType The piece that we are interested in
+
  *  @return The Move struct containing the information needed to make a move,
  *          movedPosition field will be 0 if cannot make this particular move
  */
 Move generateDownDownLeft(Bitboard initialPosition,
                           BoardState* boardState,
-                          enum BitboardType colorType,
-                          enum BitboardType pieceType);
+                          enum BitboardType colorType
+                          );
 
 
 
@@ -466,14 +462,14 @@ Move generateDownDownLeft(Bitboard initialPosition,
  *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
  *  @param boardState The current state of the game
  *  @param colorType The color that the player is playing as
- *  @param pieceType The piece that we are interested in
+
  *  @return The Move struct containing the information needed to make a move,
  *          movedPosition field will be 0 if cannot make this particular move
  */
 Move generateDownLeftLeft(Bitboard initialPosition,
                           BoardState* boardState,
-                          enum BitboardType colorType,
-                          enum BitboardType pieceType);
+                          enum BitboardType colorType
+                          );
 
 
 
@@ -482,14 +478,14 @@ Move generateDownLeftLeft(Bitboard initialPosition,
  *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
  *  @param boardState The current state of the game
  *  @param colorType The color that the player is playing as
- *  @param pieceType The piece that we are interested in
+
  *  @return The Move struct containing the information needed to make a move,
  *          movedPosition field will be 0 if cannot make this particular move
  */
 Move generateUpLeftLeft(Bitboard initialPosition,
                         BoardState* boardState,
-                        enum BitboardType colorType,
-                        enum BitboardType pieceType);
+                        enum BitboardType colorType
+                        );
 
 
 /**
@@ -497,14 +493,14 @@ Move generateUpLeftLeft(Bitboard initialPosition,
  *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
  *  @param boardState The current state of the game
  *  @param colorType The color that the player is playing as
- *  @param pieceType The piece that we are interested in
+
  *  @return The Move struct containing the information needed to make a move,
  *          movedPosition field will be 0 if cannot make this particular move
  */
 Move generateUpUpLeft(Bitboard initialPosition,
                       BoardState* boardState,
-                      enum BitboardType colorType,
-                      enum BitboardType pieceType);
+                      enum BitboardType colorType
+                      );
 
 /**************************************************************************************************/
 
