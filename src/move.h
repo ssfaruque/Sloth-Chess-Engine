@@ -222,14 +222,12 @@ Moves* generateKingMoves(BoardState* boardState,
  *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
  *  @param boardState The current state of the game
  *  @param colorType The color that the player is playing as
- *  @param pieceType The piece that we are interested in
  *  @param offset How many squares we want to move the piece by
  *  @return The Move struct containing the information needed to make a move
  */
 Move generateSlideLeftMove(Bitboard initialPosition,
                            BoardState* boardState,
                            enum BitboardType colorType,
-                           enum BitboardType pieceType,
                            int offset);
 
 
@@ -239,14 +237,12 @@ Move generateSlideLeftMove(Bitboard initialPosition,
  *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
  *  @param boardState The current state of the game
  *  @param colorType The color that the player is playing as
- *  @param pieceType The piece that we are interested in
  *  @param offset How many squares we want to move the piece by
  *  @return The Move struct containing the information needed to make a move
  */
 Move generateSlideRightMove(Bitboard initialPosition,
                             BoardState* boardState,
                             enum BitboardType colorType,
-                            enum BitboardType pieceType,
                             int offset);
 
 
@@ -257,14 +253,12 @@ Move generateSlideRightMove(Bitboard initialPosition,
  *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
  *  @param boardState The current state of the game
  *  @param colorType The color that the player is playing as
- *  @param pieceType The piece that we are interested in
  *  @param offset How many squares we want to move the piece by
  *  @return The Move struct containing the information needed to make a move
  */
 Move generateSlideUpMove(Bitboard initialPosition,
                          BoardState* boardState,
                          enum BitboardType colorType,
-                         enum BitboardType pieceType,
                          int offset);
 
 
@@ -275,14 +269,12 @@ Move generateSlideUpMove(Bitboard initialPosition,
  *  @param initialPosition The Bitboard containing only the initial position of a specfiic piece
  *  @param boardState The current state of the game
  *  @param colorType The color that the player is playing as
- *  @param pieceType The piece that we are interested in
  *  @param offset How many squares we want to move the piece by
  *  @return The Move struct containing the information needed to make a move
  */
 Move generateSlideDownMove(Bitboard initialPosition,
                            BoardState* boardState,
                            enum BitboardType colorType,
-                           enum BitboardType pieceType,
                            int offset);
 
 /***********************************************************************************************/

@@ -204,10 +204,104 @@ Moves* generatePawnMoves(BoardState* boardState,
 
 
 Moves* generateRookMoves(BoardState* boardState,
-                       Bitboard isolatedPiece,
-                       enum BitboardType colorType)
+                         Bitboard isolatedPiece,
+                         enum BitboardType colorType)
 {
-  return NULL;
+  
+  Moves* moves = (Moves*)malloc(sizeof(Moves) * 50);
+  int moveNum = 0; //number of moves
+  Move move;
+  moves->numCaptureMoves = 0; // number of Capture moves
+  moves->numQuietMoves = 0; // Number of Quiet moves
+  
+  //Slide Up Moves
+  int i = 1; //for looping
+  while (1)
+  {
+    
+    move = generateSlideUpMove(isolatedPiece, boardState, colorType, i++);
+    //if legal move
+    if (move.movedPosition)
+    {
+      //capture move once in this direction
+      if (move.movedPosition & boardState->boards[!colorType])
+      {
+        moves->captureMoves[moves->numCaptureMoves++] = move;
+        break;
+      }
+      else//quiet
+        moves->quietMoves[moves->numQuietMoves++] = move;
+    }
+    else
+      break;
+  }
+  //Slide Down Moves
+  i = 1;
+  while (1)
+  {
+    
+    move = generateSlideDownMove(isolatedPiece, boardState, colorType, i++);
+    //if legal move
+    if (move.movedPosition)
+    {
+      //capture move once in this direction
+      if (move.movedPosition & boardState->boards[!colorType])
+      {
+        moves->captureMoves[moves->numCaptureMoves++] = move;
+        break;
+      }
+      else//quiet
+        moves->quietMoves[moves->numQuietMoves++] = move;
+    }
+    else
+      break;
+  }
+  //Slide Left Moves
+  i = 1;
+  while (1)
+  {
+    
+    move = generateSlideLeftMove(isolatedPiece, boardState, colorType, i++);
+    //if legal move
+    if (move.movedPosition)
+    {
+      //capture move once in this direction
+      if (move.movedPosition & boardState->boards[!colorType])
+      {
+        moves->captureMoves[moves->numCaptureMoves++] = move;
+        break;
+      }
+      else//quiet
+        moves->quietMoves[moves->numQuietMoves++] = move;
+    }
+    else
+      break;
+  }
+  //Slide Right Moves
+  i = 1;
+  while (1)
+  {
+    move = generateSlideRightMove(isolatedPiece, boardState, colorType, i++);
+    //if legal move
+    if (move.movedPosition)
+    {
+      //capture move once in this direction
+      if (move.movedPosition & boardState->boards[!colorType])
+      {
+        moves->captureMoves[moves->numCaptureMoves++] = move;
+        break;
+      }
+      else//quiet
+        moves->quietMoves[moves->numQuietMoves++] = move;
+    }
+    else
+      break;
+  }
+  
+  
+  
+  
+  return moves;
 }
 
 
@@ -226,7 +320,7 @@ Moves* generateKnightMoves(BoardState* boardState,
     if (move.movedPosition)
     {
         //capture move
-        if (move.movedPosition & boardState->boards[~colorType])
+        if (move.movedPosition & boardState->boards[!colorType])
             moves->captureMoves[moves->numCaptureMoves++] = move;
         else
             moves->quietMoves[moves->numQuietMoves++] = move;
@@ -238,7 +332,7 @@ Moves* generateKnightMoves(BoardState* boardState,
     if (move.movedPosition)
     {
        //capture move
-        if (move.movedPosition & boardState->boards[~colorType])
+        if (move.movedPosition & boardState->boards[!colorType])
             moves->captureMoves[moves->numCaptureMoves++] = move;
         else
             moves->quietMoves[moves->numQuietMoves++] = move;
@@ -249,7 +343,7 @@ Moves* generateKnightMoves(BoardState* boardState,
     if (move.movedPosition)
     {
         //capture move
-        if (move.movedPosition & boardState->boards[~colorType])
+        if (move.movedPosition & boardState->boards[!colorType])
             moves->captureMoves[moves->numCaptureMoves++] = move;
         else
             moves->quietMoves[moves->numQuietMoves++] = move;
@@ -260,7 +354,7 @@ Moves* generateKnightMoves(BoardState* boardState,
     if (move.movedPosition)
     {
         //capture move
-        if (move.movedPosition & boardState->boards[~colorType])
+        if (move.movedPosition & boardState->boards[!colorType])
             moves->captureMoves[moves->numCaptureMoves++] = move;
         else
             moves->quietMoves[moves->numQuietMoves++] = move;
@@ -272,7 +366,7 @@ Moves* generateKnightMoves(BoardState* boardState,
     if (move.movedPosition)
     {
         //capture move
-        if (move.movedPosition & boardState->boards[~colorType])
+        if (move.movedPosition & boardState->boards[!colorType])
             moves->captureMoves[moves->numCaptureMoves++] = move;
         else
             moves->quietMoves[moves->numQuietMoves++] = move;
@@ -283,7 +377,7 @@ Moves* generateKnightMoves(BoardState* boardState,
     if (move.movedPosition)
     {
         //capture move
-        if (move.movedPosition & boardState->boards[~colorType])
+        if (move.movedPosition & boardState->boards[!colorType])
             moves->captureMoves[moves->numCaptureMoves++] = move;
         else
             moves->quietMoves[moves->numQuietMoves++] = move;
@@ -294,7 +388,7 @@ Moves* generateKnightMoves(BoardState* boardState,
     if (move.movedPosition)
     {
        //capture move
-        if (move.movedPosition & boardState->boards[~colorType])
+        if (move.movedPosition & boardState->boards[!colorType])
             moves->captureMoves[moves->numCaptureMoves++] = move;
         else
             moves->quietMoves[moves->numQuietMoves++] = move;
@@ -305,7 +399,7 @@ Moves* generateKnightMoves(BoardState* boardState,
     if (move.movedPosition)
     {
         //capture move
-        if (move.movedPosition & boardState->boards[~colorType])
+        if (move.movedPosition & boardState->boards[!colorType])
             moves->captureMoves[moves->numCaptureMoves++] = move;
         else
             moves->quietMoves[moves->numQuietMoves++] = move;
@@ -337,7 +431,7 @@ Moves* generateBishopMoves(BoardState* boardState,
         if (move.movedPosition)
         {
             //capture move
-            if (move.movedPosition & boardState->boards[~colorType])
+            if (move.movedPosition & boardState->boards[!colorType])
             {
                 moves->captureMoves[moves->numCaptureMoves++] = move;
                 break;
@@ -359,7 +453,7 @@ Moves* generateBishopMoves(BoardState* boardState,
         if (move.movedPosition)
         {
             //capture move
-            if (move.movedPosition & boardState->boards[~colorType])
+            if (move.movedPosition & boardState->boards[!colorType])
             {
                 moves->captureMoves[moves->numCaptureMoves++] = move;
                 break;
@@ -381,7 +475,7 @@ Moves* generateBishopMoves(BoardState* boardState,
         if (move.movedPosition)
         {
             //capture move
-            if (move.movedPosition & boardState->boards[~colorType])
+            if (move.movedPosition & boardState->boards[!colorType])
             {
                 moves->captureMoves[moves->numCaptureMoves++] = move;
                 break;
@@ -403,7 +497,7 @@ Moves* generateBishopMoves(BoardState* boardState,
         if (move.movedPosition)
         {
             //capture move
-            if (move.movedPosition & boardState->boards[~colorType])
+            if (move.movedPosition & boardState->boards[!colorType])
             {
                 moves->captureMoves[moves->numCaptureMoves++] = move;
                 break;
@@ -425,8 +519,32 @@ Moves* generateQueenMoves(BoardState* boardState,
                         Bitboard isolatedPiece,
                         enum BitboardType colorType)
 {
-  return NULL;
+  Moves* moveSet1 = generateRookMoves(boardState, isolatedPiece, colorType);
+  Moves* moveSet2 = generateBishopMoves(boardState, isolatedPiece, colorType);
+  Moves* moves    =  (Moves*) malloc(sizeof(Moves) * 50);
+ 
+  moves->numCaptureMoves = moveSet1->numCaptureMoves + moveSet2->numCaptureMoves;
+  moves->numQuietMoves   = moveSet1->numQuietMoves + moveSet2->numQuietMoves;
+  
+  
+  int i;
+  
+  for(i = 0; i < moveSet1->numCaptureMoves; ++i)
+    moves->captureMoves[i] = moveSet1->captureMoves[i];
+  
+  for(i = 0; i < moveSet2->numCaptureMoves; ++i)
+    moves->captureMoves[i + moveSet1->numCaptureMoves] = moveSet2->captureMoves[i];
+  
+  for(i = 0; i < moveSet1->numQuietMoves; ++i)
+    moves->quietMoves[i] = moveSet1->quietMoves[i];
+  
+  for(i = 0; i < moveSet2->numQuietMoves; ++i)
+    moves->quietMoves[i + moveSet1->numQuietMoves] = moveSet2->quietMoves[i];
+  
+  return moves;
 }
+
+
 
 
 
@@ -434,8 +552,40 @@ Moves* generateKingMoves(BoardState* boardState,
                        Bitboard isolatedPiece,
                        enum BitboardType colorType)
 {
-
-  return NULL;
+  Moves* moves = (Moves*) malloc(sizeof(Moves) * 50);
+  Move move = {0, 0, 0};
+  moves->numCaptureMoves = 0;
+  moves->numQuietMoves = 0;
+  
+  typedef Move (*kingMove)(Bitboard initialPosition,
+                           BoardState* boardState,
+                           enum BitboardType colorType,
+                           int offset);
+  
+  kingMove kingMoveGenerate[] = {generateSlideLeftMove,       generateSlideRightMove,
+                                 generateSlideUpMove,         generateSlideDownMove,
+                                 generateDiagonalUpRightMove, generateDiagonalDownRightMove,
+                                 generateDiagonalUpLeftMove,  generateDiagonalDownLeftMove};
+  
+  
+  int i;
+  
+  for(i = 0; i < sizeof(kingMoveGenerate) / sizeof(kingMoveGenerate[0]); ++i)
+  {
+    move = kingMoveGenerate[i](isolatedPiece, boardState, colorType, 1);
+    
+    if (move.movedPosition)
+    {
+      //capture move
+      if (move.movedPosition & boardState->boards[!colorType])
+        moves->captureMoves[moves->numCaptureMoves++] = move;
+      
+      else
+        moves->quietMoves[moves->numQuietMoves++] = move;
+    }
+  }
+  
+  return moves;
 }
 
 
@@ -450,7 +600,6 @@ Moves* generateKingMoves(BoardState* boardState,
 Move generateSlideLeftMove(Bitboard initialPosition,
                            BoardState* boardState,
                            enum BitboardType colorType,
-                           enum BitboardType pieceType,
                            int offset)
 {
   Move move = {initialPosition, 0};
@@ -472,7 +621,6 @@ Move generateSlideLeftMove(Bitboard initialPosition,
 Move generateSlideRightMove(Bitboard initialPosition,
                             BoardState* boardState,
                             enum BitboardType colorType,
-                            enum BitboardType pieceType,
                             int offset)
 {
   Move move = {initialPosition, 0};
@@ -497,7 +645,6 @@ Move generateSlideRightMove(Bitboard initialPosition,
 Move generateSlideUpMove(Bitboard initialPosition,
                          BoardState* boardState,
                          enum BitboardType colorType,
-                         enum BitboardType pieceType,
                          int offset)
 {
   Move move = {initialPosition, 0};
@@ -515,7 +662,6 @@ Move generateSlideUpMove(Bitboard initialPosition,
 Move generateSlideDownMove(Bitboard initialPosition,
                            BoardState* boardState,
                            enum BitboardType colorType,
-                           enum BitboardType pieceType,
                            int offset)
 {
   Move move = {initialPosition, 0};
