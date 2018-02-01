@@ -338,7 +338,11 @@ Moves* generateBishopMoves(BoardState* boardState,
         {
             //capture move
             if (move.movedPosition & boardState->boards[~colorType])
+            {
                 moves->captureMoves[moves->numCaptureMoves++] = move;
+                break;
+            }
+
             else
                 moves->quietMoves[moves->numQuietMoves++] = move;
         }
@@ -356,7 +360,10 @@ Moves* generateBishopMoves(BoardState* boardState,
         {
             //capture move
             if (move.movedPosition & boardState->boards[~colorType])
+            {
                 moves->captureMoves[moves->numCaptureMoves++] = move;
+                break;
+            }
             else
                 moves->quietMoves[moves->numQuietMoves++] = move;
         }
@@ -375,7 +382,10 @@ Moves* generateBishopMoves(BoardState* boardState,
         {
             //capture move
             if (move.movedPosition & boardState->boards[~colorType])
+            {
                 moves->captureMoves[moves->numCaptureMoves++] = move;
+                break;
+            }
             else
                 moves->quietMoves[moves->numQuietMoves++] = move;
         }
@@ -394,7 +404,10 @@ Moves* generateBishopMoves(BoardState* boardState,
         {
             //capture move
             if (move.movedPosition & boardState->boards[~colorType])
+            {
                 moves->captureMoves[moves->numCaptureMoves++] = move;
+                break;
+            }
             else
                 moves->quietMoves[moves->numQuietMoves++] = move;
         }
