@@ -184,7 +184,10 @@ Moves* generatePawnMoves(BoardState* boardState,
 {
   
   
-  Moves* moves = (Moves*) malloc(sizeof(Moves) * 50);
+  Moves* moves = (Moves*) malloc(sizeof(Moves));
+  moves->captureMoves = (Move*) malloc(sizeof(Move) * 50);
+  moves->quietMoves = (Move*) malloc(sizeof(Move) * 50);
+  
   int moveNum = 0; //number of moves
   Move move;
   moves->numCaptureMoves = 0; // number of Capture moves
@@ -261,7 +264,10 @@ Moves* generateRookMoves(BoardState* boardState,
                          enum BitboardType colorType)
 {
   
-  Moves* moves = (Moves*)malloc(sizeof(Moves) * 50);
+  Moves* moves = (Moves*) malloc(sizeof(Moves));
+  moves->captureMoves = (Move*) malloc(sizeof(Move) * 50);
+  moves->quietMoves = (Move*) malloc(sizeof(Move) * 50);
+  
   int moveNum = 0; //number of moves
   Move move;
   moves->numCaptureMoves = 0; // number of Capture moves
@@ -362,7 +368,10 @@ Moves* generateKnightMoves(BoardState* boardState,
                          Bitboard isolatedPiece,
                          enum BitboardType colorType)
 {
-    Moves* moves = (Moves*) malloc(sizeof(Moves) * 50);
+    Moves* moves = (Moves*) malloc(sizeof(Moves));
+    moves->captureMoves = (Move*) malloc(sizeof(Move) * 50);
+    moves->quietMoves = (Move*) malloc(sizeof(Move) * 50);
+  
     int moveNum = 0;
     Move move;
     moves->numCaptureMoves = 0;
@@ -469,7 +478,10 @@ Moves* generateBishopMoves(BoardState* boardState,
                          Bitboard isolatedPiece,
                          enum BitboardType colorType)
 {
-  Moves* moves = (Moves*) malloc(sizeof(Moves) * 50);
+  Moves* moves = (Moves*) malloc(sizeof(Moves));
+  moves->captureMoves = (Move*) malloc(sizeof(Move) * 50);
+  moves->quietMoves = (Move*) malloc(sizeof(Move) * 50);
+  
     int moveNum = 0;
     Move move;
     moves->numCaptureMoves = 0;
@@ -574,7 +586,9 @@ Moves* generateQueenMoves(BoardState* boardState,
 {
   Moves* moveSet1 = generateRookMoves(boardState, isolatedPiece, colorType);
   Moves* moveSet2 = generateBishopMoves(boardState, isolatedPiece, colorType);
-  Moves* moves    =  (Moves*) malloc(sizeof(Moves) * 50);
+  Moves* moves = (Moves*) malloc(sizeof(Moves));
+  moves->captureMoves = (Move*) malloc(sizeof(Move) * 50);
+  moves->quietMoves = (Move*) malloc(sizeof(Move) * 50);
  
   moves->numCaptureMoves = moveSet1->numCaptureMoves + moveSet2->numCaptureMoves;
   moves->numQuietMoves   = moveSet1->numQuietMoves + moveSet2->numQuietMoves;
@@ -605,7 +619,10 @@ Moves* generateKingMoves(BoardState* boardState,
                        Bitboard isolatedPiece,
                        enum BitboardType colorType)
 {
-  Moves* moves = (Moves*) malloc(sizeof(Moves) * 50);
+  Moves* moves = (Moves*) malloc(sizeof(Moves));
+  moves->captureMoves = (Move*) malloc(sizeof(Move) * 50);
+  moves->quietMoves = (Move*) malloc(sizeof(Move) * 50);
+  
   Move move = {0, 0, 0};
   moves->numCaptureMoves = 0;
   moves->numQuietMoves = 0;

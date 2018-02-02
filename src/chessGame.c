@@ -30,11 +30,9 @@ void initChessGame(ChessGame* chessGame)
 
 void runChessGame(ChessGame* chessGame)
 {
-  chessGame->running = 1;
-  Bitboard board = chessGame->boardState->boards[BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS] & chessGame->boardState->boards[BOARD_TYPE_ALL_KING_POSITIONS];
+  Move move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, 1);
   
   
-  printf("Weight = %d\n", weights[3]);
   
  
 }
