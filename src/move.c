@@ -92,7 +92,7 @@ Move generateMove(BoardState* boardState,
           // maximize score
           if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
           {
-            if(evaluation > move.boardEval)
+            if(evaluation >= move.boardEval)
             {
               move = moves->quietMoves[moveNum];
               move.boardEval = evaluation;
@@ -102,7 +102,7 @@ Move generateMove(BoardState* boardState,
           // minimize score
           else if(colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
           {
-            if(evaluation < move.boardEval)
+            if(evaluation <= move.boardEval)
             {
               move = moves->quietMoves[moveNum];
               move.boardEval = evaluation;
@@ -135,7 +135,7 @@ Move generateMove(BoardState* boardState,
           // maximize score
           if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
           {
-            if(evaluation > move.boardEval)
+            if(evaluation >= move.boardEval)
             {
               move = moves->quietMoves[moveNum];
               move.boardEval = evaluation;
@@ -145,7 +145,7 @@ Move generateMove(BoardState* boardState,
           // minimize score
           else if(colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
           {
-            if(evaluation < move.boardEval)
+            if(evaluation <= move.boardEval)
             {
               move = moves->quietMoves[moveNum];
               move.boardEval = evaluation;

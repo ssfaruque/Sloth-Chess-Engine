@@ -13,6 +13,9 @@
 const int weights[] = {100, 500, 300, 325, 900, 5000};
 
 
+
+
+
 int countNumPieces(Bitboard bitboard)
 {
   int numPieces = 0;
