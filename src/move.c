@@ -182,24 +182,77 @@ Moves* generatePawnMoves(BoardState* boardState,
                          Bitboard isolatedPiece,
                          enum BitboardType colorType)
 {
-  // en passant, and move 2 spaces for first turn later on
-
+  
+  
   Moves* moves = (Moves*) malloc(sizeof(Moves) * 50);
-  int moveNum = 0;
-
-
+  int moveNum = 0; //number of moves
+  Move move;
+  moves->numCaptureMoves = 0; // number of Capture moves
+  moves->numQuietMoves = 0; // Number of Quiet moves
+  // If White, only slide up
   if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
   {
-
+    /*Generate Slide Up 1*/
+    move = generateSlideUpMove(isolatedPiece, boardState, colorType,1);
+    // If Valid and is not Capture, added to moves.
+    if (move.movedPosition &&
+        !(move.movedPosition & boardState->boards[!colorType]))
+      moves->quietMoves[moves->numQuietMoves++] = move;
+    /*Generate Slide Up 2 when unmoved*/
+    if ((isolatedPiece & 0x000000000000ff00) != 0) //if in initial position
+    {
+      move = generateSlideUpMove(isolatedPiece, boardState, colorType, 2);
+      // If Valid and is not Capture, added to moves.
+      if (move.movedPosition &&
+          !(move.movedPosition & boardState->boards[!colorType]))
+        moves->quietMoves[moves->numQuietMoves++] = move;
+    }
+    
+    //if Capture, has to be Diagonal
+	  	
+		  move = generateDiagonalUpLeftMove(isolatedPiece, boardState, colorType, 1);
+		  if( move.movedPosition & boardState->boards[!colorType])
+        moves->captureMoves[moves->numCaptureMoves++] = move;
+		  move = generateDiagonalUpRightMove(isolatedPiece, boardState, colorType, 1);
+		  if (move.movedPosition & boardState->boards[!colorType])
+        moves->captureMoves[moves->numCaptureMoves++] = move;
+    
+    
+    
   }
-
-
+  
+  // Black , only slide down
   else if(colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
   {
-
+    /*Generate Slide Up 1*/
+    move = generateSlideDownMove(isolatedPiece, boardState, colorType, 1);
+    // If Valid and is not Capture, added to moves.
+    if (move.movedPosition &&
+        !(move.movedPosition & boardState->boards[!colorType]))
+      moves->quietMoves[moves->numQuietMoves++] = move;
+    /*Generate Slide Up 2 when unmoved*/
+    if ((isolatedPiece & 0x00ff000000000000) != 0) //if in initial position
+    {
+      move = generateSlideDownMove(isolatedPiece, boardState, colorType, 2);
+      // If Valid and is not Capture, added to moves
+      if (move.movedPosition &&
+          !(move.movedPosition & boardState->boards[!colorType]))
+        moves->quietMoves[moves->numQuietMoves++] = move;
+    }
+	   //if Capture, has to be Diagonal
+    
+		  move = generateDiagonalDownLeftMove(isolatedPiece, boardState, colorType, 1);
+		  if (move.movedPosition & boardState->boards[!colorType])
+        moves->captureMoves[moves->numCaptureMoves++] = move;
+		  move = generateDiagonalDownRightMove(isolatedPiece, boardState, colorType, 1);
+		  if (move.movedPosition & boardState->boards[!colorType])
+        moves->captureMoves[moves->numCaptureMoves++] = move;
+    
+    
   }
-
+  // Need to implement en passant 
   return moves;
+  
 }
 
 

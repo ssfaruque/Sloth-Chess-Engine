@@ -145,8 +145,8 @@ Move generateMove(BoardState* boardState,
  *  @return The move that is going to be made
  */
 Moves* generatePawnMoves(BoardState* boardState,
-                       Bitboard isolatedPiece,
-                       enum BitboardType colorType);
+                         Bitboard isolatedPiece,
+                         enum BitboardType colorType);
 
 
 /**
