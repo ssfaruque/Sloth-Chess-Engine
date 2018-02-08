@@ -56,6 +56,229 @@ void updateBoardState(BoardState* boardState,
 
 
 
+
+int alphaBeta(BoardState* boardState,
+              enum BitboardType colorType,
+              int alpha,
+              int beta,
+              int depthleft )
+{
+  if(depthleft == 0)
+  {
+    return eval(boardState);
+  }
+  
+  
+  int i;
+  Move move = {0, 0, 0};
+  
+  for(i = 0; i < NUM_PIECES; ++i)
+  {
+    int pieceType = i + 2;
+    
+    Bitboard piecesBoard = (boardState->boards[colorType] & boardState->boards[pieceType]);
+    
+    while(piecesBoard)
+    {
+      Bitboard isolatedPiece = piecesBoard & -piecesBoard;
+      
+      Moves* moves = possibleMoves[i](boardState, isolatedPiece, colorType);
+      
+      int moveNum;
+      
+      for(moveNum = 0; moveNum < moves->numQuietMoves; ++moveNum)
+      {
+        updateBoardState(boardState, moves->quietMoves[moveNum].initialPosition,
+                         moves->quietMoves[moveNum].movedPosition, colorType, pieceType);
+        
+        
+        
+        int score = -alphaBeta(boardState, !colorType, -beta, -alpha, depthleft - 1 );
+        
+        
+        
+        updateBoardState(boardState, moves->quietMoves[moveNum].movedPosition,
+                         moves->quietMoves[moveNum].initialPosition, colorType, pieceType);
+        
+        
+        
+        if(score >= beta )
+        {
+          return beta;   //  fail hard beta-cutoff
+        }
+        
+        if( score > alpha )
+        {
+          alpha = score; // alpha acts like max in MiniMax
+        }
+        
+      }
+      
+      
+      for(moveNum = 0; moveNum < moves->numCaptureMoves; ++moveNum)
+      {
+        updateBoardState(boardState, moves->captureMoves[moveNum].initialPosition,
+                         moves->captureMoves[moveNum].movedPosition, colorType, pieceType);
+        
+        
+        int score = -alphaBeta(boardState, !colorType, -beta, -alpha, depthleft - 1 );
+        
+        
+        updateBoardState(boardState, moves->captureMoves[moveNum].movedPosition,
+                         moves->captureMoves[moveNum].initialPosition, colorType, pieceType);
+        
+        
+        
+        if(score >= beta )
+        {
+          return beta;   //  fail hard beta-cutoff
+        }
+        
+        if( score > alpha )
+        {
+          alpha = score; // alpha acts like max in MiniMax
+        }
+        
+        
+      }
+      
+      
+      
+      
+      // done with moves, free the possible moves
+      
+      
+      piecesBoard &= piecesBoard - 1; // reset ls1b
+    }
+    
+  }
+  
+  return alpha;
+}
+
+
+
+Move genMove(BoardState* boardState,
+             enum BitboardType colorType)
+{
+  Move move = {0, 0, 0};
+  
+  int i;
+  int alpha = -1111111111;
+  int beta  = 1111111111;
+  
+  for(i = 0; i < NUM_PIECES; ++i)
+  {
+    int pieceType = i + 2;
+    
+    Bitboard piecesBoard = (boardState->boards[colorType] & boardState->boards[pieceType]);
+    
+    while(piecesBoard)
+    {
+      Bitboard isolatedPiece = piecesBoard & -piecesBoard;
+      
+      Moves* moves = possibleMoves[i](boardState, isolatedPiece, colorType);
+      
+      
+      int moveNum;
+      
+      for(moveNum = 0; moveNum < moves->numQuietMoves; ++moveNum)
+      {
+        updateBoardState(boardState, moves->quietMoves[moveNum].initialPosition,
+                         moves->quietMoves[moveNum].movedPosition, colorType, pieceType);
+        
+        
+        int score = alphaBeta(boardState, !colorType, alpha, beta, MAX_RECURSION_DEPTH);
+        
+
+        if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
+        {
+          if(score >= move.boardEval)
+          {
+            move.initialPosition = moves->quietMoves[moveNum].initialPosition;
+            move.movedPosition = moves->quietMoves[moveNum].movedPosition;
+            move.boardEval = score;
+            
+          }
+          
+        }
+        
+        else if(colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
+        {
+          if(score <= move.boardEval)
+          {
+            move.initialPosition = moves->quietMoves[moveNum].initialPosition;
+            move.movedPosition = moves->quietMoves[moveNum].movedPosition;
+            move.boardEval = score;
+          }
+          
+          
+
+          
+        }
+        
+        
+        updateBoardState(boardState, moves->quietMoves[moveNum].movedPosition,
+                         moves->quietMoves[moveNum].initialPosition, colorType, pieceType);
+        
+      }
+      
+      
+      for(moveNum = 0; moveNum < moves->numCaptureMoves; ++moveNum)
+      {
+        updateBoardState(boardState, moves->captureMoves[moveNum].initialPosition,
+                         moves->captureMoves[moveNum].movedPosition, colorType, pieceType);
+        
+        
+        int score = alphaBeta(boardState, !colorType, alpha, beta, MAX_RECURSION_DEPTH);
+        
+        if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
+        {
+          if(score >= move.boardEval)
+          {
+            move.initialPosition = moves->quietMoves[moveNum].initialPosition;
+            move.movedPosition = moves->quietMoves[moveNum].movedPosition;
+            move.boardEval = score;
+          }
+        }
+        
+        else if(colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
+        {
+          if(score <= move.boardEval)
+          {
+            move.initialPosition = moves->quietMoves[moveNum].initialPosition;
+            move.movedPosition = moves->quietMoves[moveNum].movedPosition;
+            move.boardEval = score;
+          }
+        }
+        
+        updateBoardState(boardState, moves->captureMoves[moveNum].movedPosition,
+                         moves->captureMoves[moveNum].initialPosition, colorType, pieceType);
+        
+
+      }
+
+      // done with moves, free the possible moves
+      
+      
+      piecesBoard &= piecesBoard - 1; // reset ls1b
+    }
+    
+  }
+  
+  printf("score of chosen move: %d\n", move.boardEval);
+  
+  return move;
+}
+
+
+
+
+
+
+
+
+
 Move generateMove(BoardState* boardState,
 
                   enum BitboardType colorType,
@@ -718,7 +941,7 @@ Move generateSlideUpMove(Bitboard initialPosition,
                          int offset)
 {
   Move move = {initialPosition, 0};
-  move.movedPosition  = move.movedPosition << (8 * offset);
+  move.movedPosition  = move.initialPosition << (8 * offset);
 
   // if not out of bounds and does not collide with own pieces
   if(move.movedPosition != 0 && !(move.movedPosition & boardState->boards[colorType]))
@@ -735,7 +958,7 @@ Move generateSlideDownMove(Bitboard initialPosition,
                            int offset)
 {
   Move move = {initialPosition, 0};
-  move.movedPosition  = move.movedPosition >> (8 * offset);
+  move.movedPosition  = move.initialPosition >> (8 * offset);
 
   // if not out of bounds and does not collide with own pieces
   if(move.movedPosition != 0 && !(move.movedPosition & boardState->boards[colorType]))

@@ -25,7 +25,7 @@
 #include "bitboard.h"
 
 
-#define MAX_RECURSION_DEPTH 1
+#define MAX_RECURSION_DEPTH 4
 
 
 /**
@@ -123,6 +123,14 @@ void updateBoardState(BoardState* boardState,
 
 
 /*********************************** MOVE GENERATION BY TYPE ***********************************/
+
+
+
+Move genMove(BoardState* boardState,
+             enum BitboardType colorType);
+
+
+
 
 
 /**

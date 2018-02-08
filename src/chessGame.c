@@ -30,16 +30,15 @@ void initChessGame(ChessGame* chessGame)
 
 void runChessGame(ChessGame* chessGame)
 {
-  Move move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, 1);
+  Move move = genMove(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
   
-  /*
+  
   printBitboard(move.initialPosition);
   printBitboard(move.movedPosition);
-  printBoardState(chessGame->boardState);*/
-  
-  updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_KNIGHT_POSITIONS);
-  
   printBoardState(chessGame->boardState);
+  
+  //updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_KNIGHT_POSITIONS);
+  
   
 }
 
