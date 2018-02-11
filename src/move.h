@@ -70,6 +70,7 @@ typedef struct
                                  the initial position of the specific piece */
   Bitboard movedPosition; /**< The Bitboard containing all 0s except for a 1 in the spot of
                                the new moved position of the specific piece */
+  int capturedPiece;
   int boardEval;
 } Move;
 

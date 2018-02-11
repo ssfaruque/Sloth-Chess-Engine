@@ -50,14 +50,15 @@ void runChessGame(ChessGame* chessGame)
 
     printBoardState(chessGame->boardState);
 
-    int capturedPiece;
+  
     move.initialPosition = 0x0000000000000100 << 16;
     move.movedPosition = move.initialPosition << 9;
-    capturedPiece = updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_PAWN_POSITIONS, MOVE_TYPE_CAPTURE, 0);
+	move.capturedPiece = BOARD_TYPE_ALL_PAWN_POSITIONS;
+    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_PAWN_POSITIONS, MOVE_TYPE_CAPTURE, 0);
 
     printBoardState(chessGame->boardState);
 
-    updateBoardState(chessGame->boardState, move.movedPosition, move.initialPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_PAWN_POSITIONS, MOVE_TYPE_CAPTURE, capturedPiece);
+    updateBoardState(chessGame->boardState, move.movedPosition, move.initialPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_PAWN_POSITIONS, MOVE_TYPE_CAPTURE, move.capturedPiece);
     printBoardState(chessGame->boardState);
 }
 
