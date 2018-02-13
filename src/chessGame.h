@@ -18,7 +18,6 @@ typedef struct
   int running;
   BoardState* boardState;
   SlothChessEngine* slothChessEngine;
-  
 } ChessGame;
 
 

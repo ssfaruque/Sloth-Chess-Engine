@@ -25,7 +25,7 @@
 #include "bitboard.h"
 
 
-#define MAX_RECURSION_DEPTH 4
+#define MAX_RECURSION_DEPTH 1
 
 
 /**
@@ -52,6 +52,14 @@ enum PieceType
   NUM_PIECES
 };
 
+enum MoveType
+{
+    MOVE_TYPE_QUIET,
+    MOVE_TYPE_CAPTURE,
+    MOVE_TYPE_PASSANT,
+    MOVE_TYPE_CASTLE,
+};
+
 
 /**
  @brief Move contains two Bitboards (one for initial position and one for moved position).
@@ -62,6 +70,7 @@ typedef struct
                                  the initial position of the specific piece */
   Bitboard movedPosition; /**< The Bitboard containing all 0s except for a 1 in the spot of
                                the new moved position of the specific piece */
+  int capturedPiece;
   int boardEval;
 } Move;
 
@@ -83,7 +92,6 @@ typedef struct
 } Moves;
 
 
-
 /**
  *  @brief Initializes the member variables of Moves to all NULL.
  *  @param moves The Moves struct we want to initialize
@@ -100,6 +108,12 @@ void initMoves(Moves* moves);
 void cleanUpMoves(Moves* moves);
 
 
+void updateFlagState(BoardState* boardState,
+                      Bitboard initialPiece,
+                      Bitboard movedPiece,
+                      enum BitboardType colorType,
+                      enum BitboardType pieceType,
+                      enum MoveType moveType);
 
 /**
  *  @brief Updates the state of all Bitboards necessary after a move by the computer.
@@ -110,27 +124,24 @@ void cleanUpMoves(Moves* moves);
  *  @param movedPiece The Bitboard that only contains the piece that has moved
  *  @param colorType The color of the piece that we want to move
  *  @param pieceType The type of piece that we want to move
- *  @return void
+ *  @param moveType The type of move: Quiet, Capture, En Passant, or Castling
+ *  @param capturedPiece THe pieceType that was captured just before. Used for unmoving a capture
+ *  @return int, representing the pieceType that was captured
  */
-void updateBoardState(BoardState* boardState,
+int updateBoardState(BoardState* boardState,
                       Bitboard initialPiece,
                       Bitboard movedPiece,
                       enum BitboardType colorType,
-                      enum BitboardType pieceType);
+                      enum BitboardType pieceType,
+                      enum MoveType moveType,
+                      int capturedPiece
+                      );
 
 
 
 
 
 /*********************************** MOVE GENERATION BY TYPE ***********************************/
-
-
-
-Move genMove(BoardState* boardState,
-             enum BitboardType colorType);
-
-
-
 
 
 /**
