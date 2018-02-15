@@ -75,37 +75,6 @@ typedef struct
 } Move;
 
 
-/**
- @brief Moves contains two arrays of type Move (One for quiet moves and another for capture moves).
- */
-typedef struct
-{
-  Move* quietMoves; /**< The array containing all of the quiet moves which are moves that simply
-                         move one piece from one square to another square without interrupting
-                         another piece (the player does not capture an opponent's piece) */
-  Move* captureMoves; /**< The array containing all of the capture moves which are moves that
-                           move one piece from one square to another square and captures an opponent's
-                           piece (the piece that is captured is the opponent's piece that has the
-                           same initial position as the player's moved position) */
-  int numQuietMoves;
-  int numCaptureMoves;
-} Moves;
-
-
-/**
- *  @brief Initializes the member variables of Moves to all NULL.
- *  @param moves The Moves struct we want to initialize
- *  @return void
- */
-void initMoves(Moves* moves);
-
-
-/**
- *  @brief Cleans up all of the resources used by the Moves struct.
- *  @param moves The Moves struct we want to clean up
- *  @return void
- */
-void cleanUpMoves(Moves* moves);
 
 
 void updateFlagState(BoardState* boardState,
@@ -144,6 +113,13 @@ int updateBoardState(BoardState* boardState,
 /*********************************** MOVE GENERATION BY TYPE ***********************************/
 
 
+
+
+
+
+
+
+
 /**
  *  @brief Generates a move recursively in the tree in accordance to DFS.
  *  @param boardState The current state of the game
@@ -156,6 +132,18 @@ Move generateMove(BoardState* boardState,
                   int recurseDepth);
 
 
+
+
+
+
+Move* generateAllPawnMoves(BoardState* boardState,
+                         enum BitboardType colorType);
+
+
+
+
+
+
 /**
  *  @brief Generates a move for a pawn of a specific color.
  *         recursively in the tree in accordance to DFS
@@ -163,7 +151,7 @@ Move generateMove(BoardState* boardState,
  *  @param colorType The color that the player is playing as
  *  @return The move that is going to be made
  */
-Moves* generatePawnMoves(BoardState* boardState,
+Move* generatePawnMoves(BoardState* boardState,
                          Bitboard isolatedPiece,
                          enum BitboardType colorType);
 
@@ -175,7 +163,7 @@ Moves* generatePawnMoves(BoardState* boardState,
  *  @param colorType The color that the player is playing as
  *  @return The move that is going to be made
  */
-Moves* generateRookMoves(BoardState* boardState,
+Move* generateRookMoves(BoardState* boardState,
                        Bitboard isolatedPiece,
                        enum BitboardType colorType);
 
@@ -188,7 +176,7 @@ Moves* generateRookMoves(BoardState* boardState,
  *  @param colorType The color that the player is playing as
  *  @return The move that is going to be made
  */
-Moves* generateKnightMoves(BoardState* boardState,
+Move* generateKnightMoves(BoardState* boardState,
                          Bitboard isolatedPiece,
                          enum BitboardType colorType);
 
@@ -200,7 +188,7 @@ Moves* generateKnightMoves(BoardState* boardState,
  *  @param colorType The color that the player is playing as
  *  @return The move that is going to be made
  */
-Moves* generateBishopMoves(BoardState* boardState,
+Move* generateBishopMoves(BoardState* boardState,
                          Bitboard isolatedPiece,
                          enum BitboardType colorType);
 
@@ -212,7 +200,7 @@ Moves* generateBishopMoves(BoardState* boardState,
  *  @param colorType The color that the player is playing as
  *  @return The move that is going to be made
  */
-Moves* generateQueenMoves(BoardState* boardState,
+Move* generateQueenMoves(BoardState* boardState,
                         Bitboard isolatedPiece,
                         enum BitboardType colorType);
 
@@ -224,7 +212,7 @@ Moves* generateQueenMoves(BoardState* boardState,
  *  @param colorType The color that the player is playing as
  *  @return The move that is going to be made
  */
-Moves* generateKingMoves(BoardState* boardState,
+Move* generateKingMoves(BoardState* boardState,
                        Bitboard isolatedPiece,
                        enum BitboardType colorType);
 
