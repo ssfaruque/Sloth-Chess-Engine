@@ -118,17 +118,36 @@ int updateBoardState(BoardState* boardState,
 
 
 
+Move* generateAllMoves(BoardState* boardState,
+                       enum BitboardType colorType)
+{
+  Move* moves = (Move*) malloc(sizeof(Move) * 950);
+  
+  Move* allPawnMoves = generateAllPawnMoves(boardState, colorType);
+  Move* allRookMoves = generateAllRookMoves(boardState, colorType);
+  Move* allKnightMoves = generateAllKnightMoves(boardState, colorType);
+  Move* allBishopMoves = generateAllBishopMoves(boardState, colorType);
+  Move* allQueenMoves = generateAllQueenMoves(boardState, colorType);
+  Move* allKingMoves = generateAllKingMoves(boardState, colorType);
+  
+  memcpy((void*)&moves[0], (void*)allPawnMoves, sizeof(Move) * 400);
+  memcpy((void*)&moves[400], (void*)allRookMoves, sizeof(Move) * 100);
+  memcpy((void*)&moves[500], (void*)allKnightMoves, sizeof(Move) * 100);
+  memcpy((void*)&moves[600], (void*)allBishopMoves, sizeof(Move) * 100);
+  memcpy((void*)&moves[700], (void*)allQueenMoves, sizeof(Move) * 200);
+  memcpy((void*)&moves[900], (void*)allKingMoves, sizeof(Move) * 50);
+  
+  return moves;
+}
 
 
 
-
-
-/*
 
 Move* generateAllPawnMoves(BoardState* boardState,
                             enum BitboardType colorType)
 {
-  Move* moves = NULL;
+  Move* moves = (Move*) malloc(sizeof(Move) * 400);
+  int pieceNum = 0;
   
   Bitboard pieces = boardState->boards[BOARD_TYPE_ALL_PAWN_POSITIONS] & boardState->boards[colorType];
   
@@ -136,7 +155,8 @@ Move* generateAllPawnMoves(BoardState* boardState,
   {
     Bitboard isolatedPiece = pieces & -pieces;
     Move* setOfMoves = generatePawnMoves(boardState, isolatedPiece, colorType);
-    concatenateMovesLists(&moves, setOfMoves);
+    
+    memcpy((void*)&moves[pieceNum++ * 50], (void*)setOfMoves, sizeof(Move) * 50);
     
     // reset ls1b
     pieces &= pieces - 1;
@@ -144,7 +164,6 @@ Move* generateAllPawnMoves(BoardState* boardState,
   
   return moves;
 }
-*/
 
 
 
@@ -273,6 +292,32 @@ Move* generatePawnMoves(BoardState* boardState,
   return moves;
 
 }
+
+
+
+Move* generateAllRookMoves(BoardState* boardState,
+                           enum BitboardType colorType)
+{
+  Move* moves = (Move*) malloc(sizeof(Move) * 100);
+  int pieceNum = 0;
+  
+  Bitboard pieces = boardState->boards[BOARD_TYPE_ALL_ROOK_POSITIONS] & boardState->boards[colorType];
+  
+  while(pieces)
+  {
+    Bitboard isolatedPiece = pieces & -pieces;
+    Move* setOfMoves = generateRookMoves(boardState, isolatedPiece, colorType);
+    
+    memcpy((void*)&moves[pieceNum++ * 50], (void*)setOfMoves, sizeof(Move) * 50);
+    
+    // reset ls1b
+    pieces &= pieces - 1;
+  }
+  
+  return moves;
+}
+
+
 
 
 Move* generateRookMoves(BoardState* boardState,
@@ -408,6 +453,31 @@ Move* generateRookMoves(BoardState* boardState,
 
   return moves;
 }
+
+
+Move* generateAllKnightMoves(BoardState* boardState,
+                           enum BitboardType colorType)
+{
+  Move* moves = (Move*) malloc(sizeof(Move) * 100);
+  int pieceNum = 0;
+  
+  Bitboard pieces = boardState->boards[BOARD_TYPE_ALL_KNIGHT_POSITIONS] & boardState->boards[colorType];
+  
+  while(pieces)
+  {
+    Bitboard isolatedPiece = pieces & -pieces;
+    Move* setOfMoves = generateKnightMoves(boardState, isolatedPiece, colorType);
+    
+    memcpy((void*)&moves[pieceNum++ * 50], (void*)setOfMoves, sizeof(Move) * 50);
+    
+    // reset ls1b
+    pieces &= pieces - 1;
+  }
+  
+  return moves;
+}
+
+
 
 
 Move* generateKnightMoves(BoardState* boardState,
@@ -591,6 +661,29 @@ Move* generateKnightMoves(BoardState* boardState,
 
 
 
+Move* generateAllBishopMoves(BoardState* boardState,
+                           enum BitboardType colorType)
+{
+  Move* moves = (Move*) malloc(sizeof(Move) * 100);
+  int pieceNum = 0;
+  
+  Bitboard pieces = boardState->boards[BOARD_TYPE_ALL_BISHOP_POSITIONS] & boardState->boards[colorType];
+  
+  while(pieces)
+  {
+    Bitboard isolatedPiece = pieces & -pieces;
+    Move* setOfMoves = generateBishopMoves(boardState, isolatedPiece, colorType);
+    
+    memcpy((void*)&moves[pieceNum++ * 50], (void*)setOfMoves, sizeof(Move) * 50);
+    
+    // reset ls1b
+    pieces &= pieces - 1;
+  }
+  
+  return moves;
+}
+
+
 
 
 Move* generateBishopMoves(BoardState* boardState,
@@ -729,6 +822,29 @@ Move* generateBishopMoves(BoardState* boardState,
 }
 
 
+Move* generateAllQueenMoves(BoardState* boardState,
+                           enum BitboardType colorType)
+{
+  Move* moves = (Move*) malloc(sizeof(Move) * 200);
+  int pieceNum = 0;
+  
+  Bitboard pieces = boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] & boardState->boards[colorType];
+  
+  while(pieces)
+  {
+    Bitboard isolatedPiece = pieces & -pieces;
+    Move* setOfMoves = generateQueenMoves(boardState, isolatedPiece, colorType);
+    
+    memcpy((void*)&moves[pieceNum++ * 50], (void*)setOfMoves, sizeof(Move) * 50);
+    
+    // reset ls1b
+    pieces &= pieces - 1;
+  }
+  
+  return moves;
+}
+
+
 
 Move* generateQueenMoves(BoardState* boardState,
                         Bitboard isolatedPiece,
@@ -741,6 +857,29 @@ Move* generateQueenMoves(BoardState* boardState,
   memcpy((void*)moves, (void*)moveSet1, sizeof(Move) * 50);
   memcpy((void*)&moves[50], (void*)moveSet2, sizeof(Move) * 50);
 
+  return moves;
+}
+
+
+Move* generateAllKingMoves(BoardState* boardState,
+                           enum BitboardType colorType)
+{
+  Move* moves = (Move*) malloc(sizeof(Move) * 50);
+  int pieceNum = 0;
+  
+  Bitboard pieces = boardState->boards[BOARD_TYPE_ALL_KING_POSITIONS] & boardState->boards[colorType];
+  
+  while(pieces)
+  {
+    Bitboard isolatedPiece = pieces & -pieces;
+    Move* setOfMoves = generateKingMoves(boardState, isolatedPiece, colorType);
+    
+    memcpy((void*)&moves[pieceNum++ * 50], (void*)setOfMoves, sizeof(Move) * 50);
+    
+    // reset ls1b
+    pieces &= pieces - 1;
+  }
+  
   return moves;
 }
 

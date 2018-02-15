@@ -133,6 +133,9 @@ Move generateMove(BoardState* boardState,
 
 
 
+Move* generateAllMoves(BoardState* boardState,
+                       enum BitboardType colorType);
+
 
 
 
@@ -156,6 +159,13 @@ Move* generatePawnMoves(BoardState* boardState,
                          enum BitboardType colorType);
 
 
+
+Move* generateAllRookMoves(BoardState* boardState,
+                           enum BitboardType colorType);
+
+
+
+
 /**
  *  @brief Generates a move for a rook of a specific color.
  *         recursively in the tree in accordance to DFS
@@ -167,6 +177,10 @@ Move* generateRookMoves(BoardState* boardState,
                        Bitboard isolatedPiece,
                        enum BitboardType colorType);
 
+
+
+Move* generateAllKnightMoves(BoardState* boardState,
+                             enum BitboardType colorType);
 
 
 /**
@@ -181,6 +195,13 @@ Move* generateKnightMoves(BoardState* boardState,
                          enum BitboardType colorType);
 
 
+
+Move* generateAllBishopMoves(BoardState* boardState,
+                             enum BitboardType colorType);
+
+
+
+
 /**
  *  @brief Generates a move for a bishop of a specific color.
  *         recursively in the tree in accordance to DFS
@@ -193,6 +214,11 @@ Move* generateBishopMoves(BoardState* boardState,
                          enum BitboardType colorType);
 
 
+
+Move* generateAllQueenMoves(BoardState* boardState,
+                             enum BitboardType colorType);
+
+
 /**
  *  @brief Generates a move for a queen of a specific color.
  *         recursively in the tree in accordance to DFS
@@ -203,6 +229,12 @@ Move* generateBishopMoves(BoardState* boardState,
 Move* generateQueenMoves(BoardState* boardState,
                         Bitboard isolatedPiece,
                         enum BitboardType colorType);
+
+
+
+Move* generateAllKingMoves(BoardState* boardState,
+                             enum BitboardType colorType);
+
 
 
 /**
