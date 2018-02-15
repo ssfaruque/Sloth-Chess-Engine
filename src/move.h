@@ -25,7 +25,7 @@
 #include "bitboard.h"
 
 
-#define MAX_RECURSION_DEPTH 1
+#define MAX_RECURSION_DEPTH 4
 
 
 /**
@@ -70,6 +70,7 @@ typedef struct
                                  the initial position of the specific piece */
   Bitboard movedPosition; /**< The Bitboard containing all 0s except for a 1 in the spot of
                                the new moved position of the specific piece */
+  int pieceType;
   int capturedPiece;
   int boardEval;
 } Move;
@@ -103,8 +104,8 @@ int updateBoardState(BoardState* boardState,
                       enum BitboardType colorType,
                       enum BitboardType pieceType,
                       enum MoveType moveType,
-                      int capturedPiece
-                      );
+                      int capturedPiece,
+                      int undo);
 
 
 

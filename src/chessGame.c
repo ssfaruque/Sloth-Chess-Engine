@@ -31,35 +31,12 @@ void initChessGame(ChessGame* chessGame)
 
 void runChessGame(ChessGame* chessGame)
 {
-  //Move move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, 1);
-
-  /*
+  Move move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
+  
+  printBoardState(chessGame->boardState);
+  
   printBitboard(move.initialPosition);
   printBitboard(move.movedPosition);
-  printBoardState(chessGame->boardState);*/
-    Move move;
-    move.initialPosition = 0x0000000000000100;
-    move.movedPosition = move.initialPosition << 16;
-    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_PAWN_POSITIONS, MOVE_TYPE_QUIET, 0);
-
-    printBoardState(chessGame->boardState);
-
-    move.initialPosition = 0x0002000000000000;
-    move.movedPosition = move.initialPosition >> 16;
-    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, BOARD_TYPE_ALL_PAWN_POSITIONS, MOVE_TYPE_QUIET, 0);
-
-    printBoardState(chessGame->boardState);
-
-  
-    move.initialPosition = 0x0000000000000100 << 16;
-    move.movedPosition = move.initialPosition << 9;
-	move.capturedPiece = BOARD_TYPE_ALL_PAWN_POSITIONS;
-    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_PAWN_POSITIONS, MOVE_TYPE_CAPTURE, 0);
-
-    printBoardState(chessGame->boardState);
-
-    updateBoardState(chessGame->boardState, move.movedPosition, move.initialPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_PAWN_POSITIONS, MOVE_TYPE_CAPTURE, move.capturedPiece);
-    printBoardState(chessGame->boardState);
 }
 
 

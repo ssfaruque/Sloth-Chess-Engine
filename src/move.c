@@ -57,63 +57,142 @@ int updateBoardState(BoardState* boardState,
                       Bitboard movedPiece,
                       enum BitboardType colorType,
                       enum BitboardType pieceType,
-                      enum MoveType moveType, int capturedPiece)
+                      enum MoveType moveType,
+                      int capturedPiece,
+                      int undo)
 {
-    int i;
-
-    //update flagState bitboard for en passant and casttling
-    if (pieceType == BOARD_TYPE_ALL_PAWN_POSITIONS)
-    {
-      //  updateFlagState(boardState, initialPiece, movedPiece, colorType, pieceType, moveType);
-    }
-
-
-    switch (moveType)
-    {
-        case MOVE_TYPE_QUIET:
-            boardState->boards[colorType] = ((boardState->boards[colorType] ^ initialPiece) | movedPiece);
-            boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ initialPiece) | movedPiece);
-            break;
-
-        case MOVE_TYPE_CAPTURE:
-            boardState->boards[colorType] = ((boardState->boards[colorType] ^ initialPiece) | movedPiece);
-            boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ initialPiece) | movedPiece);
-             //undo a capture
-          
-			if (capturedPiece)
-            {
-               boardState->boards[capturedPiece] = (boardState->boards[capturedPiece] | initialPiece);
-                boardState->boards[!colorType] = ((boardState->boards[!colorType]) ^ initialPiece);
-            }
-
-            else
-            {
-                
-                boardState->boards[capturedPiece] = ((boardState->boards[capturedPiece]) | movedPiece);
-                boardState->boards[!colorType] = ((boardState->boards[!colorType]) ^ movedPiece);
-            }
-            return 0;
-
-        case MOVE_TYPE_PASSANT:
-            //get rid of en passant flag
-        break;
-
-
-        case MOVE_TYPE_CASTLE:
-
-        break;
-
-        default:
-            printf("Error");
-
-    }
-
+      if(undo && !capturedPiece) //undo quiet
+      {
+        boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
+        boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ movedPiece) | initialPiece);
+      }
+  
+      else if(!capturedPiece) // quiet
+      {
+  
+        boardState->boards[colorType] = ((boardState->boards[colorType] ^ initialPiece) | movedPiece);
+        boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ initialPiece) | movedPiece);
+      }
+  
+      else if (capturedPiece && undo) // undo capture
+      {
+        boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
+        boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ movedPiece) | initialPiece);
+        
+          boardState->boards[capturedPiece] = (boardState->boards[capturedPiece] | movedPiece);
+          boardState->boards[!colorType] = ((boardState->boards[!colorType]) ^ movedPiece);
+      }
+  
+      else if(capturedPiece) //capture
+      {
+        
+          boardState->boards[capturedPiece] = ((boardState->boards[capturedPiece]) | movedPiece);
+          boardState->boards[!colorType] = ((boardState->boards[!colorType]) ^ movedPiece);
+        
+          boardState->boards[colorType] = ((boardState->boards[colorType] ^ initialPiece) | movedPiece);
+          boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ initialPiece) | movedPiece);
+        
+      }
+       
+  
+  
   return 0;
 }
 
 
 
 /******************************** Generate moves by pieces ********************************/
+
+
+
+int negaMax(BoardState* boardState,
+            enum BitboardType colorType,
+            int depth)
+{
+  if (depth == 0)
+    return eval(boardState);
+  
+  int max = -111111111;
+  
+  Move* moves = generateAllMoves(boardState, colorType);
+  int numMoves = 950;
+  int moveNum = 0;
+  int score = 0;
+  
+  for(moveNum = 0; moveNum < numMoves; ++moveNum)
+  {
+    if(moves[moveNum].initialPosition)
+    {
+    
+      updateBoardState(boardState, moves[moveNum].initialPosition, moves[moveNum].movedPosition, colorType, moves[moveNum].pieceType, 0, moves[moveNum].capturedPiece, 0);
+      
+      score = -negaMax(boardState, !colorType, depth - 1);
+      
+      updateBoardState(boardState, moves[moveNum].initialPosition, moves[moveNum].movedPosition, colorType, moves[moveNum].pieceType, 0, moves[moveNum].capturedPiece, 1);
+      
+      if(score > max)
+        max = score;
+        
+      }
+  }
+
+  return max;
+}
+
+
+
+
+
+
+Move generateMove(BoardState* boardState,
+                  enum BitboardType colorType,
+                  int recurseDepth)
+{
+  Move move = {0, 0, 0, 0};
+  
+  int numFirstMoves = 950;
+  int i;
+  
+  int score = 0;
+  int maxScore = 0;
+  
+  Move* firstMoves = generateAllMoves(boardState, colorType);
+  
+  for(i = 0; i < numFirstMoves; ++i)
+  {
+    updateBoardState(boardState, firstMoves[i].initialPosition, firstMoves[i].movedPosition, colorType, firstMoves[i].pieceType, 0, firstMoves[i].capturedPiece, 0);
+    
+    
+    score = negaMax(boardState, !colorType, recurseDepth - 1);
+    
+    
+    updateBoardState(boardState, firstMoves[i].initialPosition, firstMoves[i].movedPosition, colorType, firstMoves[i].pieceType, 0, firstMoves[i].capturedPiece, 1);
+    
+    if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
+    {
+      if(score > maxScore)
+      {
+        maxScore = score;
+        move = firstMoves[i];
+      }
+    }
+    
+    else if(colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
+    {
+      if(score < maxScore)
+      {
+        maxScore = score;
+        move = firstMoves[i];
+      }
+    }
+    
+    
+  }
+  
+  return move;
+}
+
+
 
 
 
@@ -151,6 +230,8 @@ Move* generateAllPawnMoves(BoardState* boardState,
   
   Bitboard pieces = boardState->boards[BOARD_TYPE_ALL_PAWN_POSITIONS] & boardState->boards[colorType];
   
+  int i;
+  
   while(pieces)
   {
     Bitboard isolatedPiece = pieces & -pieces;
@@ -160,6 +241,12 @@ Move* generateAllPawnMoves(BoardState* boardState,
     
     // reset ls1b
     pieces &= pieces - 1;
+  }
+  
+  
+  for(i = 0; i < 400; ++i)
+  {
+    moves[i].pieceType = BOARD_TYPE_ALL_PAWN_POSITIONS;
   }
   
   return moves;
@@ -312,6 +399,14 @@ Move* generateAllRookMoves(BoardState* boardState,
     
     // reset ls1b
     pieces &= pieces - 1;
+  }
+  
+  
+  int i;
+  
+  for(i = 0; i < 100; ++i)
+  {
+    moves[i].pieceType = BOARD_TYPE_ALL_ROOK_POSITIONS;
   }
   
   return moves;
@@ -473,6 +568,14 @@ Move* generateAllKnightMoves(BoardState* boardState,
     // reset ls1b
     pieces &= pieces - 1;
   }
+  
+  int i;
+  
+  for(i = 0; i < 100; ++i)
+  {
+    moves[i].pieceType = BOARD_TYPE_ALL_KNIGHT_POSITIONS;
+  }
+  
   
   return moves;
 }
@@ -680,6 +783,14 @@ Move* generateAllBishopMoves(BoardState* boardState,
     pieces &= pieces - 1;
   }
   
+  
+  int i;
+  
+  for(i = 0; i < 100; ++i)
+  {
+    moves[i].pieceType = BOARD_TYPE_ALL_BISHOP_POSITIONS;
+  }
+  
   return moves;
 }
 
@@ -841,6 +952,14 @@ Move* generateAllQueenMoves(BoardState* boardState,
     pieces &= pieces - 1;
   }
   
+  
+  int i;
+  
+  for(i = 0; i < 200; ++i)
+  {
+    moves[i].pieceType = BOARD_TYPE_ALL_QUEEN_POSITIONS;
+  }
+  
   return moves;
 }
 
@@ -878,6 +997,14 @@ Move* generateAllKingMoves(BoardState* boardState,
     
     // reset ls1b
     pieces &= pieces - 1;
+  }
+  
+  
+  int i;
+  
+  for(i = 0; i < 50; ++i)
+  {
+    moves[i].pieceType = BOARD_TYPE_ALL_KING_POSITIONS;
   }
   
   return moves;
