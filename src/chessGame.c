@@ -31,12 +31,24 @@ void initChessGame(ChessGame* chessGame)
 
 void runChessGame(ChessGame* chessGame)
 {
-  Move move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
+  //Move move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
   
-  printBoardState(chessGame->boardState);
+  //printBoardState(chessGame->boardState);
   
-  printBitboard(move.initialPosition);
-  printBitboard(move.movedPosition);
+  //printBitboard(move.initialPosition);
+  //printBitboard(move.movedPosition);
+  
+  
+  Move* moves = generateAllKnightMoves(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
+  
+  int i;
+  
+  for(i = 0; i < 100; ++i)
+  {
+    printf("initialPosition = %llu, movedPosition = %llu\n", moves[i].initialPosition, moves[i].movedPosition);
+  }
+  
+  
 }
 
 

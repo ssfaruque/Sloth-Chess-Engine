@@ -142,8 +142,6 @@ int negaMax(BoardState* boardState,
 
 
 
-
-
 Move generateMove(BoardState* boardState,
                   enum BitboardType colorType,
                   int recurseDepth)
@@ -160,33 +158,37 @@ Move generateMove(BoardState* boardState,
   
   for(i = 0; i < numFirstMoves; ++i)
   {
-    updateBoardState(boardState, firstMoves[i].initialPosition, firstMoves[i].movedPosition, colorType, firstMoves[i].pieceType, 0, firstMoves[i].capturedPiece, 0);
     
-    
-    score = negaMax(boardState, !colorType, recurseDepth - 1);
-    
-    
-    updateBoardState(boardState, firstMoves[i].initialPosition, firstMoves[i].movedPosition, colorType, firstMoves[i].pieceType, 0, firstMoves[i].capturedPiece, 1);
-    
-    if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
+    if(firstMoves[i].initialPosition)
     {
-      if(score > maxScore)
+      // do the move
+      updateBoardState(boardState, firstMoves[i].initialPosition, firstMoves[i].movedPosition, colorType, firstMoves[i].pieceType, 0, firstMoves[i].capturedPiece, 0);
+      
+      score = negaMax(boardState, !colorType, recurseDepth - 1);
+      
+      // undo the move
+      updateBoardState(boardState, firstMoves[i].initialPosition, firstMoves[i].movedPosition, colorType, firstMoves[i].pieceType, 0, firstMoves[i].capturedPiece, 1);
+      
+      if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
       {
-        maxScore = score;
-        move = firstMoves[i];
+        if(score > maxScore)
+        {
+          maxScore = score;
+          move = firstMoves[i];
+        }
       }
-    }
-    
-    else if(colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
-    {
-      if(score < maxScore)
+      
+      else if(colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
       {
-        maxScore = score;
-        move = firstMoves[i];
+        if(score < maxScore)
+        {
+          maxScore = score;
+          move = firstMoves[i];
+        }
       }
+      
     }
-    
-    
+  
   }
   
   return move;
@@ -208,6 +210,7 @@ Move* generateAllMoves(BoardState* boardState,
   Move* allBishopMoves = generateAllBishopMoves(boardState, colorType);
   Move* allQueenMoves = generateAllQueenMoves(boardState, colorType);
   Move* allKingMoves = generateAllKingMoves(boardState, colorType);
+  
   
   memcpy((void*)&moves[0], (void*)allPawnMoves, sizeof(Move) * 400);
   memcpy((void*)&moves[400], (void*)allRookMoves, sizeof(Move) * 100);
@@ -236,6 +239,8 @@ Move* generateAllPawnMoves(BoardState* boardState,
   {
     Bitboard isolatedPiece = pieces & -pieces;
     Move* setOfMoves = generatePawnMoves(boardState, isolatedPiece, colorType);
+
+    
     
     memcpy((void*)&moves[pieceNum++ * 50], (void*)setOfMoves, sizeof(Move) * 50);
     
@@ -1125,7 +1130,7 @@ Move generateSlideUpMove(Bitboard initialPosition,
                          int offset)
 {
   Move move = {initialPosition, 0};
-  move.movedPosition  = move.movedPosition << (8 * offset);
+  move.movedPosition  = move.initialPosition << (8 * offset);
 
   // if not out of bounds and does not collide with own pieces
   if(move.movedPosition != 0 && !(move.movedPosition & boardState->boards[colorType]))
@@ -1142,7 +1147,7 @@ Move generateSlideDownMove(Bitboard initialPosition,
                            int offset)
 {
   Move move = {initialPosition, 0};
-  move.movedPosition  = move.movedPosition >> (8 * offset);
+  move.movedPosition  = move.initialPosition >> (8 * offset);
 
   // if not out of bounds and does not collide with own pieces
   if(move.movedPosition != 0 && !(move.movedPosition & boardState->boards[colorType]))
