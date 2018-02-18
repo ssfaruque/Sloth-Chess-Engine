@@ -33,13 +33,23 @@ void runChessGame(ChessGame* chessGame)
 {
   //Move move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
   
-  //printBoardState(chessGame->boardState);
-  
-  //printBitboard(move.initialPosition);
-  //printBitboard(move.movedPosition);
+  //updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, move.pieceType, 0, move.capturedPiece, 0);
   
   
-  Move* moves = generateAllKnightMoves(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
+  
+  Move move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
+  
+  updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, move.pieceType, 0, move.capturedPiece, 0);
+  
+  
+  printBoardState(chessGame->boardState);
+  
+  printBitboard(move.initialPosition);
+  printBitboard(move.movedPosition);
+  
+  
+  /*
+  Move* moves = generateAllQueenMoves(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
   
   int i;
   
@@ -47,6 +57,7 @@ void runChessGame(ChessGame* chessGame)
   {
     printf("initialPosition = %llu, movedPosition = %llu\n", moves[i].initialPosition, moves[i].movedPosition);
   }
+  */
   
   
 }

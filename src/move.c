@@ -123,7 +123,6 @@ int negaMax(BoardState* boardState,
   {
     if(moves[moveNum].initialPosition)
     {
-    
       updateBoardState(boardState, moves[moveNum].initialPosition, moves[moveNum].movedPosition, colorType, moves[moveNum].pieceType, 0, moves[moveNum].capturedPiece, 0);
       
       score = -negaMax(boardState, !colorType, depth - 1);
@@ -146,7 +145,7 @@ Move generateMove(BoardState* boardState,
                   enum BitboardType colorType,
                   int recurseDepth)
 {
-  Move move = {0, 0, 0, 0};
+  Move move = {0, 0, 0, 0, 0};
   
   int numFirstMoves = 950;
   int i;
@@ -169,7 +168,17 @@ Move generateMove(BoardState* boardState,
       // undo the move
       updateBoardState(boardState, firstMoves[i].initialPosition, firstMoves[i].movedPosition, colorType, firstMoves[i].pieceType, 0, firstMoves[i].capturedPiece, 1);
       
-      if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
+      
+      
+      if(score >= maxScore)
+      {
+        maxScore = score;
+        move = firstMoves[i];
+      }
+      
+      
+      
+      /*if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
       {
         if(score > maxScore)
         {
@@ -185,7 +194,7 @@ Move generateMove(BoardState* boardState,
           maxScore = score;
           move = firstMoves[i];
         }
-      }
+      }*/
       
     }
   
@@ -193,8 +202,6 @@ Move generateMove(BoardState* boardState,
   
   return move;
 }
-
-
 
 
 
@@ -264,7 +271,7 @@ Move* generatePawnMoves(BoardState* boardState,
                          enum BitboardType colorType)
 {
   int i = 0; //For captured Piece type
-  Move* moves = (Move*) malloc(sizeof(Move) * 50);
+  Move* moves = (Move*) calloc(50, sizeof(Move) * 50);
   int moveNum = 0;
   
   Move move;
@@ -425,7 +432,7 @@ Move* generateRookMoves(BoardState* boardState,
                          enum BitboardType colorType)
 {
 
-  Move* moves = (Move*) malloc(sizeof(Move) * 50);
+  Move* moves = (Move*) calloc(50, sizeof(Move) * 50);
 
   int j; //for captured Piece type
   int moveNum = 0; //number of moves
@@ -592,7 +599,7 @@ Move* generateKnightMoves(BoardState* boardState,
                          Bitboard isolatedPiece,
                          enum BitboardType colorType)
 {
-    Move* moves = (Move*) malloc(sizeof(Move) * 50);
+    Move* moves = (Move*) calloc(50, sizeof(Move) * 50);
 
 	int i = 0;
   int moveNum = 0;
@@ -806,7 +813,7 @@ Move* generateBishopMoves(BoardState* boardState,
                          Bitboard isolatedPiece,
                          enum BitboardType colorType)
 {
-  Move* moves = (Move*) malloc(sizeof(Move) * 50);
+  Move* moves = (Move*) calloc(50, sizeof(Move) * 50);
 
   
     int moveNum = 0;
@@ -951,7 +958,7 @@ Move* generateAllQueenMoves(BoardState* boardState,
     Bitboard isolatedPiece = pieces & -pieces;
     Move* setOfMoves = generateQueenMoves(boardState, isolatedPiece, colorType);
     
-    memcpy((void*)&moves[pieceNum++ * 50], (void*)setOfMoves, sizeof(Move) * 50);
+    memcpy((void*)&moves[pieceNum++ * 100], (void*)setOfMoves, sizeof(Move) * 100);
     
     // reset ls1b
     pieces &= pieces - 1;
@@ -976,7 +983,7 @@ Move* generateQueenMoves(BoardState* boardState,
 {
   Move* moveSet1 = generateRookMoves(boardState, isolatedPiece, colorType);
   Move* moveSet2 = generateBishopMoves(boardState, isolatedPiece, colorType);
-  Move* moves = (Move*) malloc(sizeof(Move) * 100);
+  Move* moves = (Move*) calloc(100, sizeof(Move) * 100);
 
   memcpy((void*)moves, (void*)moveSet1, sizeof(Move) * 50);
   memcpy((void*)&moves[50], (void*)moveSet2, sizeof(Move) * 50);
@@ -988,7 +995,7 @@ Move* generateQueenMoves(BoardState* boardState,
 Move* generateAllKingMoves(BoardState* boardState,
                            enum BitboardType colorType)
 {
-  Move* moves = (Move*) malloc(sizeof(Move) * 50);
+  Move* moves = (Move*) calloc(50, sizeof(Move) * 50);
   int pieceNum = 0;
   
   Bitboard pieces = boardState->boards[BOARD_TYPE_ALL_KING_POSITIONS] & boardState->boards[colorType];
@@ -1023,6 +1030,13 @@ Move* generateKingMoves(BoardState* boardState,
 {
   Move* moves = (Move*) malloc(sizeof(Move) * 50);
   int moveNum = 0;
+  
+  int index;
+  
+  for(index = 0; index < 50; ++index)
+  {
+  }
+  
   
 
   Move move = {0, 0, 0};
