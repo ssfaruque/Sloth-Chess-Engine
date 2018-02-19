@@ -14,6 +14,7 @@ void initSlothChessEngine(SlothChessEngine* engine, BoardState* boardState, enum
 {
   engine->boardState = boardState;
   engine->playerType = playerType;
+  engine->turn       = 0;
 }
 
 

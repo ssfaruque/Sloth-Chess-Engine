@@ -77,6 +77,13 @@ int centerControlEval(BoardState* boardState);
 
 
 
+
+int pieceSquareEval(BoardState* boardState);
+
+
+
+
+
 /**
  *  @brief Finds a value based on the current state of the game
  *  @param boardState The BoardState that we want to evaluate

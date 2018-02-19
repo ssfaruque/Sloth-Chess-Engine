@@ -16,6 +16,86 @@ const int weights[] = {100, 500, 300, 325, 900, 5000};
 
 
 
+const int pawnPST[] =
+{
+  0,  0,  0,  0,  0,  0,  0,  0,
+  50, 50, 50, 50, 50, 50, 50, 50,
+  10, 10, 20, 30, 30, 20, 10, 10,
+  5,  5, 10, 25, 25, 10,  5,  5,
+  0,  0,  0, 20, 20,  0,  0,  0,
+  5, -5,-10,  0,  0,-10, -5,  5,
+  5, 10, 10,-20,-20, 10, 10,  5,
+  0,  0,  0,  0,  0,  0,  0,  0
+};
+
+
+const int rookPST [] =
+{
+  0,  0,  0,  0,  0,  0,  0,  0,
+  5, 10, 10, 10, 10, 10, 10,  5,
+  -5,  0,  0,  0,  0,  0,  0, -5,
+  -5,  0,  0,  0,  0,  0,  0, -5,
+  -5,  0,  0,  0,  0,  0,  0, -5,
+  -5,  0,  0,  0,  0,  0,  0, -5,
+  -5,  0,  0,  0,  0,  0,  0, -5,
+  0,  0,  0,  5,  5,  0,  0,  0
+};
+
+
+const int knightPST [] =
+{
+  -50,-40,-30,-30,-30,-30,-40,-50,
+  -40,-20,  0,  0,  0,  0,-20,-40,
+  -30,  0, 10, 15, 15, 10,  0,-30,
+  -30,  5, 15, 20, 20, 15,  5,-30,
+  -30,  0, 15, 20, 20, 15,  0,-30,
+  -30,  5, 10, 15, 15, 10,  5,-30,
+  -40,-20,  0,  5,  5,  0,-20,-40,
+  -50,-40,-30,-30,-30,-30,-40,-50
+};
+
+
+const int bishopPST [] =
+{
+  -20,-10,-10,-10,-10,-10,-10,-20,
+  -10,  0,  0,  0,  0,  0,  0,-10,
+  -10,  0,  5, 10, 10,  5,  0,-10,
+  -10,  5,  5, 10, 10,  5,  5,-10,
+  -10,  0, 10, 10, 10, 10,  0,-10,
+  -10, 10, 10, 10, 10, 10, 10,-10,
+  -10,  5,  0,  0,  0,  0,  5,-10,
+  -20,-10,-10,-10,-10,-10,-10,-20
+};
+
+
+const int queenPST [] =
+{
+  -20,-10,-10, -5, -5,-10,-10,-20,
+  -10,  0,  0,  0,  0,  0,  0,-10,
+  -10,  0,  5,  5,  5,  5,  0,-10,
+  -5,  0,  5,  5,  5,  5,  0, -5,
+  0,  0,  5,  5,  5,  5,  0, -5,
+  -10,  5,  5,  5,  5,  5,  0,-10,
+  -10,  0,  5,  0,  0,  0,  0,-10,
+  -20,-10,-10, -5, -5,-10,-10,-20
+};
+
+
+const int kingPST [] =
+{
+  //king middle game
+  -30,-40,-40,-50,-50,-40,-40,-30,
+  -30,-40,-40,-50,-50,-40,-40,-30,
+  -30,-40,-40,-50,-50,-40,-40,-30,
+  -30,-40,-40,-50,-50,-40,-40,-30,
+  -20,-30,-30,-40,-40,-30,-30,-20,
+  -10,-20,-20,-20,-20,-20,-20,-10,
+  20, 20,  0,  0,  0,  0, 20, 20,
+  20, 30, 10,  0,  0, 10, 30, 20
+};
+
+
+
 int countNumPieces(Bitboard bitboard)
 {
   int numPieces = 0;
@@ -78,9 +158,123 @@ int centerControlEval(BoardState* boardState)
 }
 
 
+
+
+int spaceScore(int space, int pieceType)
+{
+  switch(pieceType)
+  {
+    case BOARD_TYPE_ALL_PAWN_POSITIONS:
+      return pawnPST[space];
+      
+    case BOARD_TYPE_ALL_ROOK_POSITIONS:
+      return rookPST[space];
+      
+    case BOARD_TYPE_ALL_KNIGHT_POSITIONS:
+      return kingPST[space];
+      
+    case BOARD_TYPE_ALL_BISHOP_POSITIONS:
+      return bishopPST[space];
+      
+    case BOARD_TYPE_ALL_QUEEN_POSITIONS:
+      return queenPST[space];
+      
+    case BOARD_TYPE_ALL_KING_POSITIONS:
+      return kingPST[space];
+      
+    default:
+      return 0;
+  }
+}
+
+
+
+// Below function is from chess programming wiki
+
+// Returns position of the only set bit in 'n'
+int findPosition(uint64_t n, int colorType)
+{
+  unsigned int i = 1, pos = 1;
+  
+  // Iterate through bits of n till we find a set bit
+  // i&n will be non-zero only when 'i' and 'n' have a set bit
+  // at same position
+  while (!(i & n))
+  {
+    // Unset current bit and set the next bit in 'i'
+    i = i << 1;
+    
+    // increment position
+    ++pos;
+    
+    // *** GET RID OF BELOW IF STATEMENT ***
+    if(pos > 63)
+      return 0;
+    
+    //printf("n = %d \n", n);
+  }
+  
+  
+  if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
+    return 63 - pos;
+  
+  else
+    return pos;
+}
+
+
+
+
+
+
+int pieceSquareEval(BoardState* boardState)
+{
+  int score = 0;
+  
+  int pieceType;
+  
+  for(pieceType = 2; pieceType <= BOARD_TYPE_ALL_KING_POSITIONS; ++pieceType)
+  {
+    Bitboard whitePieces = boardState->boards[pieceType] & boardState->boards[BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS];
+    Bitboard blackPieces = boardState->boards[pieceType] & boardState->boards[BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS];
+    
+    while(whitePieces)
+    {
+      Bitboard isolatedPiece = whitePieces & -whitePieces;
+      
+      int space = findPosition(isolatedPiece, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
+      
+      score += spaceScore(space, pieceType);
+      
+      // reset ls1b
+      whitePieces &= whitePieces - 1;
+    }
+    
+    
+    while(blackPieces)
+    {
+      Bitboard isolatedPiece = blackPieces & -blackPieces;
+      
+      int space = findPosition(isolatedPiece, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS);
+      
+      score += -spaceScore(space, pieceType);
+   
+      // reset ls1b
+      blackPieces &= blackPieces - 1;
+    }
+    
+    
+  }
+  
+  return score;
+}
+
+
+
+
 int eval(BoardState* boardState)
 {
-  return materialEval(boardState) + centerControlEval(boardState);
+  return materialEval(boardState) + centerControlEval(boardState) + pieceSquareEval(boardState);
 }
 
 

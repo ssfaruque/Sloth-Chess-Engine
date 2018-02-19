@@ -20,11 +20,13 @@ typedef Move* (*moveGeneration)(BoardState* boardState,
                                 Bitboard isolatedPiece,
                                 enum BitboardType colorType);
 
+
+/*
 moveGeneration possibleMoves[] = {generatePawnMoves,   generateRookMoves,
                                   generateKnightMoves, generateBishopMoves,
                                   generateQueenMoves,  generateKingMoves};
 
-
+*/
 
 
 void updateFlagState(BoardState* boardState,
@@ -105,6 +107,68 @@ int updateBoardState(BoardState* boardState,
 
 
 
+
+
+
+/* Skeleton functions to fill out */
+
+void generateAllSlidingMovesQuiet(BoardState* boardState,
+                                  Bitboard isolatedPiece,
+                                  int pieceType,
+                                  enum BitboardType colorType,
+                                  Moves* moves)
+{
+}
+
+
+void generateAllSlidingMovesCapture(BoardState* boardState,
+                                    Bitboard isolatedPiece,
+                                    int pieceType,
+                                    enum BitboardType colorType,
+                                    Moves* moves)
+{
+}
+
+
+void generateAllDiagonalMovesQuiet(BoardState* boardState,
+                                   Bitboard isolatedPiece,
+                                   int pieceType,
+                                   enum BitboardType colorType,
+                                   Moves* moves)
+{
+}
+
+
+void generateAllDiagonalMovesCapture(BoardState* boardState,
+                                     Bitboard isolatedPiece,
+                                     int pieceType,
+                                     enum BitboardType colorType,
+                                     Moves* moves)
+{
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 int negaMax(BoardState* boardState,
             enum BitboardType colorType,
             int depth)
@@ -114,7 +178,8 @@ int negaMax(BoardState* boardState,
   
   int max = -111111111;
   
-  Move* moves = generateAllMoves(boardState, colorType);
+  Moves moves;
+  generateAllMoves(boardState, colorType, &moves);
   int numMoves = 950;
   int moveNum = 0;
   int score = 0;
@@ -134,13 +199,14 @@ int negaMax(BoardState* boardState,
         
       }
   }
+  
 
   return max;
 }
+*/
 
 
-
-
+/*
 Move generateMove(BoardState* boardState,
                   enum BitboardType colorType,
                   int recurseDepth)
@@ -153,7 +219,9 @@ Move generateMove(BoardState* boardState,
   int score = 0;
   int maxScore = 0;
   
-  Move* firstMoves = generateAllMoves(boardState, colorType);
+  Moves firstMoves;
+  
+  generateAllMoves(boardState, colorType, &firstMoves);
   
   for(i = 0; i < numFirstMoves; ++i)
   {
@@ -174,70 +242,40 @@ Move generateMove(BoardState* boardState,
       {
         maxScore = score;
         move = firstMoves[i];
+        move.boardEval = score;
       }
-      
-      
-      
-      /*if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
-      {
-        if(score > maxScore)
-        {
-          maxScore = score;
-          move = firstMoves[i];
-        }
-      }
-      
-      else if(colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
-      {
-        if(score < maxScore)
-        {
-          maxScore = score;
-          move = firstMoves[i];
-        }
-      }*/
       
     }
   
   }
   
+  free(firstMoves);
+  
   return move;
 }
+*/
 
 
 
-
-Move* generateAllMoves(BoardState* boardState,
-                       enum BitboardType colorType)
+void generateAllMoves(BoardState* boardState,
+                      enum BitboardType colorType,
+                      Moves* moves)
 {
-  Move* moves = (Move*) malloc(sizeof(Move) * 950);
-  
-  Move* allPawnMoves = generateAllPawnMoves(boardState, colorType);
-  Move* allRookMoves = generateAllRookMoves(boardState, colorType);
-  Move* allKnightMoves = generateAllKnightMoves(boardState, colorType);
-  Move* allBishopMoves = generateAllBishopMoves(boardState, colorType);
-  Move* allQueenMoves = generateAllQueenMoves(boardState, colorType);
-  Move* allKingMoves = generateAllKingMoves(boardState, colorType);
-  
-  
-  memcpy((void*)&moves[0], (void*)allPawnMoves, sizeof(Move) * 400);
-  memcpy((void*)&moves[400], (void*)allRookMoves, sizeof(Move) * 100);
-  memcpy((void*)&moves[500], (void*)allKnightMoves, sizeof(Move) * 100);
-  memcpy((void*)&moves[600], (void*)allBishopMoves, sizeof(Move) * 100);
-  memcpy((void*)&moves[700], (void*)allQueenMoves, sizeof(Move) * 200);
-  memcpy((void*)&moves[900], (void*)allKingMoves, sizeof(Move) * 50);
-  
-  return moves;
+  generateAllPawnMoves(boardState, colorType, moves);
+  generateAllRookMoves(boardState, colorType, moves);
+  generateAllKnightMoves(boardState, colorType, moves);
+  generateAllBishopMoves(boardState, colorType, moves);
+  //generateAllQueenMoves(boardState, colorType, moves);
+  generateAllKingMoves(boardState, colorType, moves);
 }
 
 
 
 
-Move* generateAllPawnMoves(BoardState* boardState,
-                            enum BitboardType colorType)
+void generateAllPawnMoves(BoardState* boardState,
+                          enum BitboardType colorType,
+                          Moves* moves)
 {
-  Move* moves = (Move*) malloc(sizeof(Move) * 400);
-  int pieceNum = 0;
-  
   Bitboard pieces = boardState->boards[BOARD_TYPE_ALL_PAWN_POSITIONS] & boardState->boards[colorType];
   
   int i;
@@ -245,33 +283,29 @@ Move* generateAllPawnMoves(BoardState* boardState,
   while(pieces)
   {
     Bitboard isolatedPiece = pieces & -pieces;
-    Move* setOfMoves = generatePawnMoves(boardState, isolatedPiece, colorType);
+    
+    generatePawnMoves(boardState, isolatedPiece, colorType, moves);
 
-    
-    
-    memcpy((void*)&moves[pieceNum++ * 50], (void*)setOfMoves, sizeof(Move) * 50);
-    
     // reset ls1b
     pieces &= pieces - 1;
   }
   
-  
+  /*
   for(i = 0; i < 400; ++i)
   {
     moves[i].pieceType = BOARD_TYPE_ALL_PAWN_POSITIONS;
-  }
+  }*/
   
-  return moves;
 }
 
 
 
-Move* generatePawnMoves(BoardState* boardState,
+void generatePawnMoves(BoardState* boardState,
                          Bitboard isolatedPiece,
-                         enum BitboardType colorType)
+                         enum BitboardType colorType,
+                       Moves* moves)
 {
   int i = 0; //For captured Piece type
-  Move* moves = (Move*) calloc(50, sizeof(Move) * 50);
   int moveNum = 0;
   
   Move move;
@@ -284,7 +318,8 @@ Move* generatePawnMoves(BoardState* boardState,
     // If Valid and is not Capture, added to moves.
     if(move.movedPosition &&
         !(move.movedPosition & boardState->boards[!colorType]))
-      moves[moveNum++] = move;
+      moves->moves[BOARD_TYPE_ALL_PAWN_POSITIONS - 2][moves->numPawnMoves++] = move;
+    
     
     /*Generate Slide Up 2 when unmoved*/
     if((isolatedPiece & 0x000000000000ff00) != 0) // if in initial position
@@ -293,7 +328,7 @@ Move* generatePawnMoves(BoardState* boardState,
       // If Valid and is not Capture, added to moves.
       if(move.movedPosition &&
           !(move.movedPosition & boardState->boards[!colorType]))
-        moves[moveNum++] = move;
+        moves->moves[BOARD_TYPE_ALL_PAWN_POSITIONS - 2][moves->numPawnMoves++] = move;
         
     }
 
@@ -310,7 +345,7 @@ Move* generatePawnMoves(BoardState* boardState,
 					  break;
 				  }
 			  }
-        moves[moveNum++] = move;
+        moves->moves[BOARD_TYPE_ALL_PAWN_POSITIONS - 2][moves->numPawnMoves++] = move;
 
 		  }
     
@@ -325,7 +360,7 @@ Move* generatePawnMoves(BoardState* boardState,
 					  break;
 				  }
 			  }
-			  moves[moveNum++] = move;
+			  moves->moves[BOARD_TYPE_ALL_PAWN_POSITIONS - 2][moves->numPawnMoves++] = move;
 
 		  }
 
@@ -340,7 +375,7 @@ Move* generatePawnMoves(BoardState* boardState,
     // If Valid and is not Capture, added to moves.
     if (move.movedPosition &&
         !(move.movedPosition & boardState->boards[!colorType]))
-      moves[moveNum++] = move;
+      moves->moves[BOARD_TYPE_ALL_PAWN_POSITIONS - 2][moves->numPawnMoves++] = move;
     
     /*Generate Slide Up 2 when unmoved*/
     if ((isolatedPiece & 0x00ff000000000000) != 0) //if in initial position
@@ -350,7 +385,7 @@ Move* generatePawnMoves(BoardState* boardState,
       // If Valid and is not Capture, added to moves
       if (move.movedPosition &&
           !(move.movedPosition & boardState->boards[!colorType]))
-        moves[moveNum++] = move;
+        moves->moves[BOARD_TYPE_ALL_PAWN_POSITIONS - 2][moves->numPawnMoves++] = move;
     }
 	   //if Capture, has to be Diagonal
 
@@ -365,7 +400,7 @@ Move* generatePawnMoves(BoardState* boardState,
 					  break;
 				  }
 			  }
-			  moves[moveNum++] = move;
+			  moves->moves[BOARD_TYPE_ALL_PAWN_POSITIONS - 2][moves->numPawnMoves++] = move;
 			
 		  }
 		  move = generateDiagonalDownRightMove(isolatedPiece, boardState, colorType, 1);
@@ -379,7 +414,7 @@ Move* generatePawnMoves(BoardState* boardState,
 					  break;
 				  }
 			  }
-			  moves[moveNum++] = move;
+			  moves->moves[BOARD_TYPE_ALL_PAWN_POSITIONS - 2][moves->numPawnMoves++] = move;
 
 		  }
       
@@ -387,17 +422,14 @@ Move* generatePawnMoves(BoardState* boardState,
 
   }
   
-  // Need to implement en passant
-  return moves;
-
 }
 
 
 
-Move* generateAllRookMoves(BoardState* boardState,
-                           enum BitboardType colorType)
+void generateAllRookMoves(BoardState* boardState,
+                           enum BitboardType colorType,
+                          Moves* moves)
 {
-  Move* moves = (Move*) malloc(sizeof(Move) * 100);
   int pieceNum = 0;
   
   Bitboard pieces = boardState->boards[BOARD_TYPE_ALL_ROOK_POSITIONS] & boardState->boards[colorType];
@@ -405,9 +437,9 @@ Move* generateAllRookMoves(BoardState* boardState,
   while(pieces)
   {
     Bitboard isolatedPiece = pieces & -pieces;
-    Move* setOfMoves = generateRookMoves(boardState, isolatedPiece, colorType);
     
-    memcpy((void*)&moves[pieceNum++ * 50], (void*)setOfMoves, sizeof(Move) * 50);
+    generateRookMoves(boardState, isolatedPiece, colorType, moves);
+    
     
     // reset ls1b
     pieces &= pieces - 1;
@@ -416,24 +448,22 @@ Move* generateAllRookMoves(BoardState* boardState,
   
   int i;
   
+  /*
   for(i = 0; i < 100; ++i)
   {
     moves[i].pieceType = BOARD_TYPE_ALL_ROOK_POSITIONS;
   }
-  
-  return moves;
+  */
 }
 
 
 
 
-Move* generateRookMoves(BoardState* boardState,
+void generateRookMoves(BoardState* boardState,
                          Bitboard isolatedPiece,
-                         enum BitboardType colorType)
+                         enum BitboardType colorType,
+                       Moves* moves)
 {
-
-  Move* moves = (Move*) calloc(50, sizeof(Move) * 50);
-
   int j; //for captured Piece type
   int moveNum = 0; //number of moves
   Move move;
@@ -459,11 +489,11 @@ Move* generateRookMoves(BoardState* boardState,
 				  break;
 			  }
 		  }
-		  moves[moveNum++] = move;
+		  moves->moves[BOARD_TYPE_ALL_ROOK_POSITIONS - 2][moves->numRookMoves++] = move;
         break;
       }
       else//quiet
-        moves[moveNum++] = move;
+        moves->moves[BOARD_TYPE_ALL_ROOK_POSITIONS - 2][moves->numRookMoves++] = move;
     }
     else
       break;
@@ -488,11 +518,11 @@ Move* generateRookMoves(BoardState* boardState,
 				  break;
 			  }
 		  }
-		  moves[moveNum++] = move;
+		  moves->moves[BOARD_TYPE_ALL_ROOK_POSITIONS - 2][moves->numRookMoves++] = move;
         break;
       }
       else//quiet
-        moves[moveNum++] = move;
+        moves->moves[BOARD_TYPE_ALL_ROOK_POSITIONS - 2][moves->numRookMoves++] = move;
     }
     else
       break;
@@ -517,11 +547,11 @@ Move* generateRookMoves(BoardState* boardState,
 				  break;
 			  }
 		  }
-		  moves[moveNum++] = move;
+		  moves->moves[BOARD_TYPE_ALL_ROOK_POSITIONS - 2][moves->numRookMoves++] = move;
         break;
       }
       else//quiet
-        moves[moveNum++] = move;
+        moves->moves[BOARD_TYPE_ALL_ROOK_POSITIONS - 2][moves->numRookMoves++] = move;
     }
     else
       break;
@@ -545,27 +575,23 @@ Move* generateRookMoves(BoardState* boardState,
 				  break;
 			  }
 		  }
-		  moves[moveNum++] = move;
+		  moves->moves[BOARD_TYPE_ALL_ROOK_POSITIONS - 2][moves->numRookMoves++] = move;
         break;
       }
       else//quiet
-        moves[moveNum++] = move;
+        moves->moves[BOARD_TYPE_ALL_ROOK_POSITIONS - 2][moves->numRookMoves++] = move;
     }
     else
       break;
   }
 
-
-
-
-  return moves;
 }
 
 
-Move* generateAllKnightMoves(BoardState* boardState,
-                           enum BitboardType colorType)
+void generateAllKnightMoves(BoardState* boardState,
+                           enum BitboardType colorType,
+                            Moves* moves)
 {
-  Move* moves = (Move*) malloc(sizeof(Move) * 100);
   int pieceNum = 0;
   
   Bitboard pieces = boardState->boards[BOARD_TYPE_ALL_KNIGHT_POSITIONS] & boardState->boards[colorType];
@@ -573,9 +599,9 @@ Move* generateAllKnightMoves(BoardState* boardState,
   while(pieces)
   {
     Bitboard isolatedPiece = pieces & -pieces;
-    Move* setOfMoves = generateKnightMoves(boardState, isolatedPiece, colorType);
     
-    memcpy((void*)&moves[pieceNum++ * 50], (void*)setOfMoves, sizeof(Move) * 50);
+    generateKnightMoves(boardState, isolatedPiece, colorType, moves);
+
     
     // reset ls1b
     pieces &= pieces - 1;
@@ -583,24 +609,23 @@ Move* generateAllKnightMoves(BoardState* boardState,
   
   int i;
   
+  /*
   for(i = 0; i < 100; ++i)
   {
     moves[i].pieceType = BOARD_TYPE_ALL_KNIGHT_POSITIONS;
   }
+  */
   
-  
-  return moves;
 }
 
 
 
 
-Move* generateKnightMoves(BoardState* boardState,
+void generateKnightMoves(BoardState* boardState,
                          Bitboard isolatedPiece,
-                         enum BitboardType colorType)
+                         enum BitboardType colorType,
+                         Moves* moves)
 {
-    Move* moves = (Move*) calloc(50, sizeof(Move) * 50);
-
 	int i = 0;
   int moveNum = 0;
   Move move;
@@ -621,11 +646,11 @@ Move* generateKnightMoves(BoardState* boardState,
 					break;
 				}
 			}
-			moves[moveNum++] = move;
+			moves->moves[BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2][moves->numKnightMoves++] = move;
 		}
             
         else
-            moves[moveNum++] = move;
+            moves->moves[BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2][moves->numKnightMoves++] = move;
     }
 
 
@@ -644,10 +669,10 @@ Move* generateKnightMoves(BoardState* boardState,
 					break;
 				}
 			}
-			moves[moveNum++] = move;
+			moves->moves[BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2][moves->numKnightMoves++] = move;
 		}
         else
-            moves[moveNum++] = move;
+            moves->moves[BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2][moves->numKnightMoves++] = move;
     }
 
     move = generateUpUpRight(isolatedPiece, boardState, colorType);
@@ -665,25 +690,38 @@ Move* generateKnightMoves(BoardState* boardState,
 					break;
 				}
 			}
-			moves[moveNum++] = move;
+			moves->moves[BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2][moves->numKnightMoves++] = move;
 		}
           
         else
-            moves[moveNum++] = move;
+            moves->moves[BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2][moves->numKnightMoves++] = move;
     }
 
     move = generateUpRightRight(isolatedPiece, boardState, colorType);
-        //if legal move
-    if (move.movedPosition)
+  
+  //if legal move
+  if (move.movedPosition)
+  {
+    //capture move
+    if (move.movedPosition & boardState->boards[!colorType])
     {
-        //capture move
-        if (move.movedPosition & boardState->boards[!colorType])
-            moves[moveNum++] = move;
-        else
-            moves[moveNum++] = move;
-
-    move = generateDownDownLeft(isolatedPiece, boardState, colorType);
+      for (i = 0; i < NUM_PIECES; i++) // put captured Piece type into move
+      {
+        if (move.movedPosition & boardState->boards[i + 2])
+        {
+          move.capturedPiece = i + 2;
+          break;
+        }
+      }
+      moves->moves[BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2][moves->numKnightMoves++] = move;
     }
+    
+    else
+      moves->moves[BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2][moves->numKnightMoves++] = move;
+  }
+  
+  move = generateDownDownLeft(isolatedPiece, boardState, colorType);
+    
 
         //if legal move
     if (move.movedPosition)
@@ -699,11 +737,11 @@ Move* generateKnightMoves(BoardState* boardState,
 					break;
 				}
 			}
-			moves[moveNum++] = move;
+			moves->moves[BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2][moves->numKnightMoves++] = move;
 		}
         
         else
-            moves[moveNum++] = move;
+            moves->moves[BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2][moves->numKnightMoves++] = move;
     }
 
     move = generateDownLeftLeft(isolatedPiece, boardState, colorType);
@@ -721,11 +759,11 @@ Move* generateKnightMoves(BoardState* boardState,
 					break;
 				}
 			}
-			moves[moveNum++] = move;
+			moves->moves[BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2][moves->numKnightMoves++] = move;
 		}
         
         else
-            moves[moveNum++] = move;
+            moves->moves[BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2][moves->numKnightMoves++] = move;
     }
 
     move = generateDownRightRight(isolatedPiece, boardState, colorType);
@@ -743,10 +781,10 @@ Move* generateKnightMoves(BoardState* boardState,
 					break;
 				}
 			}
-			moves[moveNum++] = move;
+			moves->moves[BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2][moves->numKnightMoves++] = move;
 		}
         else
-            moves[moveNum++] = move;
+            moves->moves[BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2][moves->numKnightMoves++] = move;
     }
 
     move = generateDownDownRight(isolatedPiece, boardState, colorType);
@@ -764,22 +802,21 @@ Move* generateKnightMoves(BoardState* boardState,
 					break;
 				}
 			}
-			moves[moveNum++] = move;
+			moves->moves[BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2][moves->numKnightMoves++] = move;
 		}
             
         else
-            moves[moveNum++] = move;
+            moves->moves[BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2][moves->numKnightMoves++] = move;
     }
 
-    return moves;
 }
 
 
 
-Move* generateAllBishopMoves(BoardState* boardState,
-                           enum BitboardType colorType)
+void generateAllBishopMoves(BoardState* boardState,
+                           enum BitboardType colorType,
+                            Moves* moves)
 {
-  Move* moves = (Move*) malloc(sizeof(Move) * 100);
   int pieceNum = 0;
   
   Bitboard pieces = boardState->boards[BOARD_TYPE_ALL_BISHOP_POSITIONS] & boardState->boards[colorType];
@@ -787,9 +824,9 @@ Move* generateAllBishopMoves(BoardState* boardState,
   while(pieces)
   {
     Bitboard isolatedPiece = pieces & -pieces;
-    Move* setOfMoves = generateBishopMoves(boardState, isolatedPiece, colorType);
     
-    memcpy((void*)&moves[pieceNum++ * 50], (void*)setOfMoves, sizeof(Move) * 50);
+    generateBishopMoves(boardState, isolatedPiece, colorType, moves);
+
     
     // reset ls1b
     pieces &= pieces - 1;
@@ -798,24 +835,22 @@ Move* generateAllBishopMoves(BoardState* boardState,
   
   int i;
   
+  /*
   for(i = 0; i < 100; ++i)
   {
     moves[i].pieceType = BOARD_TYPE_ALL_BISHOP_POSITIONS;
   }
-  
-  return moves;
+  */
 }
 
 
 
 
-Move* generateBishopMoves(BoardState* boardState,
+void generateBishopMoves(BoardState* boardState,
                          Bitboard isolatedPiece,
-                         enum BitboardType colorType)
+                         enum BitboardType colorType,
+                         Moves* moves)
 {
-  Move* moves = (Move*) calloc(50, sizeof(Move) * 50);
-
-  
     int moveNum = 0;
     Move move;
 
@@ -840,12 +875,12 @@ Move* generateBishopMoves(BoardState* boardState,
 						break;
 					}
 				}
-				moves[moveNum++] = move;
+				moves->moves[BOARD_TYPE_ALL_BISHOP_POSITIONS - 2][moves->numBishopMoves++] = move;
                 break;
             }
 
             else
-                moves[moveNum++] = move;
+                moves->moves[BOARD_TYPE_ALL_BISHOP_POSITIONS - 2][moves->numBishopMoves++] = move;
         }
         else
             break;
@@ -870,11 +905,11 @@ Move* generateBishopMoves(BoardState* boardState,
 						break;
 					}
 				}
-				moves[moveNum++] = move;
+				moves->moves[BOARD_TYPE_ALL_BISHOP_POSITIONS - 2][moves->numBishopMoves++] = move;
                 break;
             }
             else
-                moves[moveNum++] = move;
+                moves->moves[BOARD_TYPE_ALL_BISHOP_POSITIONS - 2][moves->numBishopMoves++] = move;
         }
 
         else
@@ -900,11 +935,11 @@ Move* generateBishopMoves(BoardState* boardState,
 						break;
 					}
 				}
-				moves[moveNum++] = move;
+				moves->moves[BOARD_TYPE_ALL_BISHOP_POSITIONS - 2][moves->numBishopMoves++] = move;
                 break;
             }
             else
-                moves[moveNum++] = move;
+               moves->moves[BOARD_TYPE_ALL_BISHOP_POSITIONS - 2][moves->numBishopMoves++] = move;
         }
 
         else
@@ -930,25 +965,24 @@ Move* generateBishopMoves(BoardState* boardState,
 						break;
 					}
 				}
-				moves[moveNum++] = move;
+				moves->moves[BOARD_TYPE_ALL_BISHOP_POSITIONS - 2][moves->numBishopMoves++] = move;
                 break;
             }
             else
-                moves[moveNum++] = move;
+                moves->moves[BOARD_TYPE_ALL_BISHOP_POSITIONS - 2][moves->numBishopMoves++] = move;
         }
 
         else
             break;
     }
 
-    return moves;
 }
 
-
-Move* generateAllQueenMoves(BoardState* boardState,
-                           enum BitboardType colorType)
+/*
+void generateAllQueenMoves(BoardState* boardState,
+                           enum BitboardType colorType,
+                           Moves* moves)
 {
-  Move* moves = (Move*) malloc(sizeof(Move) * 200);
   int pieceNum = 0;
   
   Bitboard pieces = boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] & boardState->boards[colorType];
@@ -956,9 +990,9 @@ Move* generateAllQueenMoves(BoardState* boardState,
   while(pieces)
   {
     Bitboard isolatedPiece = pieces & -pieces;
-    Move* setOfMoves = generateQueenMoves(boardState, isolatedPiece, colorType);
     
-    memcpy((void*)&moves[pieceNum++ * 100], (void*)setOfMoves, sizeof(Move) * 100);
+    generateQueenMoves(boardState, isolatedPiece, colorType, moves);
+
     
     // reset ls1b
     pieces &= pieces - 1;
@@ -967,35 +1001,34 @@ Move* generateAllQueenMoves(BoardState* boardState,
   
   int i;
   
+ 
   for(i = 0; i < 200; ++i)
   {
     moves[i].pieceType = BOARD_TYPE_ALL_QUEEN_POSITIONS;
   }
   
-  return moves;
 }
 
 
 
-Move* generateQueenMoves(BoardState* boardState,
+
+void generateQueenMoves(BoardState* boardState,
                         Bitboard isolatedPiece,
-                        enum BitboardType colorType)
+                        enum BitboardType colorType,
+                        Moves* moves)
 {
   Move* moveSet1 = generateRookMoves(boardState, isolatedPiece, colorType);
   Move* moveSet2 = generateBishopMoves(boardState, isolatedPiece, colorType);
-  Move* moves = (Move*) calloc(100, sizeof(Move) * 100);
 
-  memcpy((void*)moves, (void*)moveSet1, sizeof(Move) * 50);
-  memcpy((void*)&moves[50], (void*)moveSet2, sizeof(Move) * 50);
-
-  return moves;
 }
+*/
 
 
-Move* generateAllKingMoves(BoardState* boardState,
-                           enum BitboardType colorType)
+
+void generateAllKingMoves(BoardState* boardState,
+                           enum BitboardType colorType,
+                          Moves* moves)
 {
-  Move* moves = (Move*) calloc(50, sizeof(Move) * 50);
   int pieceNum = 0;
   
   Bitboard pieces = boardState->boards[BOARD_TYPE_ALL_KING_POSITIONS] & boardState->boards[colorType];
@@ -1003,9 +1036,9 @@ Move* generateAllKingMoves(BoardState* boardState,
   while(pieces)
   {
     Bitboard isolatedPiece = pieces & -pieces;
-    Move* setOfMoves = generateKingMoves(boardState, isolatedPiece, colorType);
     
-    memcpy((void*)&moves[pieceNum++ * 50], (void*)setOfMoves, sizeof(Move) * 50);
+    generateKingMoves(boardState, isolatedPiece, colorType, moves);
+
     
     // reset ls1b
     pieces &= pieces - 1;
@@ -1013,32 +1046,23 @@ Move* generateAllKingMoves(BoardState* boardState,
   
   
   int i;
-  
+  /*
   for(i = 0; i < 50; ++i)
   {
     moves[i].pieceType = BOARD_TYPE_ALL_KING_POSITIONS;
   }
-  
-  return moves;
+  */
 }
 
 
 
-Move* generateKingMoves(BoardState* boardState,
+void generateKingMoves(BoardState* boardState,
                        Bitboard isolatedPiece,
-                       enum BitboardType colorType)
+                       enum BitboardType colorType,
+                       Moves* moves)
 {
-  Move* moves = (Move*) malloc(sizeof(Move) * 50);
   int moveNum = 0;
   
-  int index;
-  
-  for(index = 0; index < 50; ++index)
-  {
-  }
-  
-  
-
   Move move = {0, 0, 0};
 
 
@@ -1073,15 +1097,14 @@ Move* generateKingMoves(BoardState* boardState,
 					break;
 				}
 			}
-      moves[moveNum++] = move;
+      moves->moves[BOARD_TYPE_ALL_KING_POSITIONS - 2][moves->numKingMoves++] = move;
 		}
 
       else
-        moves[moveNum++] = move;
+        moves->moves[BOARD_TYPE_ALL_KING_POSITIONS - 2][moves->numKingMoves++] = move;
     }
   }
 
-  return moves;
 }
 
 
