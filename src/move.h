@@ -133,6 +133,8 @@ int updateBoardState(BoardState* boardState,
 
 /*********************************** MOVE GENERATION BY TYPE ***********************************/
 
+int findCapturedPiece(BoardState* boardState, Bitboard movedPosition);
+
 
 /* Skeleton functions to fill out */
 
