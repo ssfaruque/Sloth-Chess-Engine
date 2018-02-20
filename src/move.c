@@ -150,15 +150,17 @@ void generateAllSlidingMoves(BoardState* boardState,
             if (colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
             {
                 move = generateSlideUpMove(isolatedPiece, boardState, colorType, 1);
+                move.pieceType = pieceType;
 
                 //If valid and is not capture
                 if (move.movedPosition &&
                     !(move.movedPosition & boardState->boards[!colorType]))
                     moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
 
-                if ((isolatedPiece & 0x000000000000ff00) != 0) //if in initial position
+                if ((isolatedPiece & 0x000000000000ff00) != 0) //if in initial position, move up by 2
                 {
                     move = generateSlideUpMove(isolatedPiece, boardState, colorType, 2);
+                    move.pieceType = pieceType;
 
                     //If valid and is not capture
                     if (move.movedPosition &&
@@ -171,6 +173,7 @@ void generateAllSlidingMoves(BoardState* boardState,
             else if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
             {
                 move = generateSlideDownMove(isolatedPiece, boardState, colorType, 1);
+                move.pieceType = pieceType;
 
                 //If valid and is not capture
                 if (move.movedPosition &&
@@ -180,6 +183,7 @@ void generateAllSlidingMoves(BoardState* boardState,
                 if ((isolatedPiece & 0x000000000000ff00) != 0) //if in initial position
                 {
                     move = generateSlideDownMove(isolatedPiece, boardState, colorType, 2);
+                    move.pieceType = pieceType;
 
                     //If valid and is not capture
                     if (move.movedPosition &&
@@ -201,6 +205,7 @@ void generateAllSlidingMoves(BoardState* boardState,
                 while(1)
                 {
                     move = rookMoveGenerate[i](isolatedPiece, boardState, colorType, offset++);
+                    move.pieceType = pieceType;
 
                     if (move.movedPosition) // if valid
                     {
@@ -236,6 +241,7 @@ void generateAllSlidingMoves(BoardState* boardState,
             for(int i = 0; i < sizeof(rookMoveGenerate) / sizeof(rookMoveGenerate[0]); ++i)
             {
                 move = rookMoveGenerate[i](isolatedPiece, boardState, colorType, 1);
+                move.pieceType = pieceType;
 
                 if (move.movedPosition) // if valid
                 {
@@ -273,6 +279,7 @@ void generateAllDiagonalMoves(BoardState* boardState,
             if (colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
             {
                   move = generateDiagonalUpLeftMove(isolatedPiece, boardState, colorType, 1);
+                  move.pieceType = pieceType;
 
                   if (move.movedPosition & boardState->boards[!colorType]) //if capture
                   {
@@ -281,6 +288,7 @@ void generateAllDiagonalMoves(BoardState* boardState,
                   }
 
                   move = generateDiagonalUpRightMove(isolatedPiece, boardState, colorType, 1);
+                  move.pieceType = pieceType;
 
                   if (move.movedPosition & boardState->boards[!colorType]) //if capture
                   {
@@ -292,6 +300,7 @@ void generateAllDiagonalMoves(BoardState* boardState,
             else if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
             {
                   move = generateDiagonalDownLeftMove(isolatedPiece, boardState, colorType, 1);
+                  move.pieceType = pieceType;
 
                   if (move.movedPosition & boardState->boards[!colorType])
                   {
@@ -300,6 +309,7 @@ void generateAllDiagonalMoves(BoardState* boardState,
                   }
 
                   move = generateDiagonalDownRightMove(isolatedPiece, boardState, colorType, 1);
+                  move.pieceType = pieceType;
 
                   if (move.movedPosition & boardState->boards[!colorType])
                   {
@@ -319,6 +329,7 @@ void generateAllDiagonalMoves(BoardState* boardState,
                 while(1)
                 {
                     move = bishopMoveGenerate[i](isolatedPiece, boardState, colorType, offset++);
+                    move.pieceType = pieceType;
 
                     if (move.movedPosition) // if valid
                     {
@@ -355,6 +366,7 @@ void generateAllDiagonalMoves(BoardState* boardState,
             for(int i = 0; i < sizeof(bishopMoveGenerate) / sizeof(bishopMoveGenerate[0]); ++i)
             {
                 move = bishopMoveGenerate[i](isolatedPiece, boardState, colorType, 1);
+                move.pieceType = pieceType;
 
                 if (move.movedPosition) // if valid
                 {
@@ -1304,6 +1316,7 @@ int findCol(Bitboard initialPosition)
 
 int isKingInCheck(BoardState* boardState, enum BitboardType colorType)
 {
+
 
   return 0;
 }
