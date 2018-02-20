@@ -142,31 +142,18 @@ int findCapturedPiece(BoardState* boardState, Bitboard movedPosition);
 /* These functions generate all of the possible moves for a particular
    piece and place them inside the moves list */
 
-void generateAllSlidingMovesQuiet(BoardState* boardState,
+void generateAllSlidingMoves(BoardState* boardState,
                                   Bitboard isolatedPiece,
                                   int pieceType,
                                   enum BitboardType colorType,
                                   Moves* moves);
 
-void generateAllSlidingMovesCapture(BoardState* boardState,
-                                    Bitboard isolatedPiece,
-                                    int pieceType,
-                                    enum BitboardType colorType,
-                                    Moves* moves);
 
-
-void generateAllDiagonalMovesQuiet(BoardState* boardState,
+void generateAllDiagonalMoves(BoardState* boardState,
                                    Bitboard isolatedPiece,
                                    int pieceType,
                                    enum BitboardType colorType,
                                    Moves* moves);
-
-void generateAllDiagonalMovesCapture(BoardState* boardState,
-                                    Bitboard isolatedPiece,
-                                    int pieceType,
-                                    enum BitboardType colorType,
-                                    Moves* moves);
-
 
 
 

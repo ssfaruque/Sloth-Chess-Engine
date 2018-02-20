@@ -36,6 +36,13 @@ typedef Move (*rookMove)(Bitboard initialPosition,
             rookMove rookMoveGenerate[] = {generateSlideLeftMove, generateSlideRightMove,
                                  generateSlideUpMove, generateSlideDownMove};
 
+typedef Move (*bishopMove)(Bitboard initialPosition,
+                           BoardState* boardState,
+                           enum BitboardType colorType,
+                           int offset);
+
+            bishopMove bishopMoveGenerate[] = {generateDiagonalDownLeftMove, generateDiagonalDownRightMove,
+                                 generateDiagonalUpLeftMove, generateDiagonalUpRightMove};
 
 void updateFlagState(BoardState* boardState,
                       Bitboard initialPiece,
@@ -128,7 +135,7 @@ int findCapturedPiece(BoardState* boardState, Bitboard movedPosition)
 
 /* Skeleton functions to fill out */
 
-void generateAllSlidingMovesQuiet(BoardState* boardState,
+void generateAllSlidingMoves(BoardState* boardState,
                                   Bitboard isolatedPiece,
                                   int pieceType,
                                   enum BitboardType colorType,
@@ -161,7 +168,7 @@ void generateAllSlidingMovesQuiet(BoardState* boardState,
                 }
             }
 
-            if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
+            else if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
             {
                 move = generateSlideDownMove(isolatedPiece, boardState, colorType, 1);
 
@@ -182,11 +189,10 @@ void generateAllSlidingMovesQuiet(BoardState* boardState,
                 }
             }
 
-        break;
+        break; //pawns
 
         case BOARD_TYPE_ALL_ROOK_POSITIONS :
         case BOARD_TYPE_ALL_QUEEN_POSITIONS :
-
 
             for(int i = 0; i < sizeof(rookMoveGenerate) / sizeof(rookMoveGenerate[0]); ++i)
             {
@@ -201,48 +207,172 @@ void generateAllSlidingMovesQuiet(BoardState* boardState,
                         if (move.movedPosition & boardState->boards[!colorType]) //if capture
                         {
                             move.capturedPiece = findCapturedPiece(boardState, move.movedPosition);
-                            moves->moves[pieceType - 2][moves->numRookMoves++] = move;
+
+                            if (pieceType == BOARD_TYPE_ALL_ROOK_POSITIONS)
+                                moves->moves[pieceType - 2][moves->numRookMoves++] = move;
+                            else
+                                moves->moves[pieceType - 2][moves->numQueenMoves++] = move;
                             break;
                         }
 
                         else //quiet move
-                            moves->moves[pieceType - 2][moves->numRookMoves++] = move;
+                        {
+                            if (pieceType == BOARD_TYPE_ALL_ROOK_POSITIONS)
+                                moves->moves[pieceType - 2][moves->numRookMoves++] = move;
+                            else
+                                moves->moves[pieceType - 2][moves->numQueenMoves++] = move;
+                        }
+
                     } //if valid
 
                 else
                     break;
                 } //while 1
             } // looping through rookMoveGenerate
-        break;
+        break; //rooks and queens
+
+        case BOARD_TYPE_ALL_KING_POSITIONS :
+
+            for(int i = 0; i < sizeof(rookMoveGenerate) / sizeof(rookMoveGenerate[0]); ++i)
+            {
+                move = rookMoveGenerate[i](isolatedPiece, boardState, colorType, 1);
+
+                if (move.movedPosition) // if valid
+                {
+                    if (move.movedPosition & boardState->boards[!colorType]) //if capture
+                    {
+                        move.capturedPiece = findCapturedPiece(boardState, move.movedPosition);
+                        moves->moves[pieceType - 2][moves->numKingMoves++] = move;
+                    }
+
+                    else //quiet move
+                        moves->moves[pieceType - 2][moves->numKingMoves++] = move;
+                } //if valid
+
+            } // looping through rookMoveGenerate
+        break; //king
+
     } //switch Piecetype
     //add king queen
 }
 
 
-void generateAllSlidingMovesCapture(BoardState* boardState,
-                                    Bitboard isolatedPiece,
-                                    int pieceType,
-                                    enum BitboardType colorType,
-                                    Moves* moves)
-{
-}
 
-
-void generateAllDiagonalMovesQuiet(BoardState* boardState,
+void generateAllDiagonalMoves(BoardState* boardState,
                                    Bitboard isolatedPiece,
                                    int pieceType,
                                    enum BitboardType colorType,
                                    Moves* moves)
 {
-}
+    Move move;
+    int offset;
 
+    switch (pieceType)
+    {
+        case BOARD_TYPE_ALL_PAWN_POSITIONS:
+            if (colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
+            {
+                  move = generateDiagonalUpLeftMove(isolatedPiece, boardState, colorType, 1);
 
-void generateAllDiagonalMovesCapture(BoardState* boardState,
-                                     Bitboard isolatedPiece,
-                                     int pieceType,
-                                     enum BitboardType colorType,
-                                     Moves* moves)
-{
+                  if (move.movedPosition & boardState->boards[!colorType]) //if capture
+                  {
+                      move.capturedPiece = findCapturedPiece(boardState, move.movedPosition);
+                      moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
+                  }
+
+                  move = generateDiagonalUpRightMove(isolatedPiece, boardState, colorType, 1);
+
+                  if (move.movedPosition & boardState->boards[!colorType]) //if capture
+                  {
+                      move.capturedPiece = findCapturedPiece(boardState, move.movedPosition);
+                      moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
+                  }
+            }
+
+            else if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
+            {
+                  move = generateDiagonalDownLeftMove(isolatedPiece, boardState, colorType, 1);
+
+                  if (move.movedPosition & boardState->boards[!colorType])
+                  {
+                      move.capturedPiece = findCapturedPiece(boardState, move.movedPosition);
+                      moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
+                  }
+
+                  move = generateDiagonalDownRightMove(isolatedPiece, boardState, colorType, 1);
+
+                  if (move.movedPosition & boardState->boards[!colorType])
+                  {
+                      move.capturedPiece = findCapturedPiece(boardState, move.movedPosition);
+                      moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
+                  }
+            }
+
+        break; //pawns
+
+        case BOARD_TYPE_ALL_BISHOP_POSITIONS:
+        case BOARD_TYPE_ALL_QUEEN_POSITIONS:
+            for(int i = 0; i < sizeof(bishopMoveGenerate) / sizeof(bishopMoveGenerate[0]); ++i)
+            {
+                offset = 1;
+
+                while(1)
+                {
+                    move = bishopMoveGenerate[i](isolatedPiece, boardState, colorType, offset++);
+
+                    if (move.movedPosition) // if valid
+                    {
+                        if (move.movedPosition & boardState->boards[!colorType]) //if capture
+                        {
+                            move.capturedPiece = findCapturedPiece(boardState, move.movedPosition);
+
+                            if (pieceType == BOARD_TYPE_ALL_BISHOP_POSITIONS)
+                                moves->moves[pieceType - 2][moves->numBishopMoves++] = move;
+                            else
+                                moves->moves[pieceType - 2][moves->numQueenMoves++] = move;
+
+                            break;
+                        }
+
+                        else //quiet move
+                        {
+                           if (pieceType == BOARD_TYPE_ALL_BISHOP_POSITIONS)
+                                moves->moves[pieceType - 2][moves->numBishopMoves++] = move;
+                            else
+                                moves->moves[pieceType - 2][moves->numQueenMoves++] = move;
+                        }
+
+                    } //if valid
+
+                else
+                    break;
+                } //while 1
+            } // looping through rookMoveGenerate
+        break; //rooks and queens
+
+        case BOARD_TYPE_ALL_KING_POSITIONS :
+
+            for(int i = 0; i < sizeof(bishopMoveGenerate) / sizeof(bishopMoveGenerate[0]); ++i)
+            {
+                move = bishopMoveGenerate[i](isolatedPiece, boardState, colorType, 1);
+
+                if (move.movedPosition) // if valid
+                {
+                    if (move.movedPosition & boardState->boards[!colorType]) //if capture
+                    {
+                        move.capturedPiece = findCapturedPiece(boardState, move.movedPosition);
+                        moves->moves[pieceType - 2][moves->numKingMoves++] = move;
+                    }
+
+                    else //quiet move
+                        moves->moves[pieceType - 2][moves->numKingMoves++] = move;
+                } //if valid
+
+            } // looping through rookMoveGenerate
+        break; //king
+
+    } //switch Piecetype
+
 }
 
 
