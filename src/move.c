@@ -379,23 +379,6 @@ void generateAllDiagonalMoves(BoardState* boardState,
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 int negaMax(BoardState* boardState,
             enum BitboardType colorType,
@@ -493,7 +476,7 @@ void generateAllMoves(BoardState* boardState,
   generateAllRookMoves(boardState, colorType, moves);
   generateAllKnightMoves(boardState, colorType, moves);
   generateAllBishopMoves(boardState, colorType, moves);
-  //generateAllQueenMoves(boardState, colorType, moves);
+  generateAllQueenMoves(boardState, colorType, moves);
   generateAllKingMoves(boardState, colorType, moves);
 }
 
@@ -506,8 +489,6 @@ void generateAllPawnMoves(BoardState* boardState,
 {
   Bitboard pieces = boardState->boards[BOARD_TYPE_ALL_PAWN_POSITIONS] & boardState->boards[colorType];
 
-  int i;
-
   while(pieces)
   {
     Bitboard isolatedPiece = pieces & -pieces;
@@ -518,11 +499,6 @@ void generateAllPawnMoves(BoardState* boardState,
     pieces &= pieces - 1;
   }
 
-  /*
-  for(i = 0; i < 400; ++i)
-  {
-    moves[i].pieceType = BOARD_TYPE_ALL_PAWN_POSITIONS;
-  }*/
 
 }
 
@@ -531,125 +507,10 @@ void generateAllPawnMoves(BoardState* boardState,
 void generatePawnMoves(BoardState* boardState,
                          Bitboard isolatedPiece,
                          enum BitboardType colorType,
-                       Moves* moves)
+                         Moves* moves)
 {
-  int i = 0; //For captured Piece type
-  int moveNum = 0;
-
-  Move move;
-  // If White, only slide up
-  if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
-  {
-    /*Generate Slide Up 1*/
-    move = generateSlideUpMove(isolatedPiece, boardState, colorType,1);
-
-    // If Valid and is not Capture, added to moves.
-    if(move.movedPosition &&
-        !(move.movedPosition & boardState->boards[!colorType]))
-      moves->moves[BOARD_TYPE_ALL_PAWN_POSITIONS - 2][moves->numPawnMoves++] = move;
-
-
-    /*Generate Slide Up 2 when unmoved*/
-    if((isolatedPiece & 0x000000000000ff00) != 0) // if in initial position
-    {
-      move = generateSlideUpMove(isolatedPiece, boardState, colorType, 2);
-      // If Valid and is not Capture, added to moves.
-      if(move.movedPosition &&
-          !(move.movedPosition & boardState->boards[!colorType]))
-        moves->moves[BOARD_TYPE_ALL_PAWN_POSITIONS - 2][moves->numPawnMoves++] = move;
-
-    }
-
-    //if Capture, has to be Diagonal
-
-		  move = generateDiagonalUpLeftMove(isolatedPiece, boardState, colorType, 1);
-		  if (move.movedPosition & boardState->boards[!colorType])
-		  {
-			  for (i = 0; i < NUM_PIECES; i++) // put captured Piece type into move
-			  {
-				  if (move.movedPosition & boardState->boards[i + 2])
-				  {
-					  move.capturedPiece = i + 2;
-					  break;
-				  }
-			  }
-        moves->moves[BOARD_TYPE_ALL_PAWN_POSITIONS - 2][moves->numPawnMoves++] = move;
-
-		  }
-
-		  move = generateDiagonalUpRightMove(isolatedPiece, boardState, colorType, 1);
-		  if (move.movedPosition & boardState->boards[!colorType])
-		  {
-			  for (i = 0; i < NUM_PIECES; i++) // put captured Piece type into move
-			  {
-				  if (move.movedPosition & boardState->boards[i + 2])
-				  {
-					  move.capturedPiece = i + 2;
-					  break;
-				  }
-			  }
-			  moves->moves[BOARD_TYPE_ALL_PAWN_POSITIONS - 2][moves->numPawnMoves++] = move;
-
-		  }
-
-  }
-
-  // Black , only slide down
-  else if(colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
-  {
-    /*Generate Slide Up 1*/
-    move = generateSlideDownMove(isolatedPiece, boardState, colorType, 1);
-
-    // If Valid and is not Capture, added to moves.
-    if (move.movedPosition &&
-        !(move.movedPosition & boardState->boards[!colorType]))
-      moves->moves[BOARD_TYPE_ALL_PAWN_POSITIONS - 2][moves->numPawnMoves++] = move;
-
-    /*Generate Slide Up 2 when unmoved*/
-    if ((isolatedPiece & 0x00ff000000000000) != 0) //if in initial position
-    {
-      move = generateSlideDownMove(isolatedPiece, boardState, colorType, 2);
-
-      // If Valid and is not Capture, added to moves
-      if (move.movedPosition &&
-          !(move.movedPosition & boardState->boards[!colorType]))
-        moves->moves[BOARD_TYPE_ALL_PAWN_POSITIONS - 2][moves->numPawnMoves++] = move;
-    }
-	   //if Capture, has to be Diagonal
-
-		  move = generateDiagonalDownLeftMove(isolatedPiece, boardState, colorType, 1);
-		  if (move.movedPosition & boardState->boards[!colorType])
-		  {
-			  for (i = 0; i < NUM_PIECES; i++) // put captured Piece type into move
-			  {
-				  if (move.movedPosition & boardState->boards[i + 2])
-				  {
-					  move.capturedPiece = i + 2;
-					  break;
-				  }
-			  }
-			  moves->moves[BOARD_TYPE_ALL_PAWN_POSITIONS - 2][moves->numPawnMoves++] = move;
-
-		  }
-		  move = generateDiagonalDownRightMove(isolatedPiece, boardState, colorType, 1);
-		  if (move.movedPosition & boardState->boards[!colorType])
-		  {
-			  for (i = 0; i < NUM_PIECES; i++) // put captured Piece type into move
-			  {
-				  if (move.movedPosition & boardState->boards[i + 2])
-				  {
-					  move.capturedPiece = i + 2;
-					  break;
-				  }
-			  }
-			  moves->moves[BOARD_TYPE_ALL_PAWN_POSITIONS - 2][moves->numPawnMoves++] = move;
-
-		  }
-
-
-
-  }
-
+  generateAllSlidingMoves(boardState, isolatedPiece, BOARD_TYPE_ALL_PAWN_POSITIONS, colorType, moves);
+  generateAllDiagonalMoves(boardState, isolatedPiece, BOARD_TYPE_ALL_PAWN_POSITIONS, colorType, moves);
 }
 
 
@@ -658,8 +519,6 @@ void generateAllRookMoves(BoardState* boardState,
                            enum BitboardType colorType,
                           Moves* moves)
 {
-  int pieceNum = 0;
-
   Bitboard pieces = boardState->boards[BOARD_TYPE_ALL_ROOK_POSITIONS] & boardState->boards[colorType];
 
   while(pieces)
@@ -673,15 +532,6 @@ void generateAllRookMoves(BoardState* boardState,
     pieces &= pieces - 1;
   }
 
-
-  int i;
-
-  /*
-  for(i = 0; i < 100; ++i)
-  {
-    moves[i].pieceType = BOARD_TYPE_ALL_ROOK_POSITIONS;
-  }
-  */
 }
 
 
@@ -692,128 +542,10 @@ void generateRookMoves(BoardState* boardState,
                          enum BitboardType colorType,
                        Moves* moves)
 {
-  int j; //for captured Piece type
-  int moveNum = 0; //number of moves
-  Move move;
-
-
-  //Slide Up Moves
-  int i = 1; //for looping
-  while (1)
-  {
-
-    move = generateSlideUpMove(isolatedPiece, boardState, colorType, i++);
-    //if legal move
-    if (move.movedPosition)
-    {
-      //capture move once in this direction
-      if (move.movedPosition & boardState->boards[!colorType])
-      {
-		  for (j = 0; j < NUM_PIECES; j++) // put captured Piece type into move
-		  {
-			  if (move.movedPosition & boardState->boards[j + 2])
-			  {
-				  move.capturedPiece = j + 2;
-				  break;
-			  }
-		  }
-		  moves->moves[BOARD_TYPE_ALL_ROOK_POSITIONS - 2][moves->numRookMoves++] = move;
-        break;
-      }
-      else//quiet
-        moves->moves[BOARD_TYPE_ALL_ROOK_POSITIONS - 2][moves->numRookMoves++] = move;
-    }
-    else
-      break;
-  }
-  //Slide Down Moves
-  i = 1;
-  while (1)
-  {
-
-    move = generateSlideDownMove(isolatedPiece, boardState, colorType, i++);
-    //if legal move
-    if (move.movedPosition)
-    {
-      //capture move once in this direction
-      if (move.movedPosition & boardState->boards[!colorType])
-      {
-		  for (j = 0; j < NUM_PIECES; j++) // put captured Piece type into move
-		  {
-			  if (move.movedPosition & boardState->boards[j + 2])
-			  {
-				  move.capturedPiece = j + 2;
-				  break;
-			  }
-		  }
-		  moves->moves[BOARD_TYPE_ALL_ROOK_POSITIONS - 2][moves->numRookMoves++] = move;
-        break;
-      }
-      else//quiet
-        moves->moves[BOARD_TYPE_ALL_ROOK_POSITIONS - 2][moves->numRookMoves++] = move;
-    }
-    else
-      break;
-  }
-  //Slide Left Moves
-  i = 1;
-  while (1)
-  {
-
-    move = generateSlideLeftMove(isolatedPiece, boardState, colorType, i++);
-    //if legal move
-    if (move.movedPosition)
-    {
-      //capture move once in this direction
-      if (move.movedPosition & boardState->boards[!colorType])
-      {
-		   for (j = 0; j < NUM_PIECES; j++) // put captured Piece type into move
-		  {
-			  if (move.movedPosition & boardState->boards[j + 2])
-			  {
-				  move.capturedPiece = j + 2;
-				  break;
-			  }
-		  }
-		  moves->moves[BOARD_TYPE_ALL_ROOK_POSITIONS - 2][moves->numRookMoves++] = move;
-        break;
-      }
-      else//quiet
-        moves->moves[BOARD_TYPE_ALL_ROOK_POSITIONS - 2][moves->numRookMoves++] = move;
-    }
-    else
-      break;
-  }
-  //Slide Right Moves
-  i = 1;
-  while (1)
-  {
-    move = generateSlideRightMove(isolatedPiece, boardState, colorType, i++);
-    //if legal move
-    if (move.movedPosition)
-    {
-      //capture move once in this direction
-      if (move.movedPosition & boardState->boards[!colorType])
-      {
-		  for (j = 0; j < NUM_PIECES; j++) // put captured Piece type into move
-		  {
-			  if (move.movedPosition & boardState->boards[j + 2])
-			  {
-				  move.capturedPiece = j + 2;
-				  break;
-			  }
-		  }
-		  moves->moves[BOARD_TYPE_ALL_ROOK_POSITIONS - 2][moves->numRookMoves++] = move;
-        break;
-      }
-      else//quiet
-        moves->moves[BOARD_TYPE_ALL_ROOK_POSITIONS - 2][moves->numRookMoves++] = move;
-    }
-    else
-      break;
-  }
-
+  generateAllSlidingMoves(boardState, isolatedPiece, BOARD_TYPE_ALL_ROOK_POSITIONS, colorType, moves);
 }
+
+
 
 
 void generateAllKnightMoves(BoardState* boardState,
@@ -835,14 +567,7 @@ void generateAllKnightMoves(BoardState* boardState,
     pieces &= pieces - 1;
   }
 
-  int i;
 
-  /*
-  for(i = 0; i < 100; ++i)
-  {
-    moves[i].pieceType = BOARD_TYPE_ALL_KNIGHT_POSITIONS;
-  }
-  */
 
 }
 
@@ -1061,14 +786,6 @@ void generateAllBishopMoves(BoardState* boardState,
   }
 
 
-  int i;
-
-  /*
-  for(i = 0; i < 100; ++i)
-  {
-    moves[i].pieceType = BOARD_TYPE_ALL_BISHOP_POSITIONS;
-  }
-  */
 }
 
 
@@ -1079,134 +796,10 @@ void generateBishopMoves(BoardState* boardState,
                          enum BitboardType colorType,
                          Moves* moves)
 {
-    int moveNum = 0;
-    Move move;
-
-    int i = 1;//for looping
-    int j = 0;//for captured Piece type
-
-    while(1)
-    {
-
-        move = generateDiagonalDownLeftMove(isolatedPiece, boardState, colorType, i++);
-        //if legal move
-        if (move.movedPosition)
-        {
-            //capture move
-            if (move.movedPosition & boardState->boards[!colorType])
-            {
-				for (j = 0; j < NUM_PIECES; j++) // put captured Piece type into move
-				{
-					if (move.movedPosition & boardState->boards[j + 2])
-					{
-						move.capturedPiece = j + 2;
-						break;
-					}
-				}
-				moves->moves[BOARD_TYPE_ALL_BISHOP_POSITIONS - 2][moves->numBishopMoves++] = move;
-                break;
-            }
-
-            else
-                moves->moves[BOARD_TYPE_ALL_BISHOP_POSITIONS - 2][moves->numBishopMoves++] = move;
-        }
-        else
-            break;
-    }
-
-    i = 1;
-    while(1)
-    {
-
-        move = generateDiagonalDownRightMove(isolatedPiece, boardState, colorType, i++);
-        //if legal move
-        if (move.movedPosition)
-        {
-            //capture move
-            if (move.movedPosition & boardState->boards[!colorType])
-            {
-				for (j = 0; j < NUM_PIECES; j++) // put captured Piece type into move
-				{
-					if (move.movedPosition & boardState->boards[j + 2])
-					{
-						move.capturedPiece = j + 2;
-						break;
-					}
-				}
-				moves->moves[BOARD_TYPE_ALL_BISHOP_POSITIONS - 2][moves->numBishopMoves++] = move;
-                break;
-            }
-            else
-                moves->moves[BOARD_TYPE_ALL_BISHOP_POSITIONS - 2][moves->numBishopMoves++] = move;
-        }
-
-        else
-            break;
-    }
-
-    i = 1;
-    while(1)
-    {
-
-        move = generateDiagonalUpLeftMove(isolatedPiece, boardState, colorType, i++);
-        //if legal move
-        if (move.movedPosition)
-        {
-            //capture move
-            if (move.movedPosition & boardState->boards[!colorType])
-            {
-				for (j = 0; j < NUM_PIECES; j++) // put captured Piece type into move
-				{
-					if (move.movedPosition & boardState->boards[j + 2])
-					{
-						move.capturedPiece = j + 2;
-						break;
-					}
-				}
-				moves->moves[BOARD_TYPE_ALL_BISHOP_POSITIONS - 2][moves->numBishopMoves++] = move;
-                break;
-            }
-            else
-               moves->moves[BOARD_TYPE_ALL_BISHOP_POSITIONS - 2][moves->numBishopMoves++] = move;
-        }
-
-        else
-            break;
-    }
-
-    i = 1;
-    while(1)
-    {
-
-        move = generateDiagonalUpRightMove(isolatedPiece, boardState, colorType, i++);
-        //if legal move
-        if (move.movedPosition)
-        {
-            //capture move
-            if (move.movedPosition & boardState->boards[!colorType])
-            {
-				for (j = 0; j < NUM_PIECES; j++) // put captured Piece type into move
-				{
-					if (move.movedPosition & boardState->boards[j + 2])
-					{
-						move.capturedPiece = j + 2;
-						break;
-					}
-				}
-				moves->moves[BOARD_TYPE_ALL_BISHOP_POSITIONS - 2][moves->numBishopMoves++] = move;
-                break;
-            }
-            else
-                moves->moves[BOARD_TYPE_ALL_BISHOP_POSITIONS - 2][moves->numBishopMoves++] = move;
-        }
-
-        else
-            break;
-    }
-
+  generateAllDiagonalMoves(boardState, isolatedPiece, BOARD_TYPE_ALL_BISHOP_POSITIONS, colorType, moves);
 }
 
-/*
+
 void generateAllQueenMoves(BoardState* boardState,
                            enum BitboardType colorType,
                            Moves* moves)
@@ -1227,14 +820,6 @@ void generateAllQueenMoves(BoardState* boardState,
   }
 
 
-  int i;
-
-
-  for(i = 0; i < 200; ++i)
-  {
-    moves[i].pieceType = BOARD_TYPE_ALL_QUEEN_POSITIONS;
-  }
-
 }
 
 
@@ -1245,11 +830,11 @@ void generateQueenMoves(BoardState* boardState,
                         enum BitboardType colorType,
                         Moves* moves)
 {
-  Move* moveSet1 = generateRookMoves(boardState, isolatedPiece, colorType);
-  Move* moveSet2 = generateBishopMoves(boardState, isolatedPiece, colorType);
+  generateAllSlidingMoves(boardState, isolatedPiece, BOARD_TYPE_ALL_QUEEN_POSITIONS, colorType, moves);
+  generateAllDiagonalMoves(boardState, isolatedPiece, BOARD_TYPE_ALL_QUEEN_POSITIONS, colorType, moves);
 
 }
-*/
+
 
 
 
@@ -1272,14 +857,6 @@ void generateAllKingMoves(BoardState* boardState,
     pieces &= pieces - 1;
   }
 
-
-  int i;
-  /*
-  for(i = 0; i < 50; ++i)
-  {
-    moves[i].pieceType = BOARD_TYPE_ALL_KING_POSITIONS;
-  }
-  */
 }
 
 
@@ -1289,49 +866,8 @@ void generateKingMoves(BoardState* boardState,
                        enum BitboardType colorType,
                        Moves* moves)
 {
-  int moveNum = 0;
-
-  Move move = {0, 0, 0};
-
-
-  typedef Move (*kingMove)(Bitboard initialPosition,
-                           BoardState* boardState,
-                           enum BitboardType colorType,
-                           int offset);
-
-  kingMove kingMoveGenerate[] = {generateSlideLeftMove,       generateSlideRightMove,
-                                 generateSlideUpMove,         generateSlideDownMove,
-                                 generateDiagonalUpRightMove, generateDiagonalDownRightMove,
-                                 generateDiagonalUpLeftMove,  generateDiagonalDownLeftMove};
-
-
-  int i;
-  int j = 0; //for captured Piece type
-
-  for(i = 0; i < sizeof(kingMoveGenerate) / sizeof(kingMoveGenerate[0]); ++i)
-  {
-    move = kingMoveGenerate[i](isolatedPiece, boardState, colorType, 1);
-
-    if (move.movedPosition)
-    {
-      //capture move
-		if (move.movedPosition & boardState->boards[!colorType])
-		{
-			for (j = 0; j < NUM_PIECES; j++) // put captured Piece type into move
-			{
-				if (move.movedPosition & boardState->boards[j + 2])
-				{
-					move.capturedPiece = j + 2;
-					break;
-				}
-			}
-      moves->moves[BOARD_TYPE_ALL_KING_POSITIONS - 2][moves->numKingMoves++] = move;
-		}
-
-      else
-        moves->moves[BOARD_TYPE_ALL_KING_POSITIONS - 2][moves->numKingMoves++] = move;
-    }
-  }
+  generateAllSlidingMoves(boardState, isolatedPiece, BOARD_TYPE_ALL_KING_POSITIONS, colorType, moves);
+  generateAllDiagonalMoves(boardState, isolatedPiece, BOARD_TYPE_ALL_KING_POSITIONS, colorType, moves);
 
 }
 
