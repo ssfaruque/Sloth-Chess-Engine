@@ -31,9 +31,17 @@ void initChessGame(ChessGame* chessGame)
 
 void runChessGame(ChessGame* chessGame)
 {
-  //Move move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
+  Move move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
   
-  //updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, move.pieceType, 0, move.capturedPiece, 0);
+  updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, move.pieceType, 0, move.capturedPiece, 0);
+  
+  
+  printBoardState(chessGame->boardState);
+  
+  printBitboard(move.initialPosition);
+  printBitboard(move.movedPosition);
+  
+  
   
   /*
   while(1)
@@ -61,10 +69,10 @@ void runChessGame(ChessGame* chessGame)
     printf("Turn %d\n", chessGame->slothChessEngine->turn);
     printf("Score = %d\n", move.boardEval);
     printBoardState(chessGame->boardState);
-    
    
-  }
-  */
+   
+  }*/
+  
   
 }
 

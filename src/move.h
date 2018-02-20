@@ -86,12 +86,20 @@ typedef struct
 typedef struct
 {
   Move moves[NUM_PIECES][MAX_NUM_MOVES];
-  int numPawnMoves;
-  int numRookMoves;
-  int numKnightMoves;
-  int numBishopMoves;
-  int numQueenMoves;
-  int numKingMoves;
+  
+  union
+  {
+    int numMoves[NUM_PIECES];
+    
+    int numPawnMoves;
+    int numRookMoves;
+    int numKnightMoves;
+    int numBishopMoves;
+    int numQueenMoves;
+    int numKingMoves;
+  };
+  
+  
 } Moves;
 
 

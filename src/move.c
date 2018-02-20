@@ -391,7 +391,7 @@ void generateAllDiagonalMoves(BoardState* boardState,
 
 
 
-/*
+
 int negaMax(BoardState* boardState,
             enum BitboardType colorType,
             int depth)
@@ -399,37 +399,52 @@ int negaMax(BoardState* boardState,
   if (depth == 0)
     return eval(boardState);
 
-  int max = -111111111;
+  int max = 0;
+  
+  if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
+    max = -111111111;
+  
+  else
+    max = 1111111111;
+  
 
   Moves moves;
   generateAllMoves(boardState, colorType, &moves);
-  int numMoves = 950;
-  int moveNum = 0;
+
   int score = 0;
-
-  for(moveNum = 0; moveNum < numMoves; ++moveNum)
+  int i;
+  int j;
+  
+  
+  for(i = 0; i < NUM_PIECES; ++i)
   {
-    if(moves[moveNum].initialPosition)
+    
+    for(j = 0; j < moves.numMoves[i]; ++j)
     {
-      updateBoardState(boardState, moves[moveNum].initialPosition, moves[moveNum].movedPosition, colorType, moves[moveNum].pieceType, 0, moves[moveNum].capturedPiece, 0);
-
-      score = -negaMax(boardState, !colorType, depth - 1);
-
-      updateBoardState(boardState, moves[moveNum].initialPosition, moves[moveNum].movedPosition, colorType, moves[moveNum].pieceType, 0, moves[moveNum].capturedPiece, 1);
-
-      if(score > max)
-        max = score;
-
+      
+      if(moves.moves[i][j].initialPosition)
+      {
+        updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 0);
+        
+        score = -negaMax(boardState, !colorType, depth - 1);
+        
+        updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 1);
+        
+        if(score > max)
+          max = score;
+        
       }
+      
+    }
+  
   }
-
-
+  
   return max;
 }
-*/
 
 
-/*
+
+
 Move generateMove(BoardState* boardState,
                   enum BitboardType colorType,
                   int recurseDepth)
@@ -438,6 +453,7 @@ Move generateMove(BoardState* boardState,
 
   int numFirstMoves = 950;
   int i;
+  int j;
 
   int score = 0;
   int maxScore = 0;
@@ -446,37 +462,38 @@ Move generateMove(BoardState* boardState,
 
   generateAllMoves(boardState, colorType, &firstMoves);
 
-  for(i = 0; i < numFirstMoves; ++i)
+  for(i = 0; i < NUM_PIECES; ++i)
   {
-
-    if(firstMoves[i].initialPosition)
+    
+    for(j = 0; j < firstMoves.numMoves[i]; ++j)
     {
-      // do the move
-      updateBoardState(boardState, firstMoves[i].initialPosition, firstMoves[i].movedPosition, colorType, firstMoves[i].pieceType, 0, firstMoves[i].capturedPiece, 0);
-
-      score = negaMax(boardState, !colorType, recurseDepth - 1);
-
-      // undo the move
-      updateBoardState(boardState, firstMoves[i].initialPosition, firstMoves[i].movedPosition, colorType, firstMoves[i].pieceType, 0, firstMoves[i].capturedPiece, 1);
-
-
-
-      if(score >= maxScore)
+      if(firstMoves.moves[i][j].initialPosition)
       {
-        maxScore = score;
-        move = firstMoves[i];
-        move.boardEval = score;
+        // do the move
+        updateBoardState(boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, 0, firstMoves.moves[i][j].capturedPiece, 0);
+        
+        score = negaMax(boardState, !colorType, recurseDepth - 1);
+        
+        // undo the move
+        updateBoardState(boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, 0, firstMoves.moves[i][j].capturedPiece, 1);
+        
+        
+        if(score >= maxScore)
+        {
+          maxScore = score;
+          move = firstMoves.moves[i][j];
+          move.boardEval = score;
+        }
+        
       }
-
     }
-
+    
   }
 
-  free(firstMoves);
 
   return move;
 }
-*/
+
 
 
 
@@ -578,6 +595,11 @@ void generateAllKnightMoves(BoardState* boardState,
     // reset ls1b
     pieces &= pieces - 1;
   }
+  
+  int i;
+  
+  for(i = 0; i < moves->numKnightMoves; ++i)
+    moves->moves[BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2][i].pieceType = BOARD_TYPE_ALL_KNIGHT_POSITIONS;
 
 
 
