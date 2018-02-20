@@ -25,7 +25,7 @@
 #include "bitboard.h"
 
 
-#define MAX_RECURSION_DEPTH 3
+#define MAX_RECURSION_DEPTH 1
 
 
 /**
@@ -91,12 +91,15 @@ typedef struct
   {
     int numMoves[NUM_PIECES];
     
-    int numPawnMoves;
-    int numRookMoves;
-    int numKnightMoves;
-    int numBishopMoves;
-    int numQueenMoves;
-    int numKingMoves;
+    struct
+    {
+      int numPawnMoves;
+      int numRookMoves;
+      int numKnightMoves;
+      int numBishopMoves;
+      int numQueenMoves;
+      int numKingMoves;
+    };
   };
   
   

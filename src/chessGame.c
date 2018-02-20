@@ -31,7 +31,7 @@ void initChessGame(ChessGame* chessGame)
 
 void runChessGame(ChessGame* chessGame)
 {
-  Move move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
+  /*Move move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
   
   updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, move.pieceType, 0, move.capturedPiece, 0);
   
@@ -40,10 +40,10 @@ void runChessGame(ChessGame* chessGame)
   
   printBitboard(move.initialPosition);
   printBitboard(move.movedPosition);
+  */
   
   
   
-  /*
   while(1)
   {
     Move move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
@@ -71,7 +71,7 @@ void runChessGame(ChessGame* chessGame)
     printBoardState(chessGame->boardState);
    
    
-  }*/
+  }
   
   
 }

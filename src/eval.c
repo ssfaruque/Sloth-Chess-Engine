@@ -271,7 +271,6 @@ int pieceSquareEval(BoardState* boardState)
 
 
 
-
 int eval(BoardState* boardState)
 {
   return materialEval(boardState) + centerControlEval(boardState) + pieceSquareEval(boardState);

@@ -141,7 +141,7 @@ void generateAllSlidingMoves(BoardState* boardState,
                                   enum BitboardType colorType,
                                   Moves* moves)
 {
-    Move move;
+  Move move = {0, 0, 0, 0, 0};
     int offset;
 
     switch (pieceType)
@@ -270,7 +270,7 @@ void generateAllDiagonalMoves(BoardState* boardState,
                                    enum BitboardType colorType,
                                    Moves* moves)
 {
-    Move move;
+    Move move = {0, 0, 0, 0, 0};
     int offset;
 
     switch (pieceType)
@@ -399,16 +399,11 @@ int negaMax(BoardState* boardState,
   if (depth == 0)
     return eval(boardState);
 
-  int max = 0;
-  
-  if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
-    max = -111111111;
-  
-  else
-    max = 1111111111;
-  
+  int max = -111111111;
 
   Moves moves;
+  moves.numMoves[0] = moves.numMoves[1] = moves.numMoves[2] =
+  moves.numMoves[3] = moves.numMoves[4] = moves.numMoves[5] = 0;
   generateAllMoves(boardState, colorType, &moves);
 
   int score = 0;
@@ -418,7 +413,6 @@ int negaMax(BoardState* boardState,
   
   for(i = 0; i < NUM_PIECES; ++i)
   {
-    
     for(j = 0; j < moves.numMoves[i]; ++j)
     {
       
@@ -451,7 +445,6 @@ Move generateMove(BoardState* boardState,
 {
   Move move = {0, 0, 0, 0, 0};
 
-  int numFirstMoves = 950;
   int i;
   int j;
 
@@ -459,7 +452,8 @@ Move generateMove(BoardState* boardState,
   int maxScore = 0;
 
   Moves firstMoves;
-
+  firstMoves.numMoves[0] = firstMoves.numMoves[1] = firstMoves.numMoves[2] =
+  firstMoves.numMoves[3] = firstMoves.numMoves[4] = firstMoves.numMoves[5] = 0;
   generateAllMoves(boardState, colorType, &firstMoves);
 
   for(i = 0; i < NUM_PIECES; ++i)
