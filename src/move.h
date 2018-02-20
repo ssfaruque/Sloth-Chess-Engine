@@ -25,7 +25,7 @@
 #include "bitboard.h"
 
 
-#define MAX_RECURSION_DEPTH 1
+#define MAX_RECURSION_DEPTH 3
 
 
 /**
@@ -86,11 +86,11 @@ typedef struct
 typedef struct
 {
   Move moves[NUM_PIECES][MAX_NUM_MOVES];
-  
+
   union
   {
     int numMoves[NUM_PIECES];
-    
+
     struct
     {
       int numPawnMoves;
@@ -101,8 +101,8 @@ typedef struct
       int numKingMoves;
     };
   };
-  
-  
+
+
 } Moves;
 
 
@@ -144,7 +144,7 @@ int updateBoardState(BoardState* boardState,
 
 /*********************************** MOVE GENERATION BY TYPE ***********************************/
 
-int findCapturedPiece(BoardState* boardState, Bitboard movedPosition);
+int findCapturedPiece(BoardState* boardState, Bitboard movedPosition, enum BitboardType colorType);
 
 
 /* Skeleton functions to fill out */

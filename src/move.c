@@ -93,21 +93,28 @@ int updateBoardState(BoardState* boardState,
 
       else if (capturedPiece && undo) // undo capture
       {
-        boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
-        boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ movedPiece) | initialPiece);
 
-          boardState->boards[capturedPiece] = (boardState->boards[capturedPiece] | movedPiece);
-          boardState->boards[!colorType] = ((boardState->boards[!colorType]) ^ movedPiece);
+          boardState->boards[capturedPiece] = (boardState->boards[capturedPiece]) | movedPiece;
+          boardState->boards[!colorType] = ((boardState->boards[!colorType]) | movedPiece);
+          boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
+
+          if (pieceType == capturedPiece)
+            boardState->boards[pieceType] = (boardState->boards[pieceType] | initialPiece);
+          else
+            boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ movedPiece) | initialPiece);
+
+
       }
 
       else if(capturedPiece) //capture
       {
-
-          boardState->boards[capturedPiece] = ((boardState->boards[capturedPiece]) | movedPiece);
+          boardState->boards[capturedPiece] = (boardState->boards[capturedPiece]) ^ movedPiece;
           boardState->boards[!colorType] = ((boardState->boards[!colorType]) ^ movedPiece);
+
 
           boardState->boards[colorType] = ((boardState->boards[colorType] ^ initialPiece) | movedPiece);
           boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ initialPiece) | movedPiece);
+
 
       }
 
@@ -121,11 +128,11 @@ int updateBoardState(BoardState* boardState,
 /******************************** Generate moves by pieces ********************************/
 
 
-int findCapturedPiece(BoardState* boardState, Bitboard movedPosition)
+int findCapturedPiece(BoardState* boardState, Bitboard movedPosition, enum BitboardType colorType)
 {
     for (int j = 0; j < NUM_PIECES; j++) //put captured Piece type into move
     {
-        if (movedPosition & boardState->boards[j+2])
+        if (movedPosition & (boardState->boards[!colorType] & boardState->boards[j+2]))
             return (j+2);
     }
 
@@ -211,7 +218,7 @@ void generateAllSlidingMoves(BoardState* boardState,
                     {
                         if (move.movedPosition & boardState->boards[!colorType]) //if capture
                         {
-                            move.capturedPiece = findCapturedPiece(boardState, move.movedPosition);
+                            move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
 
                             if (pieceType == BOARD_TYPE_ALL_ROOK_POSITIONS)
                                 moves->moves[pieceType - 2][moves->numRookMoves++] = move;
@@ -247,7 +254,7 @@ void generateAllSlidingMoves(BoardState* boardState,
                 {
                     if (move.movedPosition & boardState->boards[!colorType]) //if capture
                     {
-                        move.capturedPiece = findCapturedPiece(boardState, move.movedPosition);
+                        move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
                         moves->moves[pieceType - 2][moves->numKingMoves++] = move;
                     }
 
@@ -283,7 +290,7 @@ void generateAllDiagonalMoves(BoardState* boardState,
 
                   if (move.movedPosition & boardState->boards[!colorType]) //if capture
                   {
-                      move.capturedPiece = findCapturedPiece(boardState, move.movedPosition);
+                      move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
                       moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
                   }
 
@@ -292,7 +299,7 @@ void generateAllDiagonalMoves(BoardState* boardState,
 
                   if (move.movedPosition & boardState->boards[!colorType]) //if capture
                   {
-                      move.capturedPiece = findCapturedPiece(boardState, move.movedPosition);
+                      move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
                       moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
                   }
             }
@@ -304,7 +311,7 @@ void generateAllDiagonalMoves(BoardState* boardState,
 
                   if (move.movedPosition & boardState->boards[!colorType])
                   {
-                      move.capturedPiece = findCapturedPiece(boardState, move.movedPosition);
+                      move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
                       moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
                   }
 
@@ -313,7 +320,7 @@ void generateAllDiagonalMoves(BoardState* boardState,
 
                   if (move.movedPosition & boardState->boards[!colorType])
                   {
-                      move.capturedPiece = findCapturedPiece(boardState, move.movedPosition);
+                      move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
                       moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
                   }
             }
@@ -335,7 +342,7 @@ void generateAllDiagonalMoves(BoardState* boardState,
                     {
                         if (move.movedPosition & boardState->boards[!colorType]) //if capture
                         {
-                            move.capturedPiece = findCapturedPiece(boardState, move.movedPosition);
+                            move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
 
                             if (pieceType == BOARD_TYPE_ALL_BISHOP_POSITIONS)
                                 moves->moves[pieceType - 2][moves->numBishopMoves++] = move;
@@ -372,7 +379,7 @@ void generateAllDiagonalMoves(BoardState* boardState,
                 {
                     if (move.movedPosition & boardState->boards[!colorType]) //if capture
                     {
-                        move.capturedPiece = findCapturedPiece(boardState, move.movedPosition);
+                        move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
                         moves->moves[pieceType - 2][moves->numKingMoves++] = move;
                     }
 
@@ -409,30 +416,30 @@ int negaMax(BoardState* boardState,
   int score = 0;
   int i;
   int j;
-  
-  
+
+
   for(i = 0; i < NUM_PIECES; ++i)
   {
     for(j = 0; j < moves.numMoves[i]; ++j)
     {
-      
+
       if(moves.moves[i][j].initialPosition)
       {
         updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 0);
-        
+
         score = -negaMax(boardState, !colorType, depth - 1);
-        
+
         updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 1);
-        
+
         if(score > max)
           max = score;
-        
+
       }
-      
+
     }
-  
+
   }
-  
+
   return max;
 }
 
@@ -458,30 +465,30 @@ Move generateMove(BoardState* boardState,
 
   for(i = 0; i < NUM_PIECES; ++i)
   {
-    
+
     for(j = 0; j < firstMoves.numMoves[i]; ++j)
     {
       if(firstMoves.moves[i][j].initialPosition)
       {
         // do the move
         updateBoardState(boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, 0, firstMoves.moves[i][j].capturedPiece, 0);
-        
+
         score = negaMax(boardState, !colorType, recurseDepth - 1);
-        
+
         // undo the move
         updateBoardState(boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, 0, firstMoves.moves[i][j].capturedPiece, 1);
-        
-        
+
+
         if(score >= maxScore)
         {
           maxScore = score;
           move = firstMoves.moves[i][j];
           move.boardEval = score;
         }
-        
+
       }
     }
-    
+
   }
 
 
@@ -589,9 +596,9 @@ void generateAllKnightMoves(BoardState* boardState,
     // reset ls1b
     pieces &= pieces - 1;
   }
-  
+
   int i;
-  
+
   for(i = 0; i < moves->numKnightMoves; ++i)
     moves->moves[BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2][i].pieceType = BOARD_TYPE_ALL_KNIGHT_POSITIONS;
 
