@@ -25,7 +25,7 @@
 #include "bitboard.h"
 
 
-#define MAX_RECURSION_DEPTH 3
+#define MAX_RECURSION_DEPTH 4
 
 
 /**

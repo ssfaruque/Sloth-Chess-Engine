@@ -187,7 +187,7 @@ void generateAllSlidingMoves(BoardState* boardState,
                     !(move.movedPosition & boardState->boards[!colorType]))
                     moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
 
-                if ((isolatedPiece & 0x000000000000ff00) != 0) //if in initial position
+                if ((isolatedPiece & 0x00ff000000000000) != 0) //if in initial position
                 {
                     move = generateSlideDownMove(isolatedPiece, boardState, colorType, 2);
                     move.pieceType = pieceType;
@@ -427,6 +427,14 @@ int negaMax(BoardState* boardState,
       {
         updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 0);
 
+        if (isKingInCheck(boardState, colorType)) // the player's move leaves the player's king in check
+        {
+            //don't recurse down, undo and go to next move
+                updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 1);
+                continue;
+
+        }
+
         score = -negaMax(boardState, !colorType, depth - 1);
 
         updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 1);
@@ -472,6 +480,14 @@ Move generateMove(BoardState* boardState,
       {
         // do the move
         updateBoardState(boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, 0, firstMoves.moves[i][j].capturedPiece, 0);
+
+        if (isKingInCheck(boardState, colorType)) // the player's move leaves the player's king in check
+        {
+            //don't recurse down, undo and go to next move
+                updateBoardState(boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, 0, firstMoves.moves[i][j].capturedPiece, 1);
+                continue;
+
+        }
 
         score = negaMax(boardState, !colorType, recurseDepth - 1);
 
@@ -1061,7 +1077,7 @@ Move generateDiagonalDownRightMove(Bitboard initialPosition,
   // if not out of bounds horizontally
   if(!(offset > BOARD_LENGTH - col))
   {
-    move.movedPosition = initialPosition >> (7 * offset);
+    move.movedPosition = initialPosition >> (9 * offset);
 
     if(move.movedPosition & boardState->boards[colorType])
       move.movedPosition = 0;
@@ -1084,7 +1100,7 @@ Move generateDiagonalDownLeftMove(Bitboard initialPosition,
   // if not out of bounds horizontally
   if(!(offset > col - 1))
   {
-    move.movedPosition = initialPosition >> (9 * offset);
+    move.movedPosition = initialPosition >> (7 * offset);
 
     if(move.movedPosition & boardState->boards[colorType])
       move.movedPosition = 0;
@@ -1338,8 +1354,18 @@ int findCol(Bitboard initialPosition)
 
 
 int isKingInCheck(BoardState* boardState, enum BitboardType colorType)
-{
 
+{
+    Moves moves;
+    moves.numMoves[0] = moves.numMoves[1] = moves.numMoves[2] =
+    moves.numMoves[3] = moves.numMoves[4] = moves.numMoves[5] = 0;
+
+    generateAllMoves(boardState, !colorType, &moves);
+
+    for (int i = 0; i < NUM_PIECES; i ++)
+        for (int j = 0; j < moves.numMoves[i]; j ++)
+            if (moves.moves[i][j].capturedPiece == BOARD_TYPE_ALL_KING_POSITIONS) //if the captured piece is the opponent's king
+                return 1;
 
   return 0;
 }
