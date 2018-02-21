@@ -68,8 +68,8 @@ void runChessGame(ChessGame* chessGame)
     printBoardState(chessGame->boardState);
     isKing = isKingInCheck(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
     printf("King in Check %d", isKing);
-*/
 
+*/
 
   int i = 0;
 
