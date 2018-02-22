@@ -166,22 +166,22 @@ int spaceScore(int space, int pieceType)
   {
     case BOARD_TYPE_ALL_PAWN_POSITIONS:
       return pawnPST[space];
-      
+
     case BOARD_TYPE_ALL_ROOK_POSITIONS:
       return rookPST[space];
-      
+
     case BOARD_TYPE_ALL_KNIGHT_POSITIONS:
       return kingPST[space];
-      
+
     case BOARD_TYPE_ALL_BISHOP_POSITIONS:
       return bishopPST[space];
-      
+
     case BOARD_TYPE_ALL_QUEEN_POSITIONS:
       return queenPST[space];
-      
+
     case BOARD_TYPE_ALL_KING_POSITIONS:
       return kingPST[space];
-      
+
     default:
       return 0;
   }
@@ -192,10 +192,10 @@ int spaceScore(int space, int pieceType)
 // Below function is from chess programming wiki
 
 // Returns position of the only set bit in 'n'
-uint64_t findPosition(uint64_t n, int colorType)
+unsigned int findPosition(uint64_t n, int colorType)
 {
   uint64_t i = 1, pos = 0;
-  
+
   // Iterate through bits of n till we find a set bit
   // i&n will be non-zero only when 'i' and 'n' have a set bit
   // at same position
@@ -203,21 +203,20 @@ uint64_t findPosition(uint64_t n, int colorType)
   {
     // Unset current bit and set the next bit in 'i'
     i = i << 1;
-    
+
     // increment position
     ++pos;
-    
 
-    
     //printf("n = %d \n", n);
   }
-  
-  
+
+
   if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
     return pos - 1;
-  
+
   else
-    return 56 - ((pos - 1) / 8) * 8 + (pos - 1) % 8;
+    return (56-((pos-1)/8)*8 + (pos-1)%8);
+    //return pos;
 }
 
 
@@ -228,42 +227,42 @@ uint64_t findPosition(uint64_t n, int colorType)
 int pieceSquareEval(BoardState* boardState)
 {
   int score = 0;
-  
+
   int pieceType;
-  
+
   for(pieceType = 2; pieceType <= BOARD_TYPE_ALL_KING_POSITIONS; ++pieceType)
   {
     Bitboard whitePieces = boardState->boards[pieceType] & boardState->boards[BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS];
     Bitboard blackPieces = boardState->boards[pieceType] & boardState->boards[BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS];
-    
+
     while(whitePieces)
     {
       Bitboard isolatedPiece = whitePieces & -whitePieces;
-      
+
       int space = findPosition(isolatedPiece, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
-      
+
       score += spaceScore(space, pieceType);
-      
+
       // reset ls1b
       whitePieces &= whitePieces - 1;
     }
-    
-    
+
+
     while(blackPieces)
     {
       Bitboard isolatedPiece = blackPieces & -blackPieces;
-      
+
       int space = findPosition(isolatedPiece, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS);
-      
+
       score += -spaceScore(space, pieceType);
-   
+
       // reset ls1b
       blackPieces &= blackPieces - 1;
     }
-    
-    
+
+
   }
-  
+
   return score;
 }
 

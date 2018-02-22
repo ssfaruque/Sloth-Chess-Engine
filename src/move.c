@@ -399,8 +399,7 @@ int negaMax(BoardState* boardState,
     return eval(boardState);
 
   int max = -111111111;
-  
-  
+
   Moves moves;
   moves.numMoves[0] = moves.numMoves[1] = moves.numMoves[2] =
   moves.numMoves[3] = moves.numMoves[4] = moves.numMoves[5] = 0;
@@ -416,27 +415,27 @@ int negaMax(BoardState* boardState,
     for(j = 0; j < moves.numMoves[i]; ++j)
     {
 
-      if(moves.moves[i][j].initialPosition) // if valid
+      if(moves.moves[i][j].initialPosition) //if valid
       {
         updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 0);
 
-        
         if (isKingInCheck(boardState, colorType)) // the player's move leaves the player's king in check
         {
             //don't recurse down, undo and go to next move
                 updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 1);
-        }
-        
-        else
-        {
-          score = -negaMax(boardState, !colorType, depth - 1);
+                continue;
 
-          updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 1);
-
-          if(score > max)
-            max = score;
-          
         }
+
+        score = -negaMax(boardState, !colorType, depth - 1);
+
+        updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 1);
+
+
+            if(score >= max)
+                max = score;
+
+
 
       } // if valid
 
@@ -445,8 +444,110 @@ int negaMax(BoardState* boardState,
   } //loop through num pieces
 
   return max;
-} //negaMax
+} //negaMaz
 
+
+int maxi(BoardState* boardState,
+            enum BitboardType colorType, int depth)
+{
+    if (depth == 0) return eval(boardState);
+
+    int max = -11111111;
+
+
+
+    Moves moves;
+  moves.numMoves[0] = moves.numMoves[1] = moves.numMoves[2] =
+  moves.numMoves[3] = moves.numMoves[4] = moves.numMoves[5] = 0;
+  generateAllMoves(boardState, colorType, &moves);
+
+  int score = 0;
+  int i;
+  int j;
+
+
+    for(i = 0; i < NUM_PIECES; ++i)
+    {
+        for(j = 0; j < moves.numMoves[i]; ++j)
+        {
+
+            if(moves.moves[i][j].initialPosition) //if valid
+            {
+                updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 0);
+
+                if (isKingInCheck(boardState, colorType)) // the player's move leaves the player's king in check
+                {
+                    //don't recurse down, undo and go to next move
+                    updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 1);
+                    continue;
+
+                }
+
+                score = mini(boardState, !colorType, depth - 1);
+
+                updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 1);
+
+                if (score > max)
+                    max = score;
+
+            }
+        }
+    }
+
+    return max;
+}
+
+
+
+int mini(BoardState* boardState,
+            enum BitboardType colorType, int depth)
+{
+    if (depth == 0) return eval(boardState);
+
+    int min = 11111111;
+
+
+
+    Moves moves;
+  moves.numMoves[0] = moves.numMoves[1] = moves.numMoves[2] =
+  moves.numMoves[3] = moves.numMoves[4] = moves.numMoves[5] = 0;
+  generateAllMoves(boardState, colorType, &moves);
+
+  int score = 0;
+  int i;
+  int j;
+
+
+    for(i = 0; i < NUM_PIECES; ++i)
+    {
+        for(j = 0; j < moves.numMoves[i]; ++j)
+        {
+
+            if(moves.moves[i][j].initialPosition) //if valid
+            {
+                updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 0);
+
+                if (isKingInCheck(boardState, colorType)) // the player's move leaves the player's king in check
+                {
+                    //don't recurse down, undo and go to next move
+                    updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 1);
+                    continue;
+
+                }
+
+                score = maxi(boardState, !colorType, depth - 1);
+
+                updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 1);
+
+                if (score < min)
+                    min = score;
+
+            }
+        }
+    }
+
+    return min;
+}
 
 Move generateMove(BoardState* boardState,
                   enum BitboardType colorType,
@@ -457,9 +558,9 @@ Move generateMove(BoardState* boardState,
   int i;
   int j;
 
-  int maxScore = -111111111;
-  int score = maxScore;
-
+  int maxScore = -11111111;
+  int minScore = 11111111;
+    int score = 0;
 
   Moves firstMoves;
   firstMoves.numMoves[0] = firstMoves.numMoves[1] = firstMoves.numMoves[2] =
@@ -468,6 +569,7 @@ Move generateMove(BoardState* boardState,
 
   for(i = 0; i < NUM_PIECES; ++i)
   {
+
     for(j = 0; j < firstMoves.numMoves[i]; ++j)
     {
       if(firstMoves.moves[i][j].initialPosition)
@@ -483,20 +585,38 @@ Move generateMove(BoardState* boardState,
 
         }
 
-        score = -negaMax(boardState, !colorType, recurseDepth);
+       // score = negaMax(boardState, !colorType, recurseDepth - 1);
+
+        if (colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
+            score = mini(boardState, !colorType, recurseDepth - 1);
+        else
+            score = maxi(boardState, !colorType, recurseDepth - 1);
+
+
 
         // undo the move
         updateBoardState(boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, 0, firstMoves.moves[i][j].capturedPiece, 1);
 
-
-        if(score > maxScore)
+        if (colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
         {
-          maxScore = score;
-          move = firstMoves.moves[i][j];
-          move.boardEval = score;
+
+            if(score > maxScore)
+            {
+                maxScore = score;
+                move = firstMoves.moves[i][j];
+                move.boardEval = score;
+            }
         }
 
-        
+        else
+            if(score < minScore)
+            {
+                minScore = score;
+                move = firstMoves.moves[i][j];
+                move.boardEval = score;
+            }
+
+
       }
     }
 
