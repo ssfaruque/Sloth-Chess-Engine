@@ -447,6 +447,12 @@ int negaMax(BoardState* boardState,
 } //negaMaz
 
 
+
+// prototype
+int mini(BoardState* boardState,
+         enum BitboardType colorType, int depth);
+
+
 int maxi(BoardState* boardState,
             enum BitboardType colorType, int depth)
 {
@@ -566,7 +572,12 @@ Move generateMove(BoardState* boardState,
   firstMoves.numMoves[0] = firstMoves.numMoves[1] = firstMoves.numMoves[2] =
   firstMoves.numMoves[3] = firstMoves.numMoves[4] = firstMoves.numMoves[5] = 0;
   generateAllMoves(boardState, colorType, &firstMoves);
-
+  
+  
+  if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
+    recurseDepth = 3;
+  
+  
   for(i = 0; i < NUM_PIECES; ++i)
   {
 

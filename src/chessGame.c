@@ -31,76 +31,23 @@ void initChessGame(ChessGame* chessGame)
 
 void runChessGame(ChessGame* chessGame)
 {
-/*
-    Move move;
-
-    move.initialPosition = 0x0000000000000008;
-    move.movedPosition = move.initialPosition << 24;
-    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_KING_POSITIONS, 0, 0, 0);
-
-    printBoardState(chessGame->boardState);
-    int isKing = isKingInCheck(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
-    printf("King in Check %d", isKing);
-
-    move.initialPosition = 0x0800000000000000;
-    move.movedPosition = move.initialPosition >> 24;
-    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, BOARD_TYPE_ALL_KING_POSITIONS, 0, 0, 0);
-
-    printBoardState(chessGame->boardState);
-    isKing = isKingInCheck(chessGame->boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS);
-    printf("King in Check %d", isKing);
-
-    move.initialPosition = 0x0010000000000000;
-    move.movedPosition = move.initialPosition >> 8;
-    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, BOARD_TYPE_ALL_PAWN_POSITIONS, 0, 0, 0);
- printBoardState(chessGame->boardState);
-    isKing = isKingInCheck(chessGame->boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS);
-    printf("King in Check %d", isKing);
-
-
-    move.initialPosition = 0x0000000000000008 << 24;
-    move.movedPosition = move.initialPosition << 8;
-    move.capturedPiece = BOARD_TYPE_ALL_KING_POSITIONS;
-    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_KING_POSITIONS, 0, move.capturedPiece, 0);
-
-        printBoardState(chessGame->boardState);
-    isKing = isKingInCheck(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
-    printf("King in Check %d", isKing);
-
-        updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_KING_POSITIONS, 0, move.capturedPiece, 1);
-printBoardState(chessGame->boardState);
-    isKing = isKingInCheck(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
-    printf("King in Check %d", isKing);
-*/
-    /*
-    move.initialPosition = 0x2000000000000000;
-    move.movedPosition = move.initialPosition >> 22;
-    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, BOARD_TYPE_ALL_BISHOP_POSITIONS, 0, 0, 0);
-
-    printBoardState(chessGame->boardState);
-
-    move.initialPosition = 0x0000000000001000;
-    move.movedPosition = move.initialPosition << 16;
-    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_PAWN_POSITIONS, 0, 0, 0);
-
-
-    printBoardState(chessGame->boardState);
-    isKing = isKingInCheck(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
-    printf("King in Check %d", isKing);
-
-    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_PAWN_POSITIONS, 0, 0, 1);
-    printBoardState(chessGame->boardState);
-    isKing = isKingInCheck(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
-    printf("King in Check %d", isKing);
-*/
-
-
   int i = 0;
 
   while(1)
   {
     Move move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
 
+    
+    if(isKingInCheck(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS))
+    {
+      if(move.initialPosition == 0)
+      {
+        printf("Checkmate, white loses\n");
+        break;
+      }
+    }
+    
+    
     updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, move.pieceType, 0, move.capturedPiece, 0);
 
     i++;
@@ -112,11 +59,29 @@ printBoardState(chessGame->boardState);
     printf("Piece type: %d\n", move.pieceType);
     printf("Captured piece type: %d\n", move.capturedPiece);
 
+    
     printBoardState(chessGame->boardState);
+    
 
+    
+    
+
+    
 
 
     move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
+    
+    
+    if(isKingInCheck(chessGame->boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS))
+    {
+      if(move.initialPosition == 0)
+      {
+        printf("Checkmate, black loses\n");
+        break;
+      }
+    }
+    
+    
 
     updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, move.pieceType, 0, move.capturedPiece, 0);
 

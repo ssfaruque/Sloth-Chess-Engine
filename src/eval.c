@@ -10,7 +10,7 @@
 
 #include "eval.h"
 
-const int weights[] = {100, 500, 300, 325, 900, 5000};
+const int weights[] = {100, 500, 300, 325, 900, 5000000};
 
 
 
