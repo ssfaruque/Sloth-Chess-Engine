@@ -192,9 +192,9 @@ int spaceScore(int space, int pieceType)
 // Below function is from chess programming wiki
 
 // Returns position of the only set bit in 'n'
-int findPosition(uint64_t n, int colorType)
+uint64_t findPosition(uint64_t n, int colorType)
 {
-  unsigned int i = 1, pos = 1;
+  uint64_t i = 1, pos = 0;
   
   // Iterate through bits of n till we find a set bit
   // i&n will be non-zero only when 'i' and 'n' have a set bit
@@ -207,19 +207,17 @@ int findPosition(uint64_t n, int colorType)
     // increment position
     ++pos;
     
-    // *** GET RID OF BELOW IF STATEMENT ***
-    if(pos > 63)
-      return 0;
+
     
     //printf("n = %d \n", n);
   }
   
   
   if(colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
-    return 63 - pos;
+    return pos - 1;
   
   else
-    return pos;
+    return 56 - ((pos - 1) / 8) * 8 + (pos - 1) % 8;
 }
 
 

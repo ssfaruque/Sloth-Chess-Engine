@@ -73,7 +73,7 @@ void runChessGame(ChessGame* chessGame)
 
   int i = 0;
 
-  while(i < 20)
+  while(1)
   {
     Move move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
 

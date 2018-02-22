@@ -399,7 +399,8 @@ int negaMax(BoardState* boardState,
     return eval(boardState);
 
   int max = -111111111;
-
+  
+  
   Moves moves;
   moves.numMoves[0] = moves.numMoves[1] = moves.numMoves[2] =
   moves.numMoves[3] = moves.numMoves[4] = moves.numMoves[5] = 0;
@@ -415,24 +416,27 @@ int negaMax(BoardState* boardState,
     for(j = 0; j < moves.numMoves[i]; ++j)
     {
 
-      if(moves.moves[i][j].initialPosition) //if valid
+      if(moves.moves[i][j].initialPosition) // if valid
       {
         updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 0);
 
+        
         if (isKingInCheck(boardState, colorType)) // the player's move leaves the player's king in check
         {
             //don't recurse down, undo and go to next move
                 updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 1);
-                continue;
-
         }
+        
+        else
+        {
+          score = -negaMax(boardState, !colorType, depth - 1);
 
-        score = -negaMax(boardState, !colorType, depth - 1);
+          updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 1);
 
-        updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, 0, moves.moves[i][j].capturedPiece, 1);
-
-        if(score > max)
-          max = score;
+          if(score > max)
+            max = score;
+          
+        }
 
       } // if valid
 
@@ -441,7 +445,7 @@ int negaMax(BoardState* boardState,
   } //loop through num pieces
 
   return max;
-} //negaMaz
+} //negaMax
 
 
 Move generateMove(BoardState* boardState,
@@ -453,8 +457,9 @@ Move generateMove(BoardState* boardState,
   int i;
   int j;
 
-  int score = 0;
-  int maxScore = 0;
+  int maxScore = -111111111;
+  int score = maxScore;
+
 
   Moves firstMoves;
   firstMoves.numMoves[0] = firstMoves.numMoves[1] = firstMoves.numMoves[2] =
@@ -463,7 +468,6 @@ Move generateMove(BoardState* boardState,
 
   for(i = 0; i < NUM_PIECES; ++i)
   {
-
     for(j = 0; j < firstMoves.numMoves[i]; ++j)
     {
       if(firstMoves.moves[i][j].initialPosition)
@@ -479,19 +483,20 @@ Move generateMove(BoardState* boardState,
 
         }
 
-        score = negaMax(boardState, !colorType, recurseDepth - 1);
+        score = -negaMax(boardState, !colorType, recurseDepth);
 
         // undo the move
         updateBoardState(boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, 0, firstMoves.moves[i][j].capturedPiece, 1);
 
 
-        if(score >= maxScore)
+        if(score > maxScore)
         {
           maxScore = score;
           move = firstMoves.moves[i][j];
           move.boardEval = score;
         }
 
+        
       }
     }
 
