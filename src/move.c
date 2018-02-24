@@ -254,6 +254,8 @@ int castlingRightCheck(enum BitboardType colorType, Bitboard movedPosition)
         if (movedPosition == 0x0400000000000000)
             return 1;
     }
+  
+  return 0;
 
 }
 
@@ -563,60 +565,6 @@ void generateAllDiagonalMoves(BoardState* boardState,
 } //generate all diagonal moves
 
 
-int negaMax(BoardState* boardState,
-            enum BitboardType colorType,
-            int depth)
-{
-  if (depth == 0)
-    return eval(boardState);
-
-  int max = -111111111;
-
-  Moves moves;
-  moves.numMoves[0] = moves.numMoves[1] = moves.numMoves[2] =
-  moves.numMoves[3] = moves.numMoves[4] = moves.numMoves[5] = 0;
-  generateAllMoves(boardState, colorType, &moves);
-
-  int score = 0;
-  int i;
-  int j;
-
-
-  for(i = 0; i < NUM_PIECES; ++i)
-  {
-    for(j = 0; j < moves.numMoves[i]; ++j)
-    {
-
-      if(moves.moves[i][j].initialPosition) //if valid
-      {
-        updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 0);
-
-        if (isKingInCheck(boardState, colorType)) // the player's move leaves the player's king in check
-        {
-            //don't recurse down, undo and go to next move
-                updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
-                continue;
-
-        }
-
-        score = -negaMax(boardState, !colorType, depth - 1);
-
-        updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
-
-
-            if(score >= max)
-                max = score;
-
-
-
-      } // if valid
-
-    } //loop through num moves for each piece
-
-  } //loop through num pieces
-
-  return max;
-} //negaMaz
 
 
 int maxi(BoardState* boardState,
@@ -782,7 +730,7 @@ Move generateMove(BoardState* boardState,
         if (colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
         {
 
-            if(score > maxScore)
+            if(score >= maxScore)
             {
                 maxScore = score;
                 move = firstMoves.moves[i][j];
@@ -791,7 +739,7 @@ Move generateMove(BoardState* boardState,
         }
 
         else
-            if(score < minScore)
+            if(score <= minScore)
             {
                 minScore = score;
                 move = firstMoves.moves[i][j];
@@ -985,8 +933,6 @@ void generateAllBishopMoves(BoardState* boardState,
                            enum BitboardType colorType,
                             Moves* moves)
 {
-  int pieceNum = 0;
-
   Bitboard pieces = boardState->boards[BOARD_TYPE_ALL_BISHOP_POSITIONS] & boardState->boards[colorType];
 
   while(pieces)
