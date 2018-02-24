@@ -25,7 +25,7 @@
 #include "bitboard.h"
 
 
-#define MAX_RECURSION_DEPTH 4
+#define MAX_RECURSION_DEPTH 1
 
 
 /**
@@ -57,9 +57,16 @@ enum MoveType
     MOVE_TYPE_QUIET,
     MOVE_TYPE_CAPTURE,
     MOVE_TYPE_PASSANT,
-    MOVE_TYPE_CASTLE,
+    MOVE_TYPE_CASTLE
 };
 
+
+enum CastlingType
+{
+    NO_CASTLING,
+    KINGS_SIDE,
+    QUEENS_SIDE
+};
 
 /**
  @brief Move contains two Bitboards (one for initial position and one for moved position).
@@ -73,6 +80,8 @@ typedef struct
   int pieceType;
   int capturedPiece;
   int boardEval;
+
+  int castling;
 } Move;
 
 
@@ -134,7 +143,7 @@ int updateBoardState(BoardState* boardState,
                       Bitboard movedPiece,
                       enum BitboardType colorType,
                       enum BitboardType pieceType,
-                      enum MoveType moveType,
+                      enum CastlingType castling,
                       int capturedPiece,
                       int undo);
 
@@ -146,7 +155,9 @@ int updateBoardState(BoardState* boardState,
 
 int findCapturedPiece(BoardState* boardState, Bitboard movedPosition, enum BitboardType colorType);
 
+int castlingCheck(enum BitboardType colorType, Bitboard movedPosition);
 
+int isRookinCheck(BoardState* boardstate, enum BitboardType colorType, enum CastlingType castling);
 /* Skeleton functions to fill out */
 
 
@@ -167,8 +178,8 @@ void generateAllDiagonalMoves(BoardState* boardState,
                                    Moves* moves);
 
 
-
-
+int maxi(BoardState* boardState, enum BitboardType colorType, int depth);
+int mini(BoardState* boardState, enum BitboardType colorType, int depth);
 
 
 

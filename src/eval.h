@@ -68,7 +68,7 @@ int centerControlEval(BoardState* boardState);
 
 
 
-
+int spaceScore(enum BitboardType colorType, int space, int pieceType);
 
 // material difference
 // mobility
