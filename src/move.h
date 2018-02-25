@@ -25,7 +25,7 @@
 #include "bitboard.h"
 
 
-#define MAX_RECURSION_DEPTH 4
+#define MAX_RECURSION_DEPTH 5
 
 
 /**
@@ -178,11 +178,13 @@ void generateAllDiagonalMoves(BoardState* boardState,
                                    Moves* moves);
 
 
-int maxi(BoardState* boardState, enum BitboardType colorType, int depth);
-int mini(BoardState* boardState, enum BitboardType colorType, int depth);
+//int maxi(BoardState* boardState, enum BitboardType colorType, int depth);
+//int mini(BoardState* boardState, enum BitboardType colorType, int depth);
 
 
 
+int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType colorType, int depthleft);
+int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType colorType, int depthleft);
 
 
 
