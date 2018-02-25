@@ -59,7 +59,7 @@ int BLACK_LEFT_CASTLE = 1;
 int BLACK_RIGHT_CASTLE = 1;
 
 
-void updateFlagState(BoardState* boardState,
+/* void updateFlagState(BoardState* boardState,
                       Bitboard initialPiece,
                       Bitboard movedPiece,
                       enum BitboardType colorType,
@@ -83,6 +83,7 @@ void updateFlagState(BoardState* boardState,
 
 
 }
+*/
 
 int updateBoardState(BoardState* boardState,
                       Bitboard initialPiece,
@@ -216,7 +217,8 @@ int updateBoardState(BoardState* boardState,
 
 int findCapturedPiece(BoardState* boardState, Bitboard movedPosition, enum BitboardType colorType)
 {
-    for (int j = 0; j < NUM_PIECES; j++) //put captured Piece type into move
+    int j = 0;
+    for (j = 0; j < NUM_PIECES; j++) //put captured Piece type into move
     {
         if (movedPosition & (boardState->boards[!colorType] & boardState->boards[j+2]))
             return (j+2);
@@ -254,7 +256,7 @@ int castlingRightCheck(enum BitboardType colorType, Bitboard movedPosition)
         if (movedPosition == 0x0400000000000000)
             return 1;
     }
-  
+
   return 0;
 
 }
@@ -285,9 +287,9 @@ int isRookinCheck(BoardState* boardState, enum BitboardType colorType, enum Cast
     moves.numMoves[3] = moves.numMoves[4] = moves.numMoves[5] = 0;
 
     generateAllMoves(boardState, !colorType, &moves);
-
-    for (int i = 0; i < NUM_PIECES; i ++)
-        for (int j = 0; j < moves.numMoves[i]; j ++)
+    int i  = 0; int j = 0;
+    for ( i = 0; i < NUM_PIECES; i ++)
+        for ( j = 0; j < moves.numMoves[i]; j ++)
             if (moves.moves[i][j].capturedPiece == BOARD_TYPE_ALL_ROOK_POSITIONS
                 && moves.moves[i][j].movedPosition == rooktoCheck) //if the captured piece is the opponent's king
                     return 1;
@@ -304,9 +306,9 @@ void generateAllSlidingMoves(BoardState* boardState,
                                   enum BitboardType colorType,
                                   Moves* moves)
 {
-  Move move = {0, 0, 0, 0, 0};
+  Move move = {0, 0, 0, 0, 0, 0};
     int offset;
-
+    int i = 0;
     switch (pieceType)
     {
         case BOARD_TYPE_ALL_PAWN_POSITIONS:
@@ -320,7 +322,9 @@ void generateAllSlidingMoves(BoardState* boardState,
                     !(move.movedPosition & boardState->boards[!colorType]))
                     moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
 
-                if ((isolatedPiece & 0x000000000000ff00) != 0) //if in initial position, move up by 2
+                if (((isolatedPiece & 0x000000000000ff00) != 0 ) &&
+					!((isolatedPiece << 8) & boardState->boards[!colorType] ) &&
+					!((isolatedPiece << 8) & boardState->boards[colorType]) ) //if in initial position, move up by 2
                 {
                     move = generateSlideUpMove(isolatedPiece, boardState, colorType, 2);
                     move.pieceType = pieceType;
@@ -343,7 +347,9 @@ void generateAllSlidingMoves(BoardState* boardState,
                     !(move.movedPosition & boardState->boards[!colorType]))
                     moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
 
-                if ((isolatedPiece & 0x00ff000000000000) != 0) //if in initial position
+                if ((isolatedPiece & 0x00ff000000000000) != 0	&&
+					!((isolatedPiece >> 8) & boardState->boards[!colorType]) &&
+					!((isolatedPiece >> 8) & boardState->boards[!colorType])) //if in initial position
                 {
                     move = generateSlideDownMove(isolatedPiece, boardState, colorType, 2);
                     move.pieceType = pieceType;
@@ -361,7 +367,7 @@ void generateAllSlidingMoves(BoardState* boardState,
         case BOARD_TYPE_ALL_ROOK_POSITIONS :
         case BOARD_TYPE_ALL_QUEEN_POSITIONS :
 
-            for(int i = 0; i < sizeof(rookMoveGenerate) / sizeof(rookMoveGenerate[0]); ++i)
+            for( i = 0; i < sizeof(rookMoveGenerate) / sizeof(rookMoveGenerate[0]); ++i)
             {
                 offset = 1;
 
@@ -422,7 +428,7 @@ void generateAllSlidingMoves(BoardState* boardState,
 
         case BOARD_TYPE_ALL_KING_POSITIONS :
 
-            for(int i = 0; i < sizeof(rookMoveGenerate) / sizeof(rookMoveGenerate[0]); ++i)
+            for( i = 0; i < sizeof(rookMoveGenerate) / sizeof(rookMoveGenerate[0]); ++i)
             {
                 move = rookMoveGenerate[i](isolatedPiece, boardState, colorType, 1);
                 move.pieceType = pieceType;
@@ -453,7 +459,7 @@ void generateAllDiagonalMoves(BoardState* boardState,
 {
     Move move = {0, 0, 0, 0, 0, 0};
     int offset;
-
+    int i = 0;
     switch (pieceType)
     {
         case BOARD_TYPE_ALL_PAWN_POSITIONS:
@@ -503,7 +509,7 @@ void generateAllDiagonalMoves(BoardState* boardState,
 
         case BOARD_TYPE_ALL_BISHOP_POSITIONS:
         case BOARD_TYPE_ALL_QUEEN_POSITIONS:
-            for(int i = 0; i < sizeof(bishopMoveGenerate) / sizeof(bishopMoveGenerate[0]); ++i)
+            for(i = 0; i < sizeof(bishopMoveGenerate) / sizeof(bishopMoveGenerate[0]); ++i)
             {
                 offset = 1;
 
@@ -544,7 +550,7 @@ void generateAllDiagonalMoves(BoardState* boardState,
 
         case BOARD_TYPE_ALL_KING_POSITIONS :
 
-            for(int i = 0; i < sizeof(bishopMoveGenerate) / sizeof(bishopMoveGenerate[0]); ++i)
+            for(i = 0; i < sizeof(bishopMoveGenerate) / sizeof(bishopMoveGenerate[0]); ++i)
             {
                 move = bishopMoveGenerate[i](isolatedPiece, boardState, colorType, 1);
                 move.pieceType = pieceType;
@@ -870,6 +876,7 @@ void generateAllKnightMoves(BoardState* boardState,
                            enum BitboardType colorType,
                             Moves* moves)
 {
+  Move move = { 0, 0, 0, 0, 0, 0 };
   int pieceNum = 0;
 
   Bitboard pieces = boardState->boards[BOARD_TYPE_ALL_KNIGHT_POSITIONS] & boardState->boards[colorType];
@@ -899,8 +906,8 @@ void generateKnightMoves(BoardState* boardState,
 {
 
     Move move;
-
-    for(int i = 0; i < sizeof(knightMoveGenerate) / sizeof(knightMoveGenerate[0]); ++i)
+	int i = 0;
+    for( i = 0; i < sizeof(knightMoveGenerate) / sizeof(knightMoveGenerate[0]); ++i)
     {
         move = knightMoveGenerate[i](isolatedPiece, boardState, colorType);
 
@@ -1464,9 +1471,11 @@ int isKingInCheck(BoardState* boardState, enum BitboardType colorType)
     moves.numMoves[3] = moves.numMoves[4] = moves.numMoves[5] = 0;
 
     generateAllMoves(boardState, !colorType, &moves);
+    int i = 0;
+    int j = 0;
 
-    for (int i = 0; i < NUM_PIECES; i ++)
-        for (int j = 0; j < moves.numMoves[i]; j ++)
+    for (i = 0; i < NUM_PIECES; i ++)
+        for ( j = 0; j < moves.numMoves[i]; j ++)
             if (moves.moves[i][j].capturedPiece == BOARD_TYPE_ALL_KING_POSITIONS) //if the captured piece is the opponent's king
                 return 1;
 
