@@ -165,10 +165,16 @@ void playerPlayChess(ChessGame* chessGame)
   char moveString[10];
   
   
+  int playerColor = BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS;
+  int engineColor = BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS;
+  
+  
+  printBoardGUI(chessGame->boardState);
+  
   while(1)
   {
     
-    printf("Turn White %d\n", chessGame->slothChessEngine->turn);
+    printf("Turn white %d\n", chessGame->slothChessEngine->turn);
     printBoardGUI(chessGame->boardState);
     
     fgets(moveString, 10, stdin);
@@ -183,55 +189,35 @@ void playerPlayChess(ChessGame* chessGame)
     
     
     
-    playerMove.pieceType = getPieceType(playerMove.initialPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, chessGame->boardState);
-    playerMove.capturedPiece = getPieceType(playerMove.movedPosition, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, chessGame->boardState);
-    
-    printf("pieceType = %d, capturedPiece = %d\n", playerMove.pieceType, playerMove.capturedPiece);
+    playerMove.pieceType = getPieceType(playerMove.initialPosition, playerColor, chessGame->boardState);
+    playerMove.capturedPiece = getPieceType(playerMove.movedPosition, engineColor, chessGame->boardState);
     
     
-    updateBoardState(chessGame->boardState, playerMove.initialPosition, playerMove.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, playerMove.pieceType, 0, playerMove.capturedPiece, 0);
+    printf("Piece type: %c\n", getSymbol(playerColor, playerMove.pieceType));
+    printf("Captured piece type: %c\n", getSymbol(engineColor, playerMove.capturedPiece));
+    
+    
+    updateBoardState(chessGame->boardState, playerMove.initialPosition, playerMove.movedPosition, playerColor, playerMove.pieceType, 0, playerMove.capturedPiece, 0);
     
     printBoardGUI(chessGame->boardState);
     
-    //printBoardState(chessGame->boardState);
-    
-    
-    
-    //Move move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
-    
-    
-    /*if(isKingInCheck(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS))
-     {
-     if(move.initialPosition == 0)
-     {
-     printf("Checkmate, white loses\n");
-     break;
-     }
-     }*/
-    
-    
-    //updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, move.pieceType, 0, move.capturedPiece, 0);
     
     i++;
     chessGame->slothChessEngine->turn++;
     
     
-    /*printf("Turn White %d\n", chessGame->slothChessEngine->turn);
-     printf("Score = %d\n", move.boardEval);
-     printf("Piece type: %c\n", getSymbol(BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, move.pieceType));
-     printf("Captured piece type: %c\n", getSymbol(BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, move.capturedPiece));
-     */
     
-    //printBoardState(chessGame->boardState);
     
+
+    // ------------------------------------------
     
     
     
     Move move;
-    move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
+    move = generateMove(chessGame->boardState, engineColor, MAX_RECURSION_DEPTH);
     
     
-    if(isKingInCheck(chessGame->boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS))
+    if(isKingInCheck(chessGame->boardState, engineColor))
     {
       if(move.initialPosition == 0)
       {
@@ -239,28 +225,23 @@ void playerPlayChess(ChessGame* chessGame)
         break;
       }
     }
+
     
-    
-    /*printf("Bitboards for black move\n");
-    printBitboard(move.initialPosition);
-    printBitboard(move.movedPosition);
-    */
-    
-    
-    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, move.pieceType, 0, move.capturedPiece, 0);
+    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, engineColor, move.pieceType, 0, move.capturedPiece, 0);
     
     chessGame->slothChessEngine->turn++;
     
-    printf("Turn Black: %d\n", chessGame->slothChessEngine->turn);
+    printf("Turn black: %d\n", chessGame->slothChessEngine->turn);
     printf("Score = %d\n", move.boardEval);
-    printf("Piece type: %c\n", getSymbol(BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, move.pieceType));
-    printf("Captured piece type: %c\n", getSymbol(BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, move.capturedPiece));
+    printf("Piece type: %c\n", getSymbol(engineColor, move.pieceType));
+    printf("Captured piece type: %c\n", getSymbol(playerColor, move.capturedPiece));
+    
+    // ---------------------------------------------
     
     
-    //printBoardState(chessGame->boardState);
     
     
-    //printBoardGUI(chessGame->boardState);
+
     
   }
   
