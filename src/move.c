@@ -108,26 +108,26 @@ int updateBoardState(BoardState* boardState,
 
       else if (capturedPiece && undo) // undo capture
       {
-        
+
         boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
         boardState->boards[!colorType] = ((boardState->boards[!colorType]) | movedPiece);
 
-        
+
         if(capturedPiece == pieceType)
         {
           boardState->boards[pieceType] = (boardState->boards[pieceType] | initialPiece);
         }
-        
+
         else
         {
           boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ movedPiece) | initialPiece);
           boardState->boards[capturedPiece] = (boardState->boards[capturedPiece]) | movedPiece;
         }
 
-        
-      
-        
-        
+
+
+
+
       } // undo capture
 
       else if(capturedPiece) //capture
@@ -137,9 +137,9 @@ int updateBoardState(BoardState* boardState,
 
 
           boardState->boards[colorType] = ((boardState->boards[colorType] ^ initialPiece) | movedPiece);
-        
+
           boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ initialPiece) | movedPiece);
-        
+
       } //capture
 
 
@@ -706,7 +706,7 @@ Move generateMove(BoardState* boardState,
 
     for(j = 0; j < firstMoves.numMoves[i]; ++j)
     {
-      
+
       if(firstMoves.moves[i][j].initialPosition)
       {
         // do the move
@@ -738,14 +738,11 @@ Move generateMove(BoardState* boardState,
             score = maxi(boardState, !colorType, recurseDepth - 1);
 
 
-
-        // undo the move
-        updateBoardState(boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, firstMoves.moves[i][j].castling, firstMoves.moves[i][j].capturedPiece, 1);
-
         if (colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
         {
+            score += eval(boardState)/16; //bias the first Move
 
-            if(score >= maxScore)
+            if(score > maxScore)
             {
                 maxScore = score;
                 move = firstMoves.moves[i][j];
@@ -754,13 +751,19 @@ Move generateMove(BoardState* boardState,
         }
 
         else
-            if(score <= minScore)
+        {
+            score -= eval(boardState)/16; //bias first Move
+
+            if(score < minScore)
             {
                 minScore = score;
                 move = firstMoves.moves[i][j];
                 move.boardEval = score;
             }
+        }
 
+                // undo the move
+        updateBoardState(boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, firstMoves.moves[i][j].castling, firstMoves.moves[i][j].capturedPiece, 1);
 
       }
     }
