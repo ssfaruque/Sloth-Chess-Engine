@@ -374,8 +374,8 @@ int pieceSquareEval(BoardState* boardState)
 int bishopPairEval(BoardState* boardState)
 {
   int score = 0;
-  
-  
+
+
   return score;
 }
 

@@ -178,8 +178,8 @@ void generateAllDiagonalMoves(BoardState* boardState,
                                    Moves* moves);
 
 
-//int maxi(BoardState* boardState, enum BitboardType colorType, int depth);
-//int mini(BoardState* boardState, enum BitboardType colorType, int depth);
+int maxi(BoardState* boardState, enum BitboardType colorType, int depth);
+int mini(BoardState* boardState, enum BitboardType colorType, int depth);
 
 
 

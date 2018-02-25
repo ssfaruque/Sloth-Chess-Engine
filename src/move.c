@@ -405,7 +405,7 @@ void generateAllSlidingMoves(BoardState* boardState,
                             if (pieceType == BOARD_TYPE_ALL_ROOK_POSITIONS)
                             {
                                 moves->moves[pieceType - 2][moves->numRookMoves++] = move;
-
+/*
                                 if (WHITE_LEFT_CASTLE || BLACK_LEFT_CASTLE)
                                 {
                                     if (i == 1 && castlingLeftCheck(colorType, move.movedPosition)) //check for rook slide right and legal castling
@@ -423,6 +423,7 @@ void generateAllSlidingMoves(BoardState* boardState,
                                         moves->moves[pieceType - 2][moves->numRookMoves++] = move;
                                     }
                                 } //castle right
+                                */
                             }
 
                             else //QUEEN
@@ -583,7 +584,7 @@ void generateAllDiagonalMoves(BoardState* boardState,
 
 
 
-/*
+
 int maxi(BoardState* boardState,
             enum BitboardType colorType, int depth)
 {
@@ -683,7 +684,7 @@ int mini(BoardState* boardState,
     return min;
 }
 
-*/
+
 
 int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType colorType, int depthleft)
 {
@@ -832,7 +833,7 @@ Move generateMove(BoardState* boardState,
             }
         }
 
-        /*
+/*
         if (colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
             score = mini(boardState, !colorType, recurseDepth - 1);
         else
@@ -846,7 +847,7 @@ Move generateMove(BoardState* boardState,
         {
             score = alphaBetaMin(boardState, alpha, beta, !colorType, recurseDepth - 1);
 
-            //score += eval(boardState)/16; //bias the first Move
+            score += eval(boardState)/64; //bias the first Move
 
             if(score > maxScore)
             {
@@ -860,7 +861,7 @@ Move generateMove(BoardState* boardState,
         {
             score = alphaBetaMax(boardState, alpha, beta, !colorType, recurseDepth - 1);
 
-            //score -= eval(boardState)/16; //bias first Move
+            score -= eval(boardState)/64; //bias first Move
 
             if(score < minScore)
             {
@@ -877,7 +878,7 @@ Move generateMove(BoardState* boardState,
     }
 
   }
-
+/*
   //Keeping track of castling
     if (move.pieceType == BOARD_TYPE_ALL_KING_POSITIONS)
     {
@@ -915,7 +916,7 @@ Move generateMove(BoardState* boardState,
         }
     } // if pieceType = rook
 
-
+*/
 
   return move;
 }
