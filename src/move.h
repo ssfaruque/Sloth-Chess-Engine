@@ -25,7 +25,7 @@
 #include "bitboard.h"
 
 
-#define MAX_RECURSION_DEPTH 3
+#define MAX_RECURSION_DEPTH 5
 
 
 /**
@@ -183,6 +183,8 @@ int mini(BoardState* boardState, enum BitboardType colorType, int depth);
 
 
 
+int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType colorType, int depthleft);
+int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType colorType, int depthleft);
 
 
 

@@ -152,7 +152,7 @@ const int kingWhitePST [] =
 const int kingBlackPST [] =
 {
   //king middle game
-   20, 30, 10000,  0,  0, 10, 30, 20,
+   20, 30, 10,  0,  0, 10, 30, 20,
    20, 20,  0,  0,  0,  0, 20, 20,
   -10,-20,-20,-20,-20,-20,-20,-10,
   -20,-30,-30,-40,-40,-30,-30,-20,
@@ -369,6 +369,15 @@ int pieceSquareEval(BoardState* boardState)
   return score;
 }
 
+
+
+int bishopPairEval(BoardState* boardState)
+{
+  int score = 0;
+
+
+  return score;
+}
 
 
 int eval(BoardState* boardState)

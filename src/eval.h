@@ -82,6 +82,9 @@ int pieceSquareEval(BoardState* boardState);
 
 
 
+int bishopPairEval(BoardState* boardState);
+
+
 
 
 /**
