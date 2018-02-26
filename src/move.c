@@ -106,7 +106,7 @@ int updateBoardState(BoardState* boardState,
 				(boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] ^  movedPiece );
 
 		}
-		else
+		else // undo normal quiet
 		{
 			boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
 			boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ movedPiece) | initialPiece);
@@ -122,7 +122,7 @@ int updateBoardState(BoardState* boardState,
 			  boardState->boards[colorType] = ((boardState->boards[colorType] ^ initialPiece) | movedPiece);
 			  boardState->boards[pieceType] = boardState->boards[pieceType] ^ initialPiece ;
 			  boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] =
-						 ((boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] ^ initialPiece) | movedPiece);
+						 ((boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS]) | movedPiece);
 
 		  }
 
@@ -135,28 +135,38 @@ int updateBoardState(BoardState* boardState,
 	 }
 
       else if (capturedPiece && undo) // undo capture
-      {
+      {	
+		  // Promote capture undo
+		 if (pieceType == PIECE_TYPE_PAWN && ((colorType == PLAYER_TYPE_WHITE &&
+			 (movedPiece & 0xff00000000000000)) || (colorType == PLAYER_TYPE_BLACK &&
+			 (movedPiece & 0x00000000000000ff))))
+		 {
+			 boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
+			 boardState->boards[!colorType] = ((boardState->boards[!colorType]) | movedPiece);
+			 boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ movedPiece) | initialPiece);
+		     boardState->boards[capturedPiece] = (boardState->boards[capturedPiece]) | movedPiece;
+			 boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] =
+				 (boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] ^ movedPiece);
 
-        boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
-        boardState->boards[!colorType] = ((boardState->boards[!colorType]) | movedPiece);
+		 } //Promote capture undo
+		 else // normal capture undo
+		 {
+			 boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
+			 boardState->boards[!colorType] = ((boardState->boards[!colorType]) | movedPiece);
 
 
-        if(capturedPiece == pieceType)
-        {
-          boardState->boards[pieceType] = (boardState->boards[pieceType] | initialPiece);
-        }
+			 if (capturedPiece == pieceType)
+			  {
+				  boardState->boards[pieceType] = (boardState->boards[pieceType] | initialPiece);
+			 }
 
-        else
-        {
-          boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ movedPiece) | initialPiece);
-          boardState->boards[capturedPiece] = (boardState->boards[capturedPiece]) | movedPiece;
-        }
-
-
-
-
-
-      } // undo capture
+			  else
+			  {
+				  boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ movedPiece) | initialPiece);
+				  boardState->boards[capturedPiece] = (boardState->boards[capturedPiece]) | movedPiece;
+			  }
+		 }
+	  } // undo capture
 
       else if(capturedPiece) //capture
       {  
@@ -170,16 +180,9 @@ int updateBoardState(BoardState* boardState,
 			  boardState->boards[colorType] = ((boardState->boards[colorType] ^ initialPiece) | movedPiece);
 			  boardState->boards[pieceType] = ( boardState->boards[pieceType] ^ initialPiece) ;
 			  boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] =
-				  ((boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] ^ initialPiece) | movedPiece);
-			  
-			  
-			  boardState->boards[colorType] = ((boardState->boards[colorType] ^ initialPiece) | movedPiece);
-			  boardState->boards[pieceType] = boardState->boards[pieceType] ^ initialPiece;
-			  boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] =
-		       ((boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] ^ initialPiece) | movedPiece);
-
+				  (boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] | movedPiece);
 		  }
-		  else
+		  else // normal capture
 		  {
 			  boardState->boards[capturedPiece] = (boardState->boards[capturedPiece]) ^ movedPiece;
 			  boardState->boards[!colorType] = ((boardState->boards[!colorType]) ^ movedPiece);
