@@ -93,53 +93,103 @@ int updateBoardState(BoardState* boardState,
                       int capturedPiece,
                       int undo)
 {
-      if(undo && !capturedPiece) //undo quiet
-      {
-        boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
-        boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ movedPiece) | initialPiece);
-      }
+	if (undo && !capturedPiece) //undo quiet
+	{  /*Pawn Promotion*/
+		if (pieceType == PIECE_TYPE_PAWN && ((colorType == PLAYER_TYPE_WHITE &&
+			(movedPiece & 0xff00000000000000)) || (colorType == PLAYER_TYPE_BLACK &&
+			(movedPiece & 0x00000000000000ff))))// if promotion 
+		{
+			boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
+			boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ movedPiece) | initialPiece);
+			boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] =
+				(boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] ^ movedPiece);
+
+		}
+		else // undo normal quiet
+		{
+			boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
+			boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ movedPiece) | initialPiece);
+		}
+	}
 
       else if(!capturedPiece) // quiet
       {
+		  /*Pawn Promotion*/
+		  if (pieceType == PIECE_TYPE_PAWN && ((colorType == PLAYER_TYPE_WHITE &&
+			  (movedPiece & 0xff00000000000000)) || (colorType == PLAYER_TYPE_BLACK &&
+			  (movedPiece & 0x00000000000000ff))))// if promotion 
+		  {
+			  boardState->boards[colorType] = ((boardState->boards[colorType] ^ initialPiece) | movedPiece);
+			  boardState->boards[pieceType] = boardState->boards[pieceType] ^ initialPiece;
+			  boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] =
+				  ((boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS]) | movedPiece);
 
-        boardState->boards[colorType] = ((boardState->boards[colorType] ^ initialPiece) | movedPiece);
-        boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ initialPiece) | movedPiece);
-      }
+		  }
+
+
+		  else  // not promotion
+		  {
+			  boardState->boards[colorType] = ((boardState->boards[colorType] ^ initialPiece) | movedPiece);
+			  boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ initialPiece) | movedPiece);
+		  }
+	  }
 
       else if (capturedPiece && undo) // undo capture
       {
 
-        boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
-        boardState->boards[!colorType] = ((boardState->boards[!colorType]) | movedPiece);
+		  // Promote capture undo
+		  if (pieceType == PIECE_TYPE_PAWN && ((colorType == PLAYER_TYPE_WHITE &&
+			  (movedPiece & 0xff00000000000000)) || (colorType == PLAYER_TYPE_BLACK &&
+			  (movedPiece & 0x00000000000000ff))))
+		  {
+			  boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
+			  boardState->boards[!colorType] = ((boardState->boards[!colorType]) | movedPiece);
+			  boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ movedPiece) | initialPiece);
+			  boardState->boards[capturedPiece] = (boardState->boards[capturedPiece]) | movedPiece;
+			  boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] =
+				  (boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] ^ movedPiece);
+
+		  } //Promote capture undo
+		  else // normal capture undo
+		  {
+			  boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
+			  boardState->boards[!colorType] = ((boardState->boards[!colorType]) | movedPiece);
 
 
-        if(capturedPiece == pieceType)
-        {
-          boardState->boards[pieceType] = (boardState->boards[pieceType] | initialPiece);
-        }
+			  if (capturedPiece == pieceType)
+			  {
+				  boardState->boards[pieceType] = (boardState->boards[pieceType] | initialPiece);
+			  }
 
-        else
-        {
-          boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ movedPiece) | initialPiece);
-          boardState->boards[capturedPiece] = (boardState->boards[capturedPiece]) | movedPiece;
-        }
-
-
-
-
-
+			  else
+			  {
+				  boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ movedPiece) | initialPiece);
+				  boardState->boards[capturedPiece] = (boardState->boards[capturedPiece]) | movedPiece;
+			  }
+		  }
       } // undo capture
 
       else if(capturedPiece) //capture
       {
-          boardState->boards[capturedPiece] = (boardState->boards[capturedPiece]) ^ movedPiece;
-          boardState->boards[!colorType] = ((boardState->boards[!colorType]) ^ movedPiece);
-
-
-          boardState->boards[colorType] = ((boardState->boards[colorType] ^ initialPiece) | movedPiece);
-
-          boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ initialPiece) | movedPiece);
-
+		  /*Pawn Promotion*/
+		  if (pieceType == PIECE_TYPE_PAWN && ((colorType == PLAYER_TYPE_WHITE &&
+			  (movedPiece & 0xff00000000000000)) || (colorType == PLAYER_TYPE_BLACK &&
+			  (movedPiece & 0x00000000000000ff))))// if promotion 
+		  {
+			  boardState->boards[capturedPiece] = (boardState->boards[capturedPiece]) ^ movedPiece;
+			  boardState->boards[!colorType] = ((boardState->boards[!colorType]) ^ movedPiece);
+			  boardState->boards[colorType] = ((boardState->boards[colorType] ^ initialPiece) | movedPiece);
+			  boardState->boards[pieceType] = (boardState->boards[pieceType] ^ initialPiece);
+			  boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] =
+				  (boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] | movedPiece);
+		  }
+		  else // normal capture
+		  {
+			  boardState->boards[capturedPiece] = (boardState->boards[capturedPiece]) ^ movedPiece;
+			  boardState->boards[!colorType] = ((boardState->boards[!colorType]) ^ movedPiece);
+			  boardState->boards[colorType] = ((boardState->boards[colorType] ^ initialPiece) | movedPiece);
+			  boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ initialPiece) | movedPiece);
+		  }
       } //capture
 
 
