@@ -32,8 +32,27 @@ void initChessGame(ChessGame* chessGame)
 
 void runChessGame(ChessGame* chessGame)
 {
-  playerPlayChess(chessGame);
+  //playerPlayChess(chessGame);
+	Move move;
+	move.initialPosition = 0x0000000000000100;
+	move.movedPosition = move.initialPosition << (8*5);
+	updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_PAWN_POSITIONS, 0, BOARD_TYPE_ALL_PAWN_POSITIONS, 0);
 
+	printBoardState(chessGame->boardState);
+
+	move.initialPosition = 0x0001000000000000;
+	move.movedPosition = move.initialPosition << 9;
+	updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_PAWN_POSITIONS, 0, BOARD_TYPE_ALL_KNIGHT_POSITIONS, 0);
+	printf("Queen Promotion:\n");
+	printBoardState(chessGame->boardState);
+
+
+	printf("Queen Promotion Undo:\n");
+	updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_PAWN_POSITIONS, 0, BOARD_TYPE_ALL_KNIGHT_POSITIONS, 1);
+	printBoardState(chessGame->boardState);
+
+
+	
 }
 
 void cleanUpChessGame(ChessGame* chessGame)

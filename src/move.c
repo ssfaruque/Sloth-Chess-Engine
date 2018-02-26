@@ -95,8 +95,8 @@ int updateBoardState(BoardState* boardState,
 {
 	if (undo && !capturedPiece) //undo quiet
 	{  /*Pawn Promotion*/
-		if (pieceType == PIECE_TYPE_PAWN && ((colorType == PLAYER_TYPE_WHITE &&
-			(movedPiece & 0xff00000000000000)) || (colorType == PLAYER_TYPE_BLACK &&
+		if (pieceType == BOARD_TYPE_ALL_PAWN_POSITIONS && ((colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS &&
+			(movedPiece & 0xff00000000000000)) || (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS &&
 			(movedPiece & 0x00000000000000ff))))// if promotion 
 		{
 			boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
@@ -115,8 +115,8 @@ int updateBoardState(BoardState* boardState,
       else if(!capturedPiece) // quiet
       {
 		  /*Pawn Promotion*/
-		  if (pieceType == PIECE_TYPE_PAWN && ((colorType == PLAYER_TYPE_WHITE &&
-			  (movedPiece & 0xff00000000000000)) || (colorType == PLAYER_TYPE_BLACK &&
+		  if (pieceType == BOARD_TYPE_ALL_PAWN_POSITIONS && ((colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS &&
+			  (movedPiece & 0xff00000000000000)) || (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS &&
 			  (movedPiece & 0x00000000000000ff))))// if promotion 
 		  {
 			  boardState->boards[colorType] = ((boardState->boards[colorType] ^ initialPiece) | movedPiece);
@@ -138,8 +138,8 @@ int updateBoardState(BoardState* boardState,
       {
 
 		  // Promote capture undo
-		  if (pieceType == PIECE_TYPE_PAWN && ((colorType == PLAYER_TYPE_WHITE &&
-			  (movedPiece & 0xff00000000000000)) || (colorType == PLAYER_TYPE_BLACK &&
+		  if (pieceType == BOARD_TYPE_ALL_PAWN_POSITIONS && ((colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS &&
+			  (movedPiece & 0xff00000000000000)) || (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS &&
 			  (movedPiece & 0x00000000000000ff))))
 		  {
 			  boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
@@ -172,8 +172,8 @@ int updateBoardState(BoardState* boardState,
       else if(capturedPiece) //capture
       {
 		  /*Pawn Promotion*/
-		  if (pieceType == PIECE_TYPE_PAWN && ((colorType == PLAYER_TYPE_WHITE &&
-			  (movedPiece & 0xff00000000000000)) || (colorType == PLAYER_TYPE_BLACK &&
+		  if (pieceType == BOARD_TYPE_ALL_PAWN_POSITIONS && ((colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS &&
+			  (movedPiece & 0xff00000000000000)) || (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS &&
 			  (movedPiece & 0x00000000000000ff))))// if promotion 
 		  {
 			  boardState->boards[capturedPiece] = (boardState->boards[capturedPiece]) ^ movedPiece;
