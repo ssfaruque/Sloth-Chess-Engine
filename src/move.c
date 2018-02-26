@@ -97,7 +97,7 @@ int updateBoardState(BoardState* boardState,
 	{  /*Pawn Promotion*/
 		if (pieceType == BOARD_TYPE_ALL_PAWN_POSITIONS && ((colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS &&
 			(movedPiece & 0xff00000000000000)) || (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS &&
-			(movedPiece & 0x00000000000000ff))))// if promotion 
+			(movedPiece & 0x00000000000000ff))))// if promotion
 		{
 			boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
 			boardState->boards[pieceType] = ((boardState->boards[pieceType] ^ movedPiece) | initialPiece);
@@ -117,7 +117,7 @@ int updateBoardState(BoardState* boardState,
 		  /*Pawn Promotion*/
 		  if (pieceType == BOARD_TYPE_ALL_PAWN_POSITIONS && ((colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS &&
 			  (movedPiece & 0xff00000000000000)) || (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS &&
-			  (movedPiece & 0x00000000000000ff))))// if promotion 
+			  (movedPiece & 0x00000000000000ff))))// if promotion
 		  {
 			  boardState->boards[colorType] = ((boardState->boards[colorType] ^ initialPiece) | movedPiece);
 			  boardState->boards[pieceType] = boardState->boards[pieceType] ^ initialPiece;
@@ -174,7 +174,7 @@ int updateBoardState(BoardState* boardState,
 		  /*Pawn Promotion*/
 		  if (pieceType == BOARD_TYPE_ALL_PAWN_POSITIONS && ((colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS &&
 			  (movedPiece & 0xff00000000000000)) || (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS &&
-			  (movedPiece & 0x00000000000000ff))))// if promotion 
+			  (movedPiece & 0x00000000000000ff))))// if promotion
 		  {
 			  boardState->boards[capturedPiece] = (boardState->boards[capturedPiece]) ^ movedPiece;
 			  boardState->boards[!colorType] = ((boardState->boards[!colorType]) ^ movedPiece);
@@ -267,6 +267,60 @@ int updateBoardState(BoardState* boardState,
             boardState->boards[BOARD_TYPE_ALL_KING_POSITIONS] = ((boardState->boards[BOARD_TYPE_ALL_KING_POSITIONS] ^ king_initial) | king_final);
 
       } //if castling
+
+
+  //Keeping track of castling
+    if (move.pieceType == BOARD_TYPE_ALL_KING_POSITIONS)
+    {
+        if (colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
+        {
+            if (undo)
+            {
+                WHITE_LEFT_CASTLE = 1;
+                WHITE_RIGHT_CASTLE = 1;
+            }
+
+            else
+            {
+                WHITE_LEFT_CASTLE = 0;
+                WHITE_RIGHT_CASTLE = 0;
+            }
+        }
+
+        else //black
+        {
+            if (undo)
+            {
+                BLACK_LEFT_CASTLE = 1;
+                BLACK_RIGHT_CASTLE = 1;
+            }
+            else
+            {
+                BLACK_LEFT_CASTLE = 0;
+                BLACK_RIGHT_CASTLE = 0;
+            }
+        }
+    }
+
+
+    if (move.pieceType == BOARD_TYPE_ALL_ROOK_POSITIONS)
+    {
+        if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
+        {
+            if (move.initialPosition == 0x8000000000000000) //initial position of black rook
+                BLACK_LEFT_CASTLE = 0;
+            if (move.initialPosition == 0x0100000000000000)
+                BLACK_RIGHT_CASTLE = 0;
+        }
+
+        else
+        {
+            if (move.initialPosition == 0x0000000000000001) //initial position of white
+                WHITE_RIGHT_CASTLE = 0;
+            if (move.initialPosition == 0x0000000000000080)
+                WHITE_LEFT_CASTLE = 0;
+        }
+    } // if pieceType = rook
 
   return 0;
 } //update board state
@@ -973,44 +1027,6 @@ Move generateMove(BoardState* boardState,
     }
 
   }
-
-
-  //Keeping track of castling
-    if (move.pieceType == BOARD_TYPE_ALL_KING_POSITIONS)
-    {
-        if (colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
-        {
-             WHITE_LEFT_CASTLE = 0;
-             WHITE_RIGHT_CASTLE = 0;
-        }
-
-        else
-        {
-            BLACK_LEFT_CASTLE = 0;
-            BLACK_RIGHT_CASTLE = 0;
-        }
-
-    }
-
-
-    if (move.pieceType == BOARD_TYPE_ALL_ROOK_POSITIONS)
-    {
-        if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
-        {
-            if (move.initialPosition == 0x8000000000000000) //initial position of black rook
-                BLACK_LEFT_CASTLE = 0;
-            if (move.initialPosition == 0x0100000000000000)
-                BLACK_RIGHT_CASTLE = 0;
-        }
-
-        else
-        {
-            if (move.initialPosition == 0x0000000000000001) //initial position of white
-                WHITE_RIGHT_CASTLE = 0;
-            if (move.initialPosition == 0x0000000000000080)
-                WHITE_LEFT_CASTLE = 0;
-        }
-    } // if pieceType = rook
 
 
   return move;
