@@ -270,9 +270,9 @@ int updateBoardState(BoardState* boardState,
 
 
   //Keeping track of castling
-    if (move.pieceType == BOARD_TYPE_ALL_KING_POSITIONS)
+    if (pieceType == BOARD_TYPE_ALL_KING_POSITIONS)
     {
-        if (colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
+        if (colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS && initialPiece== 0x0000000000000008)
         {
             if (undo)
             {
@@ -287,7 +287,7 @@ int updateBoardState(BoardState* boardState,
             }
         }
 
-        else //black
+        else if (initialPiece == 0x0800000000000000) //black
         {
             if (undo)
             {
@@ -303,21 +303,21 @@ int updateBoardState(BoardState* boardState,
     }
 
 
-    if (move.pieceType == BOARD_TYPE_ALL_ROOK_POSITIONS)
+    if (pieceType == BOARD_TYPE_ALL_ROOK_POSITIONS)
     {
         if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
         {
-            if (move.initialPosition == 0x8000000000000000) //initial position of black rook
+            if (initialPiece == 0x8000000000000000) //initial position of black rook
                 BLACK_LEFT_CASTLE = 0;
-            if (move.initialPosition == 0x0100000000000000)
+            if (initialPiece == 0x0100000000000000)
                 BLACK_RIGHT_CASTLE = 0;
         }
 
         else
         {
-            if (move.initialPosition == 0x0000000000000001) //initial position of white
+            if (initialPiece == 0x0000000000000001) //initial position of white
                 WHITE_RIGHT_CASTLE = 0;
-            if (move.initialPosition == 0x0000000000000080)
+            if (initialPiece == 0x0000000000000080)
                 WHITE_LEFT_CASTLE = 0;
         }
     } // if pieceType = rook
