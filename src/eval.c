@@ -372,14 +372,6 @@ int pieceSquareEval(BoardState* boardState)
 
 
 int bishopPairEval(BoardState* boardState)
-{
-  int score = 0;
-
-
-  return score;
-}
-
-
 int eval(BoardState* boardState)
 {
   return materialEval(boardState) + centerControlEval(boardState) + pieceSquareEval(boardState);
