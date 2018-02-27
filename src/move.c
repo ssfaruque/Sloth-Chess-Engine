@@ -853,8 +853,8 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
                     }
                 }
 
-                score = moveEval + alphaBetaMin(boardState, alpha, beta, !colorType, depthleft - 1);
-                //score = alphaBetaMin(boardState, alpha, beta, !colorType, depthleft - 1);
+                //score = moveEval + alphaBetaMin(boardState, alpha, beta, !colorType, depthleft - 1);
+                score = alphaBetaMin(boardState, alpha, beta, !colorType, depthleft - 1);
 
                 updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
 
@@ -895,7 +895,7 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
             if(moves.moves[i][j].initialPosition) //if valid
             {
                 updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 0);
-                moveEval = eval(boardState);
+                //moveEval = eval(boardState);
 
                 if (isKingInCheck(boardState, colorType)) // the player's move leaves the player's king in check
                 {
@@ -915,8 +915,8 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
                     }
                 }
 
-                score = moveEval + alphaBetaMax(boardState, alpha, beta, !colorType, depthleft - 1);
-//score = alphaBetaMax(boardState, alpha, beta, !colorType, depthleft - 1);
+                //score = moveEval + alphaBetaMax(boardState, alpha, beta, !colorType, depthleft - 1);
+                score = alphaBetaMax(boardState, alpha, beta, !colorType, depthleft - 1);
                 updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
 
                 if (score <= alpha)
@@ -960,7 +960,7 @@ Move generateMove(BoardState* boardState,
       {
         // do the move
         updateBoardState(boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, firstMoves.moves[i][j].castling, firstMoves.moves[i][j].capturedPiece, 0);
-        firstMovesEval = eval(boardState);
+        //firstMovesEval = eval(boardState);
 
         if (isKingInCheck(boardState, colorType)) // the player's move leaves the player's king in check
         {
@@ -992,8 +992,8 @@ Move generateMove(BoardState* boardState,
 
         if (colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
         {
-            score = firstMovesEval + alphaBetaMin(boardState, alpha, beta, !colorType, recurseDepth - 1);
-            //score = alphaBetaMin(boardState, alpha, beta, !colorType, recurseDepth - 1);
+            //score = firstMovesEval + alphaBetaMin(boardState, alpha, beta, !colorType, recurseDepth - 1);
+            score = alphaBetaMin(boardState, alpha, beta, !colorType, recurseDepth - 1);
 
             //score += eval(boardState)/64; //bias the first Move
 
@@ -1007,8 +1007,8 @@ Move generateMove(BoardState* boardState,
 
         else
         {
-            score = firstMovesEval + alphaBetaMax(boardState, alpha, beta, !colorType, recurseDepth - 1);
-            //score = alphaBetaMax(boardState, alpha, beta, !colorType, recurseDepth - 1);
+            //score = firstMovesEval + alphaBetaMax(boardState, alpha, beta, !colorType, recurseDepth - 1);
+            score = alphaBetaMax(boardState, alpha, beta, !colorType, recurseDepth - 1);
             //score -= eval(boardState)/64; //bias first Move
 
             if(score < minScore)
@@ -1048,14 +1048,14 @@ void swapMove(Move* a, Move* b)
 int calcCaptureScore(Move* move)
 {
   int score = 0;
-  
+
   int victim = move->capturedPiece;
   int attacker = -(move->pieceType - 8);
-  
+
   // if there is a captured piece
   if(victim)
     score = victim * attacker;
-  
+
   return score;
 }
 
@@ -1064,21 +1064,21 @@ int calcCaptureScore(Move* move)
 void orderCaptureMoves(Moves* moves)
 {
   int i, j, k;
-  
+
   for(i = 0; i < NUM_PIECES; ++i)
   {
     for(j = 0; j < moves->numMoves[i]; ++j)
     {
       int startScore = calcCaptureScore(&moves->moves[i][j]);
-      
+
       for(k = j + 1; k < moves->numMoves[i]; ++k)
       {
         int captureScore = calcCaptureScore(&moves->moves[i][k]);
-        
+
         if(captureScore > startScore)
           swapMove(&moves->moves[i][j], &moves->moves[i][k]);
       }
-      
+
     }
   }
 }
@@ -1096,7 +1096,7 @@ void generateAllMoves(BoardState* boardState,
   generateAllBishopMoves(boardState, colorType, moves);
   generateAllQueenMoves(boardState, colorType, moves);
   generateAllKingMoves(boardState, colorType, moves);
-  
+
   orderCaptureMoves(moves);
 }
 
