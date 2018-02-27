@@ -1033,6 +1033,59 @@ Move generateMove(BoardState* boardState,
 }
 
 
+
+
+void swapMove(Move* a, Move* b)
+{
+  Move tmp;
+  memcpy(&tmp, a, sizeof(Move));
+  memcpy(a, b, sizeof(Move));
+  memcpy(b, &tmp, sizeof(Move));
+}
+
+
+
+int calcCaptureScore(Move* move)
+{
+  int score = 0;
+  
+  int victim = move->capturedPiece;
+  int attacker = -(move->pieceType - 8);
+  
+  // if there is a captured piece
+  if(victim)
+    score = victim * attacker;
+  
+  return score;
+}
+
+
+// only orders capture moves
+void orderCaptureMoves(Moves* moves)
+{
+  int i, j, k;
+  
+  for(i = 0; i < NUM_PIECES; ++i)
+  {
+    for(j = 0; j < moves->numMoves[i]; ++j)
+    {
+      int startScore = calcCaptureScore(&moves->moves[i][j]);
+      
+      for(k = j + 1; k < moves->numMoves[i]; ++k)
+      {
+        int captureScore = calcCaptureScore(&moves->moves[i][k]);
+        
+        if(captureScore > startScore)
+          swapMove(&moves->moves[i][j], &moves->moves[i][k]);
+      }
+      
+    }
+  }
+}
+
+
+
+
 void generateAllMoves(BoardState* boardState,
                       enum BitboardType colorType,
                       Moves* moves)
@@ -1043,6 +1096,8 @@ void generateAllMoves(BoardState* boardState,
   generateAllBishopMoves(boardState, colorType, moves);
   generateAllQueenMoves(boardState, colorType, moves);
   generateAllKingMoves(boardState, colorType, moves);
+  
+  orderCaptureMoves(moves);
 }
 
 
