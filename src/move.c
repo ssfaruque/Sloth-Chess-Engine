@@ -510,7 +510,7 @@ void generateAllSlidingMoves(BoardState* boardState,
                             {
                                 moves->moves[pieceType - 2][moves->numRookMoves++] = move;
 
-                                if (WHITE_LEFT_CASTLE)
+                           /*     if (WHITE_LEFT_CASTLE)
                                 {
                                     if (i == 1 && move.initialPosition == 0x0000000000000080 && move.movedPosition == 0x00000000000000010) //check for rook slide right and legal castling
                                     {
@@ -545,7 +545,7 @@ void generateAllSlidingMoves(BoardState* boardState,
                                         move.castling = KINGS_SIDE;
                                         moves->moves[pieceType - 2][moves->numRookMoves++] = move;
                                     }
-                                } //castle black kings side
+                                } //castle black kings side */
                             } // Rook
 
                             else //QUEEN
