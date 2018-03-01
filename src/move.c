@@ -148,7 +148,7 @@ int updateBoardState(BoardState* boardState,
 			  boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] =
 				  (boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] ^ movedPiece); // Delete queen
 			  boardState->boards[capturedPiece] = (boardState->boards[capturedPiece]) | movedPiece;//Add captured back
-                /*Add captured back needs to go after deleting queen */
+
 		  } //Promote capture undo
 		  else // normal capture undo
 		  {
