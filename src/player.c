@@ -8,11 +8,142 @@
 
 #include "player.h"
 
+#include "slothChessEngine.h"
+
+
+
 char board[8][8];
 
 
 
+void updateInternalBoard(BoardState* boardState)
+{
+  int row;
+  int col;
+  int boardNum;
+  
+  
+  for(row = 0; row < 8; ++row)
+  {
+    for(col = 0; col < 8; ++col)
+    {
+      board[row][col] = '.';
+    }
+  }
+  
+  for(boardNum = 2; boardNum < 8; ++boardNum)
+  {
+    Bitboard whitePieces = boardState->boards[boardNum] & boardState->boards[BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS];
+    Bitboard blackPieces = boardState->boards[boardNum] & boardState->boards[BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS];
+    
+    
+    uint64_t i = 1;
+    unsigned int pos = 0;
+    
+    
+    while (pos < 64)
+    {
+      if(i & whitePieces)
+      {
+        row = 7 - pos / 8;
+        col = 7 - pos % 8;
+        board[row][col] = getSymbol(BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, boardNum);
+      }
+      
+      // Unset current bit and set the next bit in 'i'
+      i = i << 1;
+      
+      // increment position
+      ++pos;
+      
+    }
+    
+    i = 1;
+    pos = 0;
+    
+    
+    while (pos < 64)
+    {
+      
+      if(i & blackPieces)
+      {
+        row = 7 - pos / 8;
+        col = 7 - pos % 8;
+        board[row][col] = getSymbol(BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, boardNum);
+      }
+      
+      // Unset current bit and set the next bit in 'i'
+      i = i << 1;
+      
+      // increment position
+      ++pos;
+      
+    }
+    
+  }
+}
 
+
+void generateFEN(SlothChessEngine* engine)
+{
+  
+  updateInternalBoard(engine->boardState);
+  
+  int row;
+  int col;
+  int index = 0;
+  int numEmpty = 0;
+  
+  for(row = 0; row < BOARD_LENGTH; ++row)
+  {
+    for(col = 0; col < BOARD_LENGTH; ++col)
+    {
+      if(board[row][col] != '.')
+      {
+        if(numEmpty)
+        {
+          engine->FEN[index++] = '0' + numEmpty;
+          numEmpty = 0;
+        }
+        
+        engine->FEN[index++] = board[row][col];
+      }
+      
+      else
+        ++numEmpty;
+    }
+    
+    if(numEmpty)
+    {
+      engine->FEN[index++] = '0' + numEmpty;
+      numEmpty = 0;
+    }
+    
+    if(row != BOARD_LENGTH - 1)
+      engine->FEN[index++] = '/';
+    
+  }
+  
+  engine->FEN[index] = '\0';
+}
+
+
+
+void setBoardStateWithFEN(SlothChessEngine* engine, char* FEN)
+{
+  int index = 0;
+  int space = 0;
+  
+  while(FEN[index] != '\0')
+  {
+    if(FEN[index] != '/')
+    {
+      int row;
+      int col;
+      ++space;
+    }
+  }
+}
 
 
 
@@ -51,74 +182,14 @@ char getSymbol(enum BitboardType color, enum BitboardType pieceType)
 
 
 
+
 void printBoardGUI(BoardState* boardState)
 {
   int row;
   int col;
-  int boardNum;
-
-
-  for(row = 0; row < 8; ++row)
-  {
-    for(col = 0; col < 8; ++col)
-    {
-      board[row][col] = '.';
-    }
-  }
-
-  for(boardNum = 2; boardNum < 8; ++boardNum)
-  {
-    Bitboard whitePieces = boardState->boards[boardNum] & boardState->boards[BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS];
-    Bitboard blackPieces = boardState->boards[boardNum] & boardState->boards[BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS];
-
-
-    uint64_t i = 1;
-    unsigned int pos = 0;
-
-
-    while (pos < 64)
-    {
-
-      if(i & whitePieces)
-      {
-        row = 7 - pos / 8;
-        col = 7 - pos % 8;
-        board[row][col] = getSymbol(BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, boardNum);
-      }
-
-      // Unset current bit and set the next bit in 'i'
-      i = i << 1;
-
-      // increment position
-      ++pos;
-
-    }
-
-    i = 1;
-    pos = 0;
-
-
-    while (pos < 64)
-    {
-
-      if(i & blackPieces)
-      {
-        row = 7 - pos / 8;
-        col = 7 - pos % 8;
-        board[row][col] = getSymbol(BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, boardNum);
-      }
-
-      // Unset current bit and set the next bit in 'i'
-      i = i << 1;
-
-      // increment position
-      ++pos;
-
-    }
-
-  }
-
-
+  
+  updateInternalBoard(boardState);
+ 
   for(row = 0; row < 8; ++row)
   {
     printf("%d | ", 8 - row);
@@ -133,8 +204,6 @@ void printBoardGUI(BoardState* boardState)
 
   printf("   ----------------\n");
   printf("    a b c d e f g h\n");
-
-
 }
 
 
@@ -173,8 +242,10 @@ void playerPlayChess(ChessGame* chessGame)
 
   while(1)
   {
-
     printf("Turn white %d\n", chessGame->slothChessEngine->turn);
+    
+    generateFEN(chessGame->slothChessEngine);
+    printf("%s\n", chessGame->slothChessEngine->FEN);
     printBoardGUI(chessGame->boardState);
 
     fgets(moveString, 10, stdin);
@@ -199,6 +270,9 @@ void playerPlayChess(ChessGame* chessGame)
 
     updateBoardState(chessGame->boardState, playerMove.initialPosition, playerMove.movedPosition, playerColor, playerMove.pieceType, 0, playerMove.capturedPiece, 0);
 
+    
+    generateFEN(chessGame->slothChessEngine);
+    printf("%s\n", chessGame->slothChessEngine->FEN);
     printBoardGUI(chessGame->boardState);
 
 
@@ -206,7 +280,7 @@ void playerPlayChess(ChessGame* chessGame)
     chessGame->slothChessEngine->turn++;
 
 
-
+    
 
 
     // ------------------------------------------
