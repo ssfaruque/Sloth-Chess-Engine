@@ -32,7 +32,7 @@ void initChessGame(ChessGame* chessGame)
 
 void runChessGame(ChessGame* chessGame)
 {
-    //playerPlayChess(chessGame);
+  playerPlayChess(chessGame);
 	/*Move move;
 	move.initialPosition = 0x0000000000000100;
 	move.movedPosition = move.initialPosition << (8*5);
@@ -50,26 +50,9 @@ void runChessGame(ChessGame* chessGame)
 	printf("Queen Promotion Undo:\n");
 	updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_PAWN_POSITIONS, 0, BOARD_TYPE_ALL_KNIGHT_POSITIONS, 1);
 	printBoardState(chessGame->boardState);
+
+
 	*/
-    Move move;
-
-
-	while(1)
-    {
-     printf("White moves:\n");
-      move =   generateMove(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
-      updateBoardState(chessGame->boardState,move.initialPosition,move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS
-                       ,move.pieceType,move.castling,move.capturedPiece,0);
-      printBoardGUI(chessGame->boardState);
-      printf("Black moves:\n");
-       move =   generateMove(chessGame->boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
-      updateBoardState(chessGame->boardState,move.initialPosition,move.movedPosition, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS
-                       ,move.pieceType,move.castling,move.capturedPiece,0);
-      printBoardGUI(chessGame->boardState);
-
-    }
-
-
 }
 
 void cleanUpChessGame(ChessGame* chessGame)

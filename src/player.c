@@ -36,10 +36,8 @@ void updateInternalBoard(BoardState* boardState)
     Bitboard whitePieces = boardState->boards[boardNum] & boardState->boards[BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS];
     Bitboard blackPieces = boardState->boards[boardNum] & boardState->boards[BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS];
     
-    
     uint64_t i = 1;
     unsigned int pos = 0;
-    
     
     while (pos < 64)
     {
@@ -129,7 +127,9 @@ void generateFEN(SlothChessEngine* engine)
 
 
 
-void setBoardStateWithFEN(SlothChessEngine* engine, char* FEN)
+
+
+void setBoardWithFEN(SlothChessEngine* engine, char* FEN)
 {
   int index = 0;
   int space = 0;
@@ -138,12 +138,208 @@ void setBoardStateWithFEN(SlothChessEngine* engine, char* FEN)
   {
     if(FEN[index] != '/')
     {
-      int row;
-      int col;
-      ++space;
+      int row = space / BOARD_LENGTH;
+      int col = space % BOARD_LENGTH;
+      
+      char c = FEN[index++];
+      
+      if(c > '0' && c <= '8')
+      {
+        int numEmptySpaces = c - '0';
+        
+        int i;
+        
+        for(i = 0; i < numEmptySpaces; ++i)
+        {
+          board[row][col] = '.';
+          ++space;
+          row = space / BOARD_LENGTH;
+          col = space % BOARD_LENGTH;
+        }
+      }
+      
+      else
+      {
+        board[row][col] = c;
+        ++space;
+      }
+      
+      
     }
+    
+    else
+      ++index;
   }
 }
+
+
+void setBoardStateWithFEN(SlothChessEngine* engine, char* FEN)
+{
+  setBoardWithFEN(engine, FEN);
+  
+  int row,col;
+  
+  int i;
+  
+  Bitboard pawns   = 0;
+  Bitboard rooks   = 0;
+  Bitboard knights = 0;
+  Bitboard bishops = 0;
+  Bitboard queens  = 0;
+  Bitboard kings   = 0;
+  
+  Bitboard whites = 0;
+  Bitboard blacks = 0;
+  
+  // loop to get all pawns
+  for(i = BOARD_LENGTH * BOARD_LENGTH - 1; i >= 0; --i)
+  {
+    int row = i / BOARD_LENGTH;
+    int col = i % BOARD_LENGTH;
+    
+    char piece = board[row][col];
+    
+    if(piece == 'p' || piece == 'P')
+    {
+      Bitboard p = ((int64_t) 1) << ((BOARD_LENGTH * BOARD_LENGTH) - 1 - i);
+      pawns |= p;
+      
+      
+      if(piece == 'P')
+        whites |= ((int64_t) 1) << ((BOARD_LENGTH * BOARD_LENGTH) - 1 - i);
+      
+      else
+        blacks |= ((int64_t) 1) << ((BOARD_LENGTH * BOARD_LENGTH) - 1 - i);
+    }
+  }
+  
+  
+  
+  // loop to get all rooks
+  for(i = BOARD_LENGTH * BOARD_LENGTH - 1; i >= 0; --i)
+  {
+    int row = i / BOARD_LENGTH;
+    int col = i % BOARD_LENGTH;
+    
+    char piece = board[row][col];
+    
+    if(piece == 'r' || piece == 'R')
+    {
+      Bitboard p = ((int64_t) 1) << ((BOARD_LENGTH * BOARD_LENGTH) - 1 - i);
+      rooks |= p;
+      
+      
+      if(piece == 'R')
+        whites |= ((int64_t) 1) << ((BOARD_LENGTH * BOARD_LENGTH) - 1 - i);
+      
+      else
+        blacks |= ((int64_t) 1) << ((BOARD_LENGTH * BOARD_LENGTH) - 1 - i);
+    }
+  }
+  
+  
+  // loop to get all knights
+  for(i = BOARD_LENGTH * BOARD_LENGTH - 1; i >= 0; --i)
+  {
+    int row = i / BOARD_LENGTH;
+    int col = i % BOARD_LENGTH;
+    
+    char piece = board[row][col];
+    
+    if(piece == 'n' || piece == 'N')
+    {
+      Bitboard p = ((int64_t) 1) << ((BOARD_LENGTH * BOARD_LENGTH) - 1 - i);
+      knights |= p;
+      
+      
+      if(piece == 'N')
+        whites |= ((int64_t) 1) << ((BOARD_LENGTH * BOARD_LENGTH) - 1 - i);
+      
+      else
+        blacks |= ((int64_t) 1) << ((BOARD_LENGTH * BOARD_LENGTH) - 1 - i);
+    }
+  }
+  
+  
+  // loop to get all bishops
+  for(i = BOARD_LENGTH * BOARD_LENGTH - 1; i >= 0; --i)
+  {
+    int row = i / BOARD_LENGTH;
+    int col = i % BOARD_LENGTH;
+    
+    char piece = board[row][col];
+    
+    if(piece == 'b' || piece == 'B')
+    {
+      Bitboard p = ((int64_t) 1) << ((BOARD_LENGTH * BOARD_LENGTH) - 1 - i);
+      bishops |= p;
+      
+      
+      if(piece == 'B')
+        whites |= ((int64_t) 1) << ((BOARD_LENGTH * BOARD_LENGTH) - 1 - i);
+      
+      else
+        blacks |= ((int64_t) 1) << ((BOARD_LENGTH * BOARD_LENGTH) - 1 - i);
+    }
+  }
+  
+  
+  // loop to get all queens
+  for(i = BOARD_LENGTH * BOARD_LENGTH - 1; i >= 0; --i)
+  {
+    int row = i / BOARD_LENGTH;
+    int col = i % BOARD_LENGTH;
+    
+    char piece = board[row][col];
+    
+    if(piece == 'q' || piece == 'Q')
+    {
+      Bitboard p = ((int64_t) 1) << ((BOARD_LENGTH * BOARD_LENGTH) - 1 - i);
+      queens |= p;
+      
+      
+      if(piece == 'Q')
+        whites |= ((int64_t) 1) << ((BOARD_LENGTH * BOARD_LENGTH) - 1 - i);
+      
+      else
+        blacks |= ((int64_t) 1) << ((BOARD_LENGTH * BOARD_LENGTH) - 1 - i);
+    }
+  }
+  
+  
+  // loop to get all kings
+  for(i = BOARD_LENGTH * BOARD_LENGTH - 1; i >= 0; --i)
+  {
+    int row = i / BOARD_LENGTH;
+    int col = i % BOARD_LENGTH;
+    
+    char piece = board[row][col];
+    
+    if(piece == 'k' || piece == 'K')
+    {
+      Bitboard p = ((int64_t) 1) << ((BOARD_LENGTH * BOARD_LENGTH) - 1 - i);
+      kings |= p;
+      
+      
+      if(piece == 'K')
+        whites |= ((int64_t) 1) << ((BOARD_LENGTH * BOARD_LENGTH) - 1 - i);
+      
+      else
+        blacks |= ((int64_t) 1) << ((BOARD_LENGTH * BOARD_LENGTH) - 1 - i);
+    }
+  }
+  
+  engine->boardState->boards[0] = whites;
+  engine->boardState->boards[1] = blacks;
+  engine->boardState->boards[2] = pawns;
+  engine->boardState->boards[3] = rooks;
+  engine->boardState->boards[4] = knights;
+  engine->boardState->boards[5] = bishops;
+  engine->boardState->boards[6] = queens;
+  engine->boardState->boards[7] = kings;
+}
+
+
 
 
 
@@ -233,11 +429,11 @@ void playerPlayChess(ChessGame* chessGame)
 
   char moveString[10];
 
-
   int playerColor = BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS;
   int engineColor = BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS;
 
-
+  setBoardStateWithFEN(chessGame->slothChessEngine, "rnb1k1nr/pp3ppp/2p2q2/2bpp3/4P2P/2N2N2/PPPP1PPR/R1BQKB2");
+  
   printBoardGUI(chessGame->boardState);
 
   while(1)
@@ -311,10 +507,6 @@ void playerPlayChess(ChessGame* chessGame)
     printf("Captured piece type: %c\n", getSymbol(playerColor, move.capturedPiece));
 
     // ---------------------------------------------
-
-
-
-
 
 
   }
