@@ -377,7 +377,7 @@ int castlingRightCheck(enum BitboardType colorType, Bitboard movedPosition)
 
 }
 
-int isRookinCheck(SlothChessEngine chessengine, enum BitboardType colorType, enum CastlingType castling)
+int isRookinCheck(SlothChessEngine *chessengine, enum BitboardType colorType, enum CastlingType castling)
 {
     Bitboard rooktoCheck;
 
@@ -416,7 +416,7 @@ int isRookinCheck(SlothChessEngine chessengine, enum BitboardType colorType, enu
 
 /* Skeleton functions to fill out */
 
-void generateAllSlidingMoves(SlothChessEngine chessengine,
+void generateAllSlidingMoves(SlothChessEngine *chessengine,
                                   Bitboard isolatedPiece,
                                   int pieceType,
                                   enum BitboardType colorType,
@@ -430,24 +430,24 @@ void generateAllSlidingMoves(SlothChessEngine chessengine,
         case BOARD_TYPE_ALL_PAWN_POSITIONS:
             if (colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
             {
-                move = generateSlideUpMove(isolatedPiece, chessengine.boardState, colorType, 1);
+                move = generateSlideUpMove(isolatedPiece, chessengine->boardState, colorType, 1);
                 move.pieceType = pieceType;
 
                 //If valid and is not capture
                 if (move.movedPosition &&
-                    !(move.movedPosition & chessengine.boardState->boards[!colorType]))
+                    !(move.movedPosition & chessengine->boardState->boards[!colorType]))
                     moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
 
                 if (((isolatedPiece & 0x000000000000ff00) != 0 ) &&
-					!((isolatedPiece << 8) & chessengine.boardState->boards[!colorType] ) &&
-					!((isolatedPiece << 8) & chessengine.boardState->boards[colorType]) ) //if in initial position, move up by 2
+					!((isolatedPiece << 8) & chessengine->boardState->boards[!colorType] ) &&
+					!((isolatedPiece << 8) & chessengine->boardState->boards[colorType]) ) //if in initial position, move up by 2
                 {
-                    move = generateSlideUpMove(isolatedPiece, chessengine.boardState, colorType, 2);
+                    move = generateSlideUpMove(isolatedPiece, chessengine->boardState, colorType, 2);
                     move.pieceType = pieceType;
 
                     //If valid and is not capture
                     if (move.movedPosition &&
-                        !(move.movedPosition & chessengine.boardState->boards[!colorType]))
+                        !(move.movedPosition & chessengine->boardState->boards[!colorType]))
                             moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
 
                 } //pawn in initial position
@@ -455,24 +455,24 @@ void generateAllSlidingMoves(SlothChessEngine chessengine,
 
             else if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
             {
-                move = generateSlideDownMove(isolatedPiece, chessengine.boardState, colorType, 1);
+                move = generateSlideDownMove(isolatedPiece, chessengine->boardState, colorType, 1);
                 move.pieceType = pieceType;
 
                 //If valid and is not capture
                 if (move.movedPosition &&
-                    !(move.movedPosition & chessengine.boardState->boards[!colorType]))
+                    !(move.movedPosition & chessengine->boardState->boards[!colorType]))
                     moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
 
                 if ((isolatedPiece & 0x00ff000000000000) != 0	&&
-					!((isolatedPiece >> 8) & chessengine.boardState->boards[!colorType]) &&
-					!((isolatedPiece >> 8) & chessengine.boardState->boards[colorType])) //if in initial position
+					!((isolatedPiece >> 8) & chessengine->boardState->boards[!colorType]) &&
+					!((isolatedPiece >> 8) & chessengine->boardState->boards[colorType])) //if in initial position
                 {
-                    move = generateSlideDownMove(isolatedPiece, chessengine.boardState, colorType, 2);
+                    move = generateSlideDownMove(isolatedPiece, chessengine->boardState, colorType, 2);
                     move.pieceType = pieceType;
 
                     //If valid and is not capture
                     if (move.movedPosition &&
-                        !(move.movedPosition & chessengine.boardState->boards[!colorType]))
+                        !(move.movedPosition & chessengine->boardState->boards[!colorType]))
                             moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
 
                 } //initial pawn position
@@ -489,14 +489,14 @@ void generateAllSlidingMoves(SlothChessEngine chessengine,
 
                 while(1)
                 {
-                    move = rookMoveGenerate[i](isolatedPiece, chessengine.boardState, colorType, offset++);
+                    move = rookMoveGenerate[i](isolatedPiece, chessengine->boardState, colorType, offset++);
                     move.pieceType = pieceType;
 
                     if (move.movedPosition) // if valid
                     {
-                        if (move.movedPosition & chessengine.boardState->boards[!colorType]) //if capture
+                        if (move.movedPosition & chessengine->boardState->boards[!colorType]) //if capture
                         {
-                            move.capturedPiece = findCapturedPiece(chessengine.boardState, move.movedPosition, colorType);
+                            move.capturedPiece = findCapturedPiece(chessengine->boardState, move.movedPosition, colorType);
 
                             if (pieceType == BOARD_TYPE_ALL_ROOK_POSITIONS)
                                 moves->moves[pieceType - 2][moves->numRookMoves++] = move;
@@ -565,13 +565,13 @@ void generateAllSlidingMoves(SlothChessEngine chessengine,
 
             for( i = 0; i < sizeof(rookMoveGenerate) / sizeof(rookMoveGenerate[0]); ++i)
             {
-                move = rookMoveGenerate[i](isolatedPiece, chessengine.boardState, colorType, 1);
+                move = rookMoveGenerate[i](isolatedPiece, chessengine->boardState, colorType, 1);
                 move.pieceType = pieceType;
 
                 if (move.movedPosition) // if valid
                 {
-                    if (move.movedPosition & chessengine.boardState->boards[!colorType]) //if capture
-                        move.capturedPiece = findCapturedPiece(chessengine.boardState, move.movedPosition, colorType);
+                    if (move.movedPosition & chessengine->boardState->boards[!colorType]) //if capture
+                        move.capturedPiece = findCapturedPiece(chessengine->boardState, move.movedPosition, colorType);
 
                     moves->moves[pieceType - 2][moves->numKingMoves++] = move;
 
@@ -586,7 +586,7 @@ void generateAllSlidingMoves(SlothChessEngine chessengine,
 
 
 
-void generateAllDiagonalMoves(SlothChessEngine chessengine,
+void generateAllDiagonalMoves(SlothChessEngine *chessengine,
                                    Bitboard isolatedPiece,
                                    int pieceType,
                                    enum BitboardType colorType,
@@ -600,42 +600,42 @@ void generateAllDiagonalMoves(SlothChessEngine chessengine,
         case BOARD_TYPE_ALL_PAWN_POSITIONS:
             if (colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
             {
-                  move = generateDiagonalUpLeftMove(isolatedPiece, chessengine.boardState, colorType, 1);
+                  move = generateDiagonalUpLeftMove(isolatedPiece, chessengine->boardState, colorType, 1);
                   move.pieceType = pieceType;
 
-                  if (move.movedPosition & chessengine.boardState->boards[!colorType]) //if capture
+                  if (move.movedPosition & chessengine->boardState->boards[!colorType]) //if capture
                   {
-                      move.capturedPiece = findCapturedPiece(chessengine.boardState, move.movedPosition, colorType);
+                      move.capturedPiece = findCapturedPiece(chessengine->boardState, move.movedPosition, colorType);
                       moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
                   }
 
-                  move = generateDiagonalUpRightMove(isolatedPiece, chessengine.boardState, colorType, 1);
+                  move = generateDiagonalUpRightMove(isolatedPiece, chessengine->boardState, colorType, 1);
                   move.pieceType = pieceType;
 
-                  if (move.movedPosition & chessengine.boardState->boards[!colorType]) //if capture
+                  if (move.movedPosition & chessengine->boardState->boards[!colorType]) //if capture
                   {
-                      move.capturedPiece = findCapturedPiece(chessengine.boardState, move.movedPosition, colorType);
+                      move.capturedPiece = findCapturedPiece(chessengine->boardState, move.movedPosition, colorType);
                       moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
                   }
             } // white color
 
             else if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
             {
-                  move = generateDiagonalDownLeftMove(isolatedPiece, chessengine.boardState, colorType, 1);
+                  move = generateDiagonalDownLeftMove(isolatedPiece, chessengine->boardState, colorType, 1);
                   move.pieceType = pieceType;
 
-                  if (move.movedPosition & chessengine.boardState->boards[!colorType])
+                  if (move.movedPosition & chessengine->boardState->boards[!colorType])
                   {
-                      move.capturedPiece = findCapturedPiece(chessengine.boardState, move.movedPosition, colorType);
+                      move.capturedPiece = findCapturedPiece(chessengine->boardState, move.movedPosition, colorType);
                       moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
                   }
 
-                  move = generateDiagonalDownRightMove(isolatedPiece, chessengine.boardState, colorType, 1);
+                  move = generateDiagonalDownRightMove(isolatedPiece, chessengine->boardState, colorType, 1);
                   move.pieceType = pieceType;
 
-                  if (move.movedPosition & chessengine.boardState->boards[!colorType])
+                  if (move.movedPosition & chessengine->boardState->boards[!colorType])
                   {
-                      move.capturedPiece = findCapturedPiece(chessengine.boardState, move.movedPosition, colorType);
+                      move.capturedPiece = findCapturedPiece(chessengine->boardState, move.movedPosition, colorType);
                       moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
                   }
             } // black color
@@ -650,14 +650,14 @@ void generateAllDiagonalMoves(SlothChessEngine chessengine,
 
                 while(1)
                 {
-                    move = bishopMoveGenerate[i](isolatedPiece, chessengine.boardState, colorType, offset++);
+                    move = bishopMoveGenerate[i](isolatedPiece, chessengine->boardState, colorType, offset++);
                     move.pieceType = pieceType;
 
                     if (move.movedPosition) // if valid
                     {
-                        if (move.movedPosition & chessengine.boardState->boards[!colorType]) //if capture
+                        if (move.movedPosition & chessengine->boardState->boards[!colorType]) //if capture
                         {
-                            move.capturedPiece = findCapturedPiece(chessengine.boardState, move.movedPosition, colorType);
+                            move.capturedPiece = findCapturedPiece(chessengine->boardState, move.movedPosition, colorType);
 
                             if (pieceType == BOARD_TYPE_ALL_BISHOP_POSITIONS)
                                 moves->moves[pieceType - 2][moves->numBishopMoves++] = move;
@@ -687,13 +687,13 @@ void generateAllDiagonalMoves(SlothChessEngine chessengine,
 
             for(i = 0; i < sizeof(bishopMoveGenerate) / sizeof(bishopMoveGenerate[0]); ++i)
             {
-                move = bishopMoveGenerate[i](isolatedPiece, chessengine.boardState, colorType, 1);
+                move = bishopMoveGenerate[i](isolatedPiece, chessengine->boardState, colorType, 1);
                 move.pieceType = pieceType;
 
                 if (move.movedPosition) // if valid
                 {
-                    if (move.movedPosition & chessengine.boardState->boards[!colorType]) //if capture
-                        move.capturedPiece = findCapturedPiece(chessengine.boardState, move.movedPosition, colorType);
+                    if (move.movedPosition & chessengine->boardState->boards[!colorType]) //if capture
+                        move.capturedPiece = findCapturedPiece(chessengine->boardState, move.movedPosition, colorType);
 
                     moves->moves[pieceType - 2][moves->numKingMoves++] = move;
                 } //if valid
@@ -708,10 +708,10 @@ void generateAllDiagonalMoves(SlothChessEngine chessengine,
 
 
 
-int maxi(SlothChessEngine chessengine,
+int maxi(SlothChessEngine *chessengine,
             enum BitboardType colorType, int depth)
 {
-    if (depth == 0) return eval(chessengine.boardState);
+    if (depth == 0) return eval(chessengine->boardState);
 
     int max = -11111111;
 
@@ -733,19 +733,19 @@ int maxi(SlothChessEngine chessengine,
 
             if(moves.moves[i][j].initialPosition) //if valid
             {
-                updateBoardState(chessengine.boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 0);
+                updateBoardState(chessengine->boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 0);
 
                 if (isKingInCheck(chessengine, colorType)) // the player's move leaves the player's king in check
                 {
                     //don't recurse down, undo and go to next move
-                    updateBoardState(chessengine.boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
+                    updateBoardState(chessengine->boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
                     continue;
 
                 }
 
                 score = mini(chessengine, !colorType, depth - 1);
 
-                updateBoardState(chessengine.boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
+                updateBoardState(chessengine->boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
 
                 if (score > max)
                     max = score;
@@ -759,10 +759,10 @@ int maxi(SlothChessEngine chessengine,
 
 
 
-int mini(SlothChessEngine chessengine,
+int mini(SlothChessEngine *chessengine,
             enum BitboardType colorType, int depth)
 {
-    if (depth == 0) return eval(chessengine.boardState);
+    if (depth == 0) return eval(chessengine->boardState);
 
     int min = 11111111;
 
@@ -783,19 +783,19 @@ int mini(SlothChessEngine chessengine,
 
             if(moves.moves[i][j].initialPosition) //if valid
             {
-                updateBoardState(chessengine.boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 0);
+                updateBoardState(chessengine->boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 0);
 
                 if (isKingInCheck(chessengine, colorType)) // the player's move leaves the player's king in check
                 {
                     //don't recurse down, undo and go to next move
-                    updateBoardState(chessengine.boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
+                    updateBoardState(chessengine->boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
                     continue;
 
                 }
 
                 score = maxi(chessengine, !colorType, depth - 1);
 
-                updateBoardState(chessengine.boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
+                updateBoardState(chessengine->boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
 
                 if (score < min)
                     min = score;
@@ -809,9 +809,9 @@ int mini(SlothChessEngine chessengine,
 
 
 
-int alphaBetaMax(SlothChessEngine chessengine, int alpha, int beta, enum BitboardType colorType, int depthleft)
+int alphaBetaMax(SlothChessEngine *chessengine, int alpha, int beta, enum BitboardType colorType, int depthleft)
 {
-    if (depthleft == 0) return eval(chessengine.boardState);
+    if (depthleft == 0) return eval(chessengine->boardState);
 
     //int max = -11111111;
 
@@ -833,13 +833,13 @@ int alphaBetaMax(SlothChessEngine chessengine, int alpha, int beta, enum Bitboar
 
             if(moves.moves[i][j].initialPosition) //if valid
             {
-                updateBoardState(chessengine.boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 0);
-                moveEval = eval(chessengine.boardState);
+                updateBoardState(chessengine->boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 0);
+                moveEval = eval(chessengine->boardState);
 
                 if (isKingInCheck(chessengine, colorType)) // the player's move leaves the player's king in check
                 {
                     //don't recurse down, undo and go to next move
-                    updateBoardState(chessengine.boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
+                    updateBoardState(chessengine->boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
                     continue;
 
                 }
@@ -849,7 +849,7 @@ int alphaBetaMax(SlothChessEngine chessengine, int alpha, int beta, enum Bitboar
                     if (isRookinCheck(chessengine, colorType, moves.moves[i][j].castling))
                     {
                         // dont recurse down
-                        updateBoardState(chessengine.boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
+                        updateBoardState(chessengine->boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
                         continue;
                     }
                 }
@@ -857,7 +857,7 @@ int alphaBetaMax(SlothChessEngine chessengine, int alpha, int beta, enum Bitboar
                 //score = moveEval + alphaBetaMin(boardState, alpha, beta, !colorType, depthleft - 1);
                 score = alphaBetaMin(chessengine, alpha, beta, !colorType, depthleft - 1);
 
-                updateBoardState(chessengine.boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
+                updateBoardState(chessengine->boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
 
                 if (score >= beta)
                     return beta;
@@ -871,9 +871,9 @@ int alphaBetaMax(SlothChessEngine chessengine, int alpha, int beta, enum Bitboar
     return alpha;
 }
 
-int alphaBetaMin(SlothChessEngine chessengine, int alpha, int beta, enum BitboardType colorType, int depthleft)
+int alphaBetaMin(SlothChessEngine *chessengine, int alpha, int beta, enum BitboardType colorType, int depthleft)
 {
-    if (depthleft == 0) return eval(chessengine.boardState);
+    if (depthleft == 0) return eval(chessengine->boardState);
 
     //int max = -11111111;
 
@@ -895,13 +895,13 @@ int alphaBetaMin(SlothChessEngine chessengine, int alpha, int beta, enum Bitboar
 
             if(moves.moves[i][j].initialPosition) //if valid
             {
-                updateBoardState(chessengine.boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 0);
+                updateBoardState(chessengine->boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 0);
                 //moveEval = eval(boardState);
 
                 if (isKingInCheck(chessengine, colorType)) // the player's move leaves the player's king in check
                 {
                     //don't recurse down, undo and go to next move
-                    updateBoardState(chessengine.boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
+                    updateBoardState(chessengine->boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
                     continue;
 
                 }
@@ -911,14 +911,14 @@ int alphaBetaMin(SlothChessEngine chessengine, int alpha, int beta, enum Bitboar
                     if (isRookinCheck(chessengine, colorType, moves.moves[i][j].castling))
                     {
                         // dont recurse down
-                        updateBoardState(chessengine.boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
+                        updateBoardState(chessengine->boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
                         continue;
                     }
                 }
 
                 //score = moveEval + alphaBetaMax(boardState, alpha, beta, !colorType, depthleft - 1);
                 score = alphaBetaMax(chessengine, alpha, beta, !colorType, depthleft - 1);
-                updateBoardState(chessengine.boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
+                updateBoardState(chessengine->boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
 
                 if (score <= alpha)
                     return alpha;
@@ -932,7 +932,7 @@ int alphaBetaMin(SlothChessEngine chessengine, int alpha, int beta, enum Bitboar
     return beta;
 }
 
-Move generateMove(SlothChessEngine chessengine,
+Move generateMove(SlothChessEngine *chessengine,
                   enum BitboardType colorType,
                   int recurseDepth)
 {
@@ -960,13 +960,13 @@ Move generateMove(SlothChessEngine chessengine,
       if(firstMoves.moves[i][j].initialPosition)
       {
         // do the move
-        updateBoardState(chessengine.boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, firstMoves.moves[i][j].castling, firstMoves.moves[i][j].capturedPiece, 0);
+        updateBoardState(chessengine->boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, firstMoves.moves[i][j].castling, firstMoves.moves[i][j].capturedPiece, 0);
         //firstMovesEval = eval(boardState);
 
         if (isKingInCheck(chessengine, colorType)) // the player's move leaves the player's king in check
         {
             //don't recurse down, undo and go to next move
-                updateBoardState(chessengine.boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, firstMoves.moves[i][j].castling, firstMoves.moves[i][j].capturedPiece, 1);
+                updateBoardState(chessengine->boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, firstMoves.moves[i][j].castling, firstMoves.moves[i][j].capturedPiece, 1);
                 continue;
 
         }
@@ -976,7 +976,7 @@ Move generateMove(SlothChessEngine chessengine,
             if (isRookinCheck(chessengine, colorType, firstMoves.moves[i][j].castling))
             {
                 // dont recurse down
-                updateBoardState(chessengine.boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, firstMoves.moves[i][j].castling, firstMoves.moves[i][j].capturedPiece, 1);
+                updateBoardState(chessengine->boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, firstMoves.moves[i][j].castling, firstMoves.moves[i][j].capturedPiece, 1);
                 continue;
             }
         }
@@ -1021,7 +1021,7 @@ Move generateMove(SlothChessEngine chessengine,
         }
 
                 // undo the move
-        updateBoardState(chessengine.boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, firstMoves.moves[i][j].castling, firstMoves.moves[i][j].capturedPiece, 1);
+        updateBoardState(chessengine->boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, firstMoves.moves[i][j].castling, firstMoves.moves[i][j].capturedPiece, 1);
 
 
       }
@@ -1087,7 +1087,7 @@ void orderCaptureMoves(Moves* moves)
 
 
 
-void generateAllMoves(SlothChessEngine chessengine,
+void generateAllMoves(SlothChessEngine *chessengine,
                       enum BitboardType colorType,
                       Moves* moves)
 {
@@ -1102,11 +1102,11 @@ void generateAllMoves(SlothChessEngine chessengine,
 }
 
 
-void generateAllPawnMoves(SlothChessEngine chessengine,
+void generateAllPawnMoves(SlothChessEngine *chessengine,
                           enum BitboardType colorType,
                           Moves* moves)
 {
-  Bitboard pieces = chessengine.boardState->boards[BOARD_TYPE_ALL_PAWN_POSITIONS] & chessengine.boardState->boards[colorType];
+  Bitboard pieces = chessengine->boardState->boards[BOARD_TYPE_ALL_PAWN_POSITIONS] & chessengine->boardState->boards[colorType];
 
   while(pieces)
   {
@@ -1122,7 +1122,7 @@ void generateAllPawnMoves(SlothChessEngine chessengine,
 }
 
 
-void generatePawnMoves(SlothChessEngine chessengine,
+void generatePawnMoves(SlothChessEngine *chessengine,
                          Bitboard isolatedPiece,
                          enum BitboardType colorType,
                          Moves* moves)
@@ -1132,11 +1132,11 @@ void generatePawnMoves(SlothChessEngine chessengine,
 }
 
 
-void generateAllRookMoves(SlothChessEngine chessengine,
+void generateAllRookMoves(SlothChessEngine *chessengine,
                            enum BitboardType colorType,
                           Moves* moves)
 {
-  Bitboard pieces = chessengine.boardState->boards[BOARD_TYPE_ALL_ROOK_POSITIONS] & chessengine.boardState->boards[colorType];
+  Bitboard pieces = chessengine->boardState->boards[BOARD_TYPE_ALL_ROOK_POSITIONS] & chessengine->boardState->boards[colorType];
 
   while(pieces)
   {
@@ -1151,7 +1151,7 @@ void generateAllRookMoves(SlothChessEngine chessengine,
 }
 
 
-void generateRookMoves(SlothChessEngine chessengine,
+void generateRookMoves(SlothChessEngine *chessengine,
                          Bitboard isolatedPiece,
                          enum BitboardType colorType,
                        Moves* moves)
@@ -1160,20 +1160,20 @@ void generateRookMoves(SlothChessEngine chessengine,
 }
 
 
-void generateAllKnightMoves(SlothChessEngine chessengine,
+void generateAllKnightMoves(SlothChessEngine *chessengine,
                            enum BitboardType colorType,
                             Moves* moves)
 {
   Move move = { 0, 0, 0, 0, 0, 0 };
   int pieceNum = 0;
 
-  Bitboard pieces = chessengine.boardState->boards[BOARD_TYPE_ALL_KNIGHT_POSITIONS] & chessengine.boardState->boards[colorType];
+  Bitboard pieces = chessengine->boardState->boards[BOARD_TYPE_ALL_KNIGHT_POSITIONS] & chessengine->boardState->boards[colorType];
 
   while(pieces)
   {
     Bitboard isolatedPiece = pieces & -pieces;
 
-    generateKnightMoves(chessengine.boardState, isolatedPiece, colorType, moves);
+    generateKnightMoves(chessengine->boardState, isolatedPiece, colorType, moves);
 
     // reset ls1b
     pieces &= pieces - 1;
@@ -1217,11 +1217,11 @@ void generateKnightMoves(BoardState* boardState,
 
 
 
-void generateAllBishopMoves(SlothChessEngine chessengine,
+void generateAllBishopMoves(SlothChessEngine *chessengine,
                            enum BitboardType colorType,
                             Moves* moves)
 {
-  Bitboard pieces = chessengine.boardState->boards[BOARD_TYPE_ALL_BISHOP_POSITIONS] & chessengine.boardState->boards[colorType];
+  Bitboard pieces = chessengine->boardState->boards[BOARD_TYPE_ALL_BISHOP_POSITIONS] & chessengine->boardState->boards[colorType];
 
   while(pieces)
   {
@@ -1236,7 +1236,7 @@ void generateAllBishopMoves(SlothChessEngine chessengine,
 }
 
 
-void generateBishopMoves(SlothChessEngine chessengine,
+void generateBishopMoves(SlothChessEngine *chessengine,
                          Bitboard isolatedPiece,
                          enum BitboardType colorType,
                          Moves* moves)
@@ -1245,13 +1245,13 @@ void generateBishopMoves(SlothChessEngine chessengine,
 }
 
 
-void generateAllQueenMoves(SlothChessEngine chessengine,
+void generateAllQueenMoves(SlothChessEngine *chessengine,
                            enum BitboardType colorType,
                            Moves* moves)
 {
   int pieceNum = 0;
 
-  Bitboard pieces = chessengine.boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] & chessengine.boardState->boards[colorType];
+  Bitboard pieces = chessengine->boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] & chessengine->boardState->boards[colorType];
 
   while(pieces)
   {
@@ -1270,7 +1270,7 @@ void generateAllQueenMoves(SlothChessEngine chessengine,
 
 
 
-void generateQueenMoves(SlothChessEngine chessengine,
+void generateQueenMoves(SlothChessEngine *chessengine,
                         Bitboard isolatedPiece,
                         enum BitboardType colorType,
                         Moves* moves)
@@ -1281,13 +1281,13 @@ void generateQueenMoves(SlothChessEngine chessengine,
 }
 
 
-void generateAllKingMoves(SlothChessEngine chessengine,
+void generateAllKingMoves(SlothChessEngine *chessengine,
                            enum BitboardType colorType,
                           Moves* moves)
 {
   int pieceNum = 0;
 
-  Bitboard pieces = chessengine.boardState->boards[BOARD_TYPE_ALL_KING_POSITIONS] & chessengine.boardState->boards[colorType];
+  Bitboard pieces = chessengine->boardState->boards[BOARD_TYPE_ALL_KING_POSITIONS] & chessengine->boardState->boards[colorType];
 
   while(pieces)
   {
@@ -1303,7 +1303,7 @@ void generateAllKingMoves(SlothChessEngine chessengine,
 
 
 
-void generateKingMoves(SlothChessEngine chessengine,
+void generateKingMoves(SlothChessEngine *chessengine,
                        Bitboard isolatedPiece,
                        enum BitboardType colorType,
                        Moves* moves)
@@ -1744,7 +1744,7 @@ int findCol(Bitboard initialPosition)
 }
 
 
-int isKingInCheck(SlothChessEngine chessengine, enum BitboardType colorType)
+int isKingInCheck(SlothChessEngine *chessengine, enum BitboardType colorType)
 
 {
     Moves moves;

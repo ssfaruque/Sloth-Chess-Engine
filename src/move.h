@@ -23,7 +23,7 @@
 #define move_h
 
 #include "bitboard.h"
-
+#include "slothChessEngine.h"
 
 #define MAX_RECURSION_DEPTH 4
 
@@ -153,18 +153,19 @@ int updateBoardState(BoardState* boardState,
 
 /*********************************** MOVE GENERATION BY TYPE ***********************************/
 
-int findCapturedPiece(BoardState* boardState, Bitboard movedPosition, enum BitboardType colorType);
+//int findCapturedPiece(BoardState *boardState, Bitboard movedPosition, enum BitboardType colorType);
 
-int castlingCheck(enum BitboardType colorType, Bitboard movedPosition);
+//int castlingCheck(enum BitboardType colorType, Bitboard movedPosition);
 
-int isRookinCheck(SlothChessEngine chessengine, enum BitboardType colorType, enum CastlingType castling);
+int isRookinCheck(SlothChessEngine *chessengine, enum BitboardType colorType, enum CastlingType castling);
+//int isRookinCheck(SlothChessEngine *chessengine, enum BitboardType colorType, enum CastlingType castling);
 /* Skeleton functions to fill out */
 
 
 /* These functions generate all of the possible moves for a particular
    piece and place them inside the moves list */
 
-void generateAllSlidingMoves(BoardState* boardState,
+void generateAllSlidingMoves(BoardState *boardState,
                                   Bitboard isolatedPiece,
                                   int pieceType,
                                   enum BitboardType colorType,
@@ -211,7 +212,7 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
  *  @param pieceType The piece that we are interested in
  *  @return The move that is going to be made
  */
-Move generateMove(BoardState* boardState,
+Move generateMove(BoardState *boardState,
                   enum BitboardType colorType,
                   int recurseDepth);
 
