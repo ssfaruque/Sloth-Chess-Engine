@@ -157,7 +157,7 @@ int updateBoardState(BoardState* boardState,
 
 //int castlingCheck(enum BitboardType colorType, Bitboard movedPosition);
 
-int isRookinCheck(SlothChessEngine* chessengine, enum BitboardType colorType, enum CastlingType castling);
+int isRookinCheck(SlothChessEngine *chessengine, enum BitboardType colorType, enum CastlingType castling);
 //int isRookinCheck(SlothChessEngine *chessengine, enum BitboardType colorType, enum CastlingType castling);
 /* Skeleton functions to fill out */
 
