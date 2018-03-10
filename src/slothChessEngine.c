@@ -25,6 +25,3 @@ void cleanUpSlothEngine(SlothChessEngine* engine)
 
 
 
-
-
-

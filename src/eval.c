@@ -10,7 +10,9 @@
 
 #include "eval.h"
 
-const int weights[] = {100, 525, 350, 350, 1000, 5000};
+const int weights[] = {100, 500, 300, 325, 900, 5000};
+
+
 
 
 
@@ -321,6 +323,10 @@ unsigned int findPosition(uint64_t n, int colorType)
 }
 
 
+
+
+
+
 int pieceSquareEval(BoardState* boardState)
 {
   int score = 0;
@@ -368,49 +374,15 @@ int pieceSquareEval(BoardState* boardState)
 int bishopPairEval(BoardState* boardState)
 {
   int score = 0;
-  int numBishops = 0;
-  
-  Bitboard whiteBishops = boardState->boards[BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS] & boardState->boards[BOARD_TYPE_ALL_BISHOP_POSITIONS];
-  
-  while(whiteBishops)
-  {
-    Bitboard isolatedPiece = whiteBishops & -whiteBishops;
-    
-    ++numBishops;
-    
-    // reset ls1b
-    whiteBishops &= whiteBishops - 1;
-  }
-  
-  
-  if(numBishops == 2)
-    score += 200;
-  
-  numBishops = 0;
-  
-  
-  Bitboard blackBishops = boardState->boards[BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS] & boardState->boards[BOARD_TYPE_ALL_BISHOP_POSITIONS];
-  
-  while(blackBishops)
-  {
-    Bitboard isolatedPiece = blackBishops & -blackBishops;
-    
-    ++numBishops;
-    
-    // reset ls1b
-    blackBishops &= blackBishops - 1;
-  }
-  
-  if(numBishops == 2)
-    score -= 200;
-  
+
+
   return score;
 }
 
 
 int eval(BoardState* boardState)
 {
-  return materialEval(boardState) + centerControlEval(boardState) + pieceSquareEval(boardState) + bishopPairEval(boardState);
+  return materialEval(boardState) + centerControlEval(boardState) + pieceSquareEval(boardState);
 }
 
 

@@ -25,7 +25,7 @@
 #include "bitboard.h"
 
 
-#define MAX_RECURSION_DEPTH 5
+
 
 
 /**
@@ -66,6 +66,14 @@ enum CastlingType
     NO_CASTLING,
     KINGS_SIDE,
     QUEENS_SIDE
+};
+
+enum CastlingFlags
+{
+    WHITE_KINGS_SIDE,
+    WHITE_QUEENS_SIDE,
+    BLACK_KINGS_SIDE,
+    BLACK_QUEENS_SIDE
 };
 
 /**
@@ -155,9 +163,12 @@ int updateBoardState(BoardState* boardState,
 
 int findCapturedPiece(BoardState* boardState, Bitboard movedPosition, enum BitboardType colorType);
 
-int castlingCheck(enum BitboardType colorType, Bitboard movedPosition);
+//int castlingCheck(enum BitboardType colorType, Bitboard movedPosition);
 
-int isRookinCheck(BoardState* boardstate, enum BitboardType colorType, enum CastlingType castling);
+int isKingInCheck(BoardState* boardState, enum BitboardType colorType, int moveLevel);
+
+
+int isRookinCheck(BoardState* boardstate, enum BitboardType colorType, enum CastlingType castling, int moveLevel);
 /* Skeleton functions to fill out */
 
 
@@ -168,7 +179,7 @@ void generateAllSlidingMoves(BoardState* boardState,
                                   Bitboard isolatedPiece,
                                   int pieceType,
                                   enum BitboardType colorType,
-                                  Moves* moves);
+                                  Moves* moves, int moveLevel);
 
 
 void generateAllDiagonalMoves(BoardState* boardState,
@@ -219,7 +230,7 @@ Move generateMove(BoardState* boardState,
 
 void generateAllMoves(BoardState* boardState,
                       enum BitboardType colorType,
-                      Moves* moves);
+                      Moves* moves, int moveLevel);
 
 
 
@@ -329,7 +340,7 @@ void generateQueenMoves(BoardState* boardState,
 
 void generateAllKingMoves(BoardState* boardState,
                              enum BitboardType colorType,
-                          Moves* moves);
+                          Moves* moves, int moveLevel);
 
 
 
@@ -343,7 +354,7 @@ void generateAllKingMoves(BoardState* boardState,
 void generateKingMoves(BoardState* boardState,
                        Bitboard isolatedPiece,
                        enum BitboardType colorType,
-                       Moves* moves);
+                       Moves* moves, int moveLevel);
 
 
 /***********************************************************************************************/
@@ -640,10 +651,6 @@ Move generateUpUpLeft(Bitboard initialPosition,
  *  @return The column that the isolated piece is located in
  */
 int findCol(Bitboard initialPosition);
-
-
-
-int isKingInCheck(BoardState* boardState, enum BitboardType colorType);
 
 
 
