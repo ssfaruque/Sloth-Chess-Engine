@@ -28,6 +28,7 @@ void initChessGame(ChessGame* chessGame)
 
   chessGame->slothChessEngine = (SlothChessEngine*) malloc(sizeof(SlothChessEngine));
   initSlothChessEngine(chessGame->slothChessEngine, chessGame->boardState, PLAYER_TYPE_WHITE);
+  printBoardGUI(chessGame->boardState);
 }
 
 
@@ -48,7 +49,7 @@ void runChessGame(ChessGame* chessGame)
       printf("Black Left Castle: %d.\n", chessGame->boardState->castlingFlags[0][BLACK_QUEENS_SIDE]);
         printf("Black Right Castle: %d.\n", chessGame->boardState->castlingFlags[0][BLACK_KINGS_SIDE]);
 
-  printBoardState(chessGame->boardState);
+  printBoardGUI(chessGame->boardState);
 
     printf("Black Ply:\n");
   move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
@@ -60,7 +61,7 @@ void runChessGame(ChessGame* chessGame)
       printf("Black Left Castle: %d.\n", chessGame->boardState->castlingFlags[0][BLACK_QUEENS_SIDE]);
         printf("Black Right Castle: %d.\n", chessGame->boardState->castlingFlags[0][BLACK_KINGS_SIDE]);
 
-  printBoardState(chessGame->boardState);
+  printBoardGUI(chessGame->boardState);
   }
 
   /*

@@ -27,7 +27,6 @@
 #include "bitboard.h"
 #include "move.h"
 
-
 #define MAX_FEN_LENGTH 50
 
 

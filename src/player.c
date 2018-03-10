@@ -432,7 +432,7 @@ void playerPlayChess(ChessGame* chessGame)
   int playerColor = BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS;
   int engineColor = BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS;
 
-  setBoardStateWithFEN(chessGame->slothChessEngine, "rnb1k1nr/pp3ppp/2p2q2/2bpp3/4P2P/2N2N2/PPPP1PPR/R1BQKB2");
+  //setBoardStateWithFEN(chessGame->slothChessEngine, "rnb1k1nr/pp3ppp/2p2q2/2bpp3/4P2P/2N2N2/PPPP1PPR/R1BQKB2");
 
   printBoardGUI(chessGame->boardState);
 
@@ -480,7 +480,6 @@ void playerPlayChess(ChessGame* chessGame)
 
 
     // ------------------------------------------
-
 
 
     Move move;
