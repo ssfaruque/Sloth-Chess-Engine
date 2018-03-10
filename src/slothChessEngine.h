@@ -28,15 +28,22 @@
 #include "move.h"
 
 
+#define MAX_FEN_LENGTH 50
+
+
 /**
  *  @brief The chess engine that contains all necessary components to generate a move
  */
 typedef struct
 {
   BoardState* boardState;         /**< The current state of the game  */
+  char FEN[MAX_FEN_LENGTH];
   enum PlayerType playerType;     /**< The color that the chess engine is currently playing as  */
   int turn;
 } SlothChessEngine;
+
+
+
 
 
 /**

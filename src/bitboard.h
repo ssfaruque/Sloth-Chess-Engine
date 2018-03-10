@@ -31,7 +31,7 @@
  *  @brief Length of a chess board
  */
 #define BOARD_LENGTH 8
-
+#define MAX_RECURSION_DEPTH 4
 
 /**
  *  @brief Type of Bitboard
@@ -81,6 +81,7 @@ typedef struct
 {
   Bitboard boards[NUM_BITBOARDS];
   Bitboard flagState;
+  int8_t castlingFlags[MAX_RECURSION_DEPTH+1][4];
 } BoardState;
 
 

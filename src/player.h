@@ -27,6 +27,10 @@ char getSymbol(enum BitboardType color, enum BitboardType pieceType);
 void playerPlayChess(ChessGame* chessGame);
 
 
+void generateFEN(SlothChessEngine* engine);
+
+void setBoardStateWithFEN(SlothChessEngine* engine, char* FEN);
+
 
 
 #endif /* player_h */
