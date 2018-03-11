@@ -10,7 +10,7 @@
 #include "slothChessEngine.h"
 #include "player.h"
 
-void initSlothChessEngine(SlothChessEngine* engine, BoardState* boardState, enum PlayerType playerType)
+void initSlothChessEngine(SlothChessEngine* engine, BoardState* boardState, enum BitboardType playerType)
 {
   engine->boardState = boardState;
   engine->playerType = playerType;
@@ -18,7 +18,7 @@ void initSlothChessEngine(SlothChessEngine* engine, BoardState* boardState, enum
 
 
 
-  setBoardStateWithFEN(engine, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+  setBoardStateWithFEN(engine, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq");
 }
 
 

@@ -664,5 +664,8 @@ Move generateUpUpLeft(Bitboard initialPosition,
 int findCol(Bitboard initialPosition);
 
 
+int findRow(Bitboard initialPosition);
+
+
 
 #endif /* move_h */

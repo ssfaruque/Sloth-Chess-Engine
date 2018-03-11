@@ -27,7 +27,7 @@
 #include "bitboard.h"
 #include "move.h"
 
-#define MAX_FEN_LENGTH 50
+#define MAX_FEN_LENGTH 100
 
 
 /**
@@ -37,7 +37,7 @@ typedef struct
 {
   BoardState* boardState;         /**< The current state of the game  */
   char FEN[MAX_FEN_LENGTH];
-  enum PlayerType playerType;     /**< The color that the chess engine is currently playing as  */
+  enum BitboardType playerType;     /**< The color that the chess engine is currently playing as  */
   int turn;
 } SlothChessEngine;
 
@@ -53,7 +53,7 @@ typedef struct
  *  @param playerType The color that the chess engine is going to play as
  *  @return void
  */
-void initSlothChessEngine(SlothChessEngine* engine, BoardState* boardState, enum PlayerType playerType);
+void initSlothChessEngine(SlothChessEngine* engine, BoardState* boardState, enum BitboardType playerType);
 
 
 /**

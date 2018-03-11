@@ -738,7 +738,7 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
         {
             if (moves.moves[i][j].capturedPiece == BOARD_TYPE_ALL_KING_POSITIONS) //if the captured piece is the opponent's rook
                 return -999999999; //check if opponent's king is in check
-
+/*
             if (moves.moves[i][j].castling)
             {
                   if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
@@ -762,7 +762,7 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
                 && moves.moves[i][j].movedPosition == rooktoCheck) //if the captured piece is the opponent's rook
                     return 999999999;
             }
-
+*/
 
             if(moves.moves[i][j].initialPosition) //if valid
             {
@@ -826,17 +826,17 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
 
                 }
 */
-/*
+
                 if (moves.moves[i][j].castling)
                 {
                     if (isRookinCheck(boardState, colorType, moves.moves[i][j].castling, MAX_RECURSION_DEPTH - depthleft+2))
                     {
                         // dont recurse down
-                        updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
+                        updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant, moves.moves[i][j].capturedPiece, 1);
                         continue;
                     }
                 }
-*/
+
 
 
                 //score = moveEval + alphaBetaMin(boardState, alpha, beta, !colorType, depthleft - 1);
@@ -899,7 +899,7 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
 
             if (moves.moves[i][j].capturedPiece == BOARD_TYPE_ALL_KING_POSITIONS) //if the captured piece is the opponent's king
                 return 999999999; //check if opponent's king is in check
-
+/*
 if (moves.moves[i][j].castling)
 {
     if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
@@ -922,6 +922,7 @@ if (moves.moves[i][j].castling)
                 && moves.moves[i][j].movedPosition == rooktoCheck) //if the captured piece is the opponent's king
                     return 999999999;
 }
+ */
 
             if(moves.moves[i][j].initialPosition) //if valid
             {
@@ -986,17 +987,17 @@ if (moves.moves[i][j].castling)
 
                 }
 */
-/*
+
                 if (moves.moves[i][j].castling)
                 {
                     if (isRookinCheck(boardState, colorType, moves.moves[i][j].castling, MAX_RECURSION_DEPTH - depthleft+2))
                     {
                     // dont recurse down
-                        updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
+                        updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant, moves.moves[i][j].capturedPiece, 1);
                         continue;
                     }
                 }
-*/
+
 
                 //score = moveEval + alphaBetaMax(boardState, alpha, beta, !colorType, depthleft - 1);
                 score = alphaBetaMax(boardState, alpha, beta, !colorType, depthleft - 1);
@@ -1116,17 +1117,17 @@ Move generateMove(BoardState* boardState,
 
         }
 */
-/*
+
         if (firstMoves.moves[i][j].castling)
         {
             if (isRookinCheck(boardState, colorType, firstMoves.moves[i][j].castling, 2))
             {
                 // dont recurse down
-                updateBoardState(boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, firstMoves.moves[i][j].castling, firstMoves.moves[i][j].capturedPiece, 1);
+                updateBoardState(boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, firstMoves.moves[i][j].castling, firstMoves.moves[i][j].enpassant, firstMoves.moves[i][j].capturedPiece, 1);
                 continue;
             }
         }
-*/
+
 
         int alpha = -11111111;
         int beta = 11111111;
@@ -2326,6 +2327,71 @@ int findCol(Bitboard initialPosition)
     }
   }
 }
+
+
+int findRow(Bitboard initialPosition)
+{
+  // if piece is in upper half of the board
+  if(initialPosition & 0xfffffffff0f0f0f0)
+  {
+    // if in upper 2 most
+    if(initialPosition & 0xffff000000000000)
+    {
+      // if upper most
+      if(initialPosition & 0xff00000000000000)
+        return 8;
+      
+      // else in 2nd upper most
+      else
+        return 7;
+    }
+    
+    // else in 3rd and 4th from upper most
+    else
+    {
+      // if in 3rd from upper most
+      if(initialPosition & 0x0000ff0000000000)
+        return 6;
+      
+      // else in 4th from upper most
+      else
+        return 5;
+    }
+  }
+  
+  // else piece is in bottom half
+  else
+  {
+    // if in 5th and 6th from upper most
+    if(initialPosition & 0x00000000ffff0000)
+    {
+      // if in 5th from upper most
+      if(initialPosition & 0x00000000ff000000)
+        return 4;
+      
+      // else 6th from upper most
+      else
+        return 3;
+    }
+    
+    // else in 7th and 8th from upper most
+    else
+    {
+      // if 7th from upper most
+      if(initialPosition & 0x000000000000ff00)
+        return 2;
+      
+      // else 8th from upper most
+      else
+        return 1;
+    }
+  }
+}
+
+
+
+
+
 
 
 int isKingInCheck(BoardState* boardState, enum BitboardType colorType, int moveLevel)

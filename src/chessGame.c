@@ -27,8 +27,8 @@ void initChessGame(ChessGame* chessGame)
   initBoardState(chessGame->boardState);
 
   chessGame->slothChessEngine = (SlothChessEngine*) malloc(sizeof(SlothChessEngine));
-  initSlothChessEngine(chessGame->slothChessEngine, chessGame->boardState, PLAYER_TYPE_WHITE);
-  printBoardGUI(chessGame->boardState);
+  initSlothChessEngine(chessGame->slothChessEngine, chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
+  //printBoardGUI(chessGame->boardState);
 }
 
 
@@ -36,10 +36,16 @@ void runChessGame(ChessGame* chessGame)
 {
   //playerPlayChess(chessGame);
 
+  //setBoardStateWithFEN(chessGame->slothChessEngine, "rnb1k1nr/pp1p1ppp/2p5/4P3/1q2PP2/3Q2PN/PKP4P/RN3B1R w kq");
+  
   Move move;
 
   while (1)
   {
+    generateFEN(chessGame->slothChessEngine);
+    printf("FEN: %s\n", chessGame->slothChessEngine->FEN);
+    
+    
         printf("White Ply:\n");
   move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
   updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, move.pieceType, move.castling, move.enpassant, move.capturedPiece, 0);
@@ -52,6 +58,9 @@ void runChessGame(ChessGame* chessGame)
   printBoardGUI(chessGame->boardState);
 
 
+    generateFEN(chessGame->slothChessEngine);
+    printf("FEN: %s\n", chessGame->slothChessEngine->FEN);
+    
 
     printf("Black Ply:\n");
   move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
