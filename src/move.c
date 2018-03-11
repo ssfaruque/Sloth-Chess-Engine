@@ -89,7 +89,7 @@ int updateBoardState(BoardState* boardState,
                       enum BitboardType colorType,
                       enum BitboardType pieceType,
                       enum CastlingType castling,
-					  enum EnpassantFlags enpassant,
+					  enum EnpassantType enpassant,
                       int capturedPiece,
                       int undo)
 {
@@ -106,7 +106,7 @@ int updateBoardState(BoardState* boardState,
 				(boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] ^ movedPiece);
 
 		}
-		
+
 		else // undo normal quiet
 		{
 			boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
@@ -233,7 +233,7 @@ int updateBoardState(BoardState* boardState,
 
 
 			  }
-		
+
 		  }
 		  else // normal capture
 		  {
@@ -1103,7 +1103,7 @@ Move generateMove(BoardState* boardState,
 			&& (firstMoves.moves[i][j].movedPosition & 0x000000ffff000000)
 				&& (firstMoves.moves[i][j].initialPosition & 0x00ff00000000ff00))
 					boardState->enpassantFlags[1] = firstMoves.moves[i][j].movedPosition;
-		else//if not, reset Enpassant flags 
+		else//if not, reset Enpassant flags
 					boardState->enpassantFlags[1] =  0x0000000000000000;
 
 
@@ -1226,7 +1226,7 @@ Move generateMove(BoardState* boardState,
 			&& (move.movedPosition & 0x000000ffff000000)
 			&& (move.initialPosition & 0x00ff00000000ff00))
 			boardState->enpassantFlags[0] =  move.movedPosition;
-		else//if not, reset Enpassant flags 
+		else//if not, reset Enpassant flags
 			boardState->enpassantFlags[0] =  0x0000000000000000;
 
   return move;
@@ -1389,10 +1389,10 @@ int pieceType = BOARD_TYPE_ALL_PAWN_POSITIONS;
 					  move.enpassant = ENPASSANT_UPRIGHT;
 					  moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
 				  }
-				  
+
 
          } //if white
-			  
+
 			  /*If BLACK*/
             else if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
             {
@@ -1436,7 +1436,7 @@ int pieceType = BOARD_TYPE_ALL_PAWN_POSITIONS;
 					  moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
 
 				  }
-                
+
 				  move = generateDiagonalDownRightMove(isolatedPiece, boardState, colorType, 1);
                   move.pieceType = pieceType;
 

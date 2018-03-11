@@ -265,7 +265,7 @@ void generateAllPawnMoves(BoardState* boardState,
 void generatePawnMoves(BoardState* boardState,
                        Bitboard isolatedPiece,
                        enum BitboardType colorType,
-                       Moves* moves);
+                       Moves* moves, int moveLevel);
 
 
 
