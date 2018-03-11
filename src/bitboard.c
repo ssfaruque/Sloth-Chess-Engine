@@ -73,7 +73,7 @@ Bitboard createBitboard(uint64_t squares)
 
 void initBoardState(BoardState* boardState)
 {
-
+/*
   boardState->boards[BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS] = 0x000000000000ffff;
   boardState->boards[BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS] = 0xffff000000000000;
   boardState->boards[BOARD_TYPE_ALL_PAWN_POSITIONS]         = 0x00ff00000000ff00;
@@ -82,12 +82,14 @@ void initBoardState(BoardState* boardState)
   boardState->boards[BOARD_TYPE_ALL_BISHOP_POSITIONS]       = 0x2400000000000024;
   boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS]        = 0x1000000000000010;
   boardState->boards[BOARD_TYPE_ALL_KING_POSITIONS]         = 0x0800000000000008;
+  */
   boardState->flagState                                     = 0x0000000000000000;
 
     int i,j;
   for (i = 0; i < MAX_RECURSION_DEPTH+1; i ++)
     for (j = 0; j < 4; j ++)
         boardState->castlingFlags[i][j] = 1;
+
 
 }
 

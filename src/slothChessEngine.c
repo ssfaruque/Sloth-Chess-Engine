@@ -8,13 +8,17 @@
  ********************************************************************************/
 
 #include "slothChessEngine.h"
-
+#include "player.h"
 
 void initSlothChessEngine(SlothChessEngine* engine, BoardState* boardState, enum PlayerType playerType)
 {
   engine->boardState = boardState;
   engine->playerType = playerType;
   engine->turn       = 0;
+
+
+
+  setBoardStateWithFEN(engine, "rnb1kbnr/ppppq1pp/8/4N3/3Pp1Q1/8/PPP2PPP/RNB1KB1R");
 }
 
 
