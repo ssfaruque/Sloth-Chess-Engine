@@ -68,6 +68,15 @@ enum CastlingType
     QUEENS_SIDE
 };
 
+enum EnpassantType
+{
+	NO_ENPASSANT,
+	ENPASSANT_UPLEFT,
+	ENPASSANT_UPRIGHT,
+	ENPASSANT_DOWNLEFT,
+	ENPASSANT_DOWNRIGHT
+};
+
 enum CastlingFlags
 {
     WHITE_KINGS_SIDE,
@@ -75,6 +84,7 @@ enum CastlingFlags
     BLACK_KINGS_SIDE,
     BLACK_QUEENS_SIDE
 };
+
 
 /**
  @brief Move contains two Bitboards (one for initial position and one for moved position).
@@ -88,7 +98,7 @@ typedef struct
   int pieceType;
   int capturedPiece;
   int boardEval;
-
+  int enpassant;
   int castling;
 } Move;
 
@@ -147,13 +157,14 @@ void updateFlagState(BoardState* boardState,
  *  @return int, representing the pieceType that was captured
  */
 int updateBoardState(BoardState* boardState,
-                      Bitboard initialPiece,
-                      Bitboard movedPiece,
-                      enum BitboardType colorType,
-                      enum BitboardType pieceType,
-                      enum CastlingType castling,
-                      int capturedPiece,
-                      int undo);
+					Bitboard initialPiece,
+					Bitboard movedPiece,
+					enum BitboardType colorType,
+					enum BitboardType pieceType,
+					enum CastlingType castling,
+					enum EnpassantType enpassant,
+                    int capturedPiece,
+                    int undo);
 
 
 
@@ -237,7 +248,7 @@ void generateAllMoves(BoardState* boardState,
 
 void generateAllPawnMoves(BoardState* boardState,
                           enum BitboardType colorType,
-                          Moves* moves);
+                          Moves* moves, int moveLevel);
 
 
 

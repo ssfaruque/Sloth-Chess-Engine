@@ -464,7 +464,9 @@ void playerPlayChess(ChessGame* chessGame)
     printf("Captured piece type: %c\n", getSymbol(engineColor, playerMove.capturedPiece));
 
 
-    updateBoardState(chessGame->boardState, playerMove.initialPosition, playerMove.movedPosition, playerColor, playerMove.pieceType, 0, playerMove.capturedPiece, 0);
+    updateBoardState(chessGame->boardState, playerMove.initialPosition, playerMove.movedPosition, playerColor, 
+					playerMove.pieceType, playerMove.castling, playerMove.enpassant
+					, playerMove.capturedPiece, 0);
 
 
     generateFEN(chessGame->slothChessEngine);
@@ -496,7 +498,8 @@ void playerPlayChess(ChessGame* chessGame)
     }
 
 
-    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, engineColor, move.pieceType, 0, move.capturedPiece, 0);
+    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, engineColor, 
+		move.pieceType, move.castling, move.enpassant, move.capturedPiece, 0);
 
     chessGame->slothChessEngine->turn++;
 
