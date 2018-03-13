@@ -1168,7 +1168,7 @@ Move generateMove(BoardState* boardState,
 
             }
 
-            score = firstMovesEval/64 + score;
+            score = -firstMovesEval/64 + score;
 
             if(score < minScore)
             {
@@ -2332,7 +2332,7 @@ int findCol(Bitboard initialPosition)
 int findRow(Bitboard initialPosition)
 {
   // if piece is in upper half of the board
-  if(initialPosition & 0xfffffffff0f0f0f0)
+  if(initialPosition & 0xffffffff00000000)
   {
     // if in upper 2 most
     if(initialPosition & 0xffff000000000000)

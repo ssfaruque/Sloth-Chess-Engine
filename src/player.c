@@ -504,9 +504,8 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
   {
     int beforeCol = cmd[0] - 'a' + 1;
     int beforeRow = cmd[1] - '0';
-    int afterRow = cmd[2] - 'a' + 1;
-    int afterCol = cmd[3] - '0';
-    
+    int afterCol = cmd[2] - 'a' + 1;
+    int afterRow = cmd[3] - '0';
     
     Bitboard initialPiece = ((int64_t)1) << ((beforeRow  - 1) * 8 + (8 - beforeCol));
     Bitboard movedPiece = ((int64_t)1) << ((afterRow  - 1) * 8 + (8 - afterCol));
@@ -516,7 +515,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
     move.movedPosition = movedPiece;
     move.castling = 0;
     move.enpassant = 0;
-    move.pieceType = findCapturedPiece(chessGame->boardState, initialPiece, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS);
+    move.pieceType = getPieceType(initialPiece, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, chessGame->boardState);
     move.capturedPiece = findCapturedPiece(chessGame->boardState, movedPiece, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
     
     updateBoardState(chessGame->boardState, initialPiece, movedPiece, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, move.pieceType, move.castling, move.enpassant, move.capturedPiece, 0);
@@ -543,9 +542,10 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
     
     sendMove[7] = 'a' + afterCol - 1;
     sendMove[8] = '0' + afterRow;
-    //sendMove[9] = '\0';
+    sendMove[9] = '\0';
     
-    fprintf(file, "Engine: %s\n", sendMove);
+    fprintf(file, "Engine (produced): initial->%lu, moved->%lu\n", move.initialPosition, move.movedPosition); 
+    fprintf(file, "Engine (sent): %s\n", sendMove);
     printf("%s\n", sendMove);
     
     
@@ -559,15 +559,13 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
   
   else if(strcmp(cmd, "protover 2") == 0)
   {
-    printf("feature usermove=0 time=0 done=1\n");
+    printf("feature sigint=0 sigterm=0 usermove=0 time=0 done=1\n");
   }
   
   else if(strcmp(cmd, "new") == 0)
   {
     initChessGame(chessGame);
     chessGame->running = 1;
-    
-    fprintf(file, "Engine: STARTING NEW GAME FOR ENGINE!\n");
   }
   
   
@@ -582,7 +580,7 @@ void runXboard(ChessGame* chessGame)
   char buffer[BUFFER_SIZE];
   
   //setbuf(stdout, NULL);
-  //setbuf(stdin, NULL);
+  setbuf(stdin, NULL);
   
   FILE* file = fopen("xboard_debug.txt", "w");
   fclose(file);
