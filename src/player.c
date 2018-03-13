@@ -499,7 +499,6 @@ int getPieceType(Bitboard isolatedBoard, enum BitboardType color, BoardState* bo
 
 void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
 {
-  
   /* user entered a move */
   if(cmd[1] >= '1' && cmd[1] <= '8')
   {
@@ -544,7 +543,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
     
     sendMove[7] = 'a' + afterCol - 1;
     sendMove[8] = '0' + afterRow;
-    sendMove[9] = '\0';
+    //sendMove[9] = '\0';
     
     fprintf(file, "Engine: %s\n", sendMove);
     printf("%s\n", sendMove);
@@ -554,13 +553,13 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
   
   else if(strcmp(cmd, "xboard") == 0)
   {
-    
+    printf("\n");
     
   }
   
   else if(strcmp(cmd, "protover 2") == 0)
   {
-    printf("feature usermove=0,time=0,colors=1,done=1\n");
+    printf("feature usermove=0 time=0 done=1\n");
   }
   
   else if(strcmp(cmd, "new") == 0)
@@ -571,19 +570,8 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
     fprintf(file, "Engine: STARTING NEW GAME FOR ENGINE!\n");
   }
   
-  else if(strcmp(cmd, "white") == 0)
-  {
-  }
   
-  else if(strcmp(cmd, "black") == 0)
-  {
-    
-  }
-  
-  
-  
-  
-  
+  fflush(stdout);
 }
 
 
@@ -593,8 +581,8 @@ void runXboard(ChessGame* chessGame)
   const int BUFFER_SIZE = 512;
   char buffer[BUFFER_SIZE];
   
-  setbuf(stdout, NULL);
-  setbuf(stdin, NULL);
+  //setbuf(stdout, NULL);
+  //setbuf(stdin, NULL);
   
   FILE* file = fopen("xboard_debug.txt", "w");
   fclose(file);
@@ -632,7 +620,7 @@ void playerPlayChess(ChessGame* chessGame)
 
   //setBoardStateWithFEN(chessGame->slothChessEngine, "rnb1k1nr/pp3ppp/2p2q2/2bpp3/4P2P/2N2N2/PPPP1PPR/R1BQKB2");
   
-  //runXboard(chessGame);
+  runXboard(chessGame);
   
   
 

@@ -34,7 +34,7 @@ void initChessGame(ChessGame* chessGame)
 
 void runChessGame(ChessGame* chessGame)
 {
-  //playerPlayChess(chessGame);
+  playerPlayChess(chessGame);
 
   //setBoardStateWithFEN(chessGame->slothChessEngine, "rnb1k1nr/pp1p1ppp/2p5/4P3/1q2PP2/3Q2PN/PKP4P/RN3B1R w kq");
   
