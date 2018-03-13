@@ -128,24 +128,24 @@ void generateFEN(SlothChessEngine* engine)
   engine->FEN[index++] = ' ';
   engine->FEN[index++] = 'w';
   engine->FEN[index++] = ' ';
-  
+
   if(engine->boardState->castlingFlags[0][WHITE_KINGS_SIDE])
     engine->FEN[index++] = 'K';
-  
+
   if(engine->boardState->castlingFlags[0][WHITE_QUEENS_SIDE])
     engine->FEN[index++] = 'Q';
-  
+
   if(engine->boardState->castlingFlags[0][BLACK_KINGS_SIDE])
     engine->FEN[index++] = 'k';
-  
+
   if(engine->boardState->castlingFlags[0][BLACK_QUEENS_SIDE])
     engine->FEN[index++] = 'q';
-  
+
   if(engine->FEN[index -1] != 'K' && engine->FEN[index -1] != 'Q' &&
      engine->FEN[index -1] != 'k' && engine->FEN[index -1] != 'q')
       engine->FEN[index++] = '-';
-    
-  
+
+
   engine->FEN[index] = '\0';
 }
 
@@ -199,16 +199,16 @@ void setBoardWithFEN(SlothChessEngine* engine, char* FEN)
 void setBoardStateWithFEN(SlothChessEngine* engine, char* FEN)
 {
   setBoardWithFEN(engine, FEN);
-  
+
   char fen[100];
   strcpy(fen, FEN);
-  
-  
+
+
   /* set castling flags, if any */
   char* ptr = strtok(fen, " ");
   ptr = strtok(NULL, " ");
   ptr = strtok(NULL, " ");
-  
+
   if(*ptr == '-')
   {
     engine->boardState->castlingFlags[0][WHITE_KINGS_SIDE]  =
@@ -216,7 +216,7 @@ void setBoardStateWithFEN(SlothChessEngine* engine, char* FEN)
     engine->boardState->castlingFlags[0][BLACK_KINGS_SIDE]  =
     engine->boardState->castlingFlags[0][BLACK_QUEENS_SIDE] = 0;
   }
-  
+
   else
   {
     while(*ptr == 'K' || *ptr == 'Q' || *ptr == 'k' || *ptr == 'q')
@@ -225,28 +225,28 @@ void setBoardStateWithFEN(SlothChessEngine* engine, char* FEN)
       {
         engine->boardState->castlingFlags[0][WHITE_KINGS_SIDE]  = 1;
       }
-      
+
       else if(*ptr == 'Q')
       {
         engine->boardState->castlingFlags[0][WHITE_QUEENS_SIDE] = 1;
       }
-      
+
       else if(*ptr == 'k')
       {
         engine->boardState->castlingFlags[0][BLACK_KINGS_SIDE] = 1;
       }
-      
+
       else if(*ptr == 'q')
       {
         engine->boardState->castlingFlags[0][BLACK_QUEENS_SIDE] = 1;
       }
-      
+
       ++ptr;
     }
   }
-  
-  
-  
+
+
+
 
   int row,col;
 
@@ -499,7 +499,7 @@ int getPieceType(Bitboard isolatedBoard, enum BitboardType color, BoardState* bo
 
 void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
 {
-  
+
   /* user entered a move */
   if(cmd[1] >= '1' && cmd[1] <= '8')
   {
@@ -507,11 +507,11 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
     int beforeRow = cmd[1] - '0';
     int afterRow = cmd[2] - 'a' + 1;
     int afterCol = cmd[3] - '0';
-    
-    
+
+
     Bitboard initialPiece = ((int64_t)1) << ((beforeRow  - 1) * 8 + (8 - beforeCol));
     Bitboard movedPiece = ((int64_t)1) << ((afterRow  - 1) * 8 + (8 - afterCol));
-    
+
     Move move;
     move.initialPosition = initialPiece;
     move.movedPosition = movedPiece;
@@ -519,71 +519,71 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
     move.enpassant = 0;
     move.pieceType = findCapturedPiece(chessGame->boardState, initialPiece, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS);
     move.capturedPiece = findCapturedPiece(chessGame->boardState, movedPiece, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
-    
+
     updateBoardState(chessGame->boardState, initialPiece, movedPiece, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, move.pieceType, move.castling, move.enpassant, move.capturedPiece, 0);
-    
+
     move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
-    
+
     updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, move.pieceType, move.castling, move.enpassant, move.capturedPiece, 0);
-    
+
     beforeRow = findRow(move.initialPosition);
     beforeCol = findCol(move.initialPosition);
 
     afterRow = findRow(move.movedPosition);
     afterCol = findCol(move.movedPosition);
-    
+
     char sendMove[50];
     sendMove[0] = 'm';
     sendMove[1] = 'o';
     sendMove[2] = 'v';
     sendMove[3] = 'e';
     sendMove[4] = ' ';
-    
+
     sendMove[5] = 'a' + beforeCol - 1;
     sendMove[6] = '0' + beforeRow;
-    
+
     sendMove[7] = 'a' + afterCol - 1;
     sendMove[8] = '0' + afterRow;
     sendMove[9] = '\0';
-    
+
     fprintf(file, "Engine: %s\n", sendMove);
     printf("%s\n", sendMove);
-    
-    
+
+
   }
-  
+
   else if(strcmp(cmd, "xboard") == 0)
   {
-    
-    
+
+
   }
-  
+
   else if(strcmp(cmd, "protover 2") == 0)
   {
     printf("feature usermove=0,time=0,colors=1,done=1\n");
   }
-  
+
   else if(strcmp(cmd, "new") == 0)
   {
     initChessGame(chessGame);
     chessGame->running = 1;
-    
+
     fprintf(file, "Engine: STARTING NEW GAME FOR ENGINE!\n");
   }
-  
+
   else if(strcmp(cmd, "white") == 0)
   {
   }
-  
+
   else if(strcmp(cmd, "black") == 0)
   {
-    
+
   }
-  
-  
-  
-  
-  
+
+
+
+
+
 }
 
 
@@ -592,30 +592,30 @@ void runXboard(ChessGame* chessGame)
 {
   const int BUFFER_SIZE = 512;
   char buffer[BUFFER_SIZE];
-  
+
   setbuf(stdout, NULL);
   setbuf(stdin, NULL);
-  
+
   FILE* file = fopen("xboard_debug.txt", "w");
   fclose(file);
-  
+
   chessGame->running = 1;
-  
+
   while(chessGame->running)
   {
     fgets(buffer, BUFFER_SIZE, stdin);
-    
+
     buffer[strlen(buffer) - 1] = '\0';
-    
+
     file = fopen("xboard_debug.txt", "a");
     fprintf(file, "Xboard: %s\n", buffer);
-    
+
     processXboardCmd(chessGame, buffer, file);
-    
+
     fclose(file);
-    
+
   }
-  
+
 }
 
 
@@ -630,16 +630,16 @@ void playerPlayChess(ChessGame* chessGame)
   int playerColor = BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS;
   int engineColor = BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS;
 
+  setBoardStateWithFEN(chessGame->slothChessEngine, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq");
   //setBoardStateWithFEN(chessGame->slothChessEngine, "rnb1k1nr/pp3ppp/2p2q2/2bpp3/4P2P/2N2N2/PPPP1PPR/R1BQKB2");
-  
-  //runXboard(chessGame);
-  
-  
 
-  printBoardGUI(chessGame->boardState);
+  //runXboard(chessGame);
+
+
 
   while(1)
   {
+
     printf("Turn white %d\n", chessGame->slothChessEngine->turn);
 
     generateFEN(chessGame->slothChessEngine);
@@ -652,7 +652,7 @@ void playerPlayChess(ChessGame* chessGame)
 
     uint64_t one = 1;
 
-    Move playerMove;
+    Move playerMove = {0,0,0,0,0,0,0};
     playerMove.initialPosition = (one << spaceNumInitial);
     playerMove.movedPosition = (one << spaceNumMoved);
 
@@ -666,7 +666,7 @@ void playerPlayChess(ChessGame* chessGame)
     printf("Captured piece type: %c\n", getSymbol(engineColor, playerMove.capturedPiece));
 
 
-    updateBoardState(chessGame->boardState, playerMove.initialPosition, playerMove.movedPosition, playerColor, 
+    updateBoardState(chessGame->boardState, playerMove.initialPosition, playerMove.movedPosition, playerColor,
 					playerMove.pieceType, playerMove.castling, playerMove.enpassant
 					, playerMove.capturedPiece, 0);
 
@@ -682,11 +682,10 @@ void playerPlayChess(ChessGame* chessGame)
 
 
 
-
     // ------------------------------------------
 
 
-    Move move;
+    Move move = {0,0,0,0,0,0,0};
     move = generateMove(chessGame->boardState, engineColor, MAX_RECURSION_DEPTH);
 
 
@@ -700,7 +699,7 @@ void playerPlayChess(ChessGame* chessGame)
     }
 
 
-    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, engineColor, 
+    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, engineColor,
 		move.pieceType, move.castling, move.enpassant, move.capturedPiece, 0);
 
     chessGame->slothChessEngine->turn++;
@@ -711,6 +710,7 @@ void playerPlayChess(ChessGame* chessGame)
     printf("Captured piece type: %c\n", getSymbol(playerColor, move.capturedPiece));
 
     // ---------------------------------------------
+
 
 
   }

@@ -1168,7 +1168,7 @@ Move generateMove(BoardState* boardState,
 
             }
 
-            score = firstMovesEval/64 + score;
+            score = -firstMovesEval/64 + score;
 
             if(score < minScore)
             {
@@ -1367,6 +1367,7 @@ int pieceType = BOARD_TYPE_ALL_PAWN_POSITIONS;
                       move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
                       moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
                   }
+                  /*
 				  else if( (boardState->enpassantFlags[moveLevel-1] & (move.initialPosition << 1))
 					  ) //Potentially enpassant
 				  {
@@ -1374,7 +1375,7 @@ int pieceType = BOARD_TYPE_ALL_PAWN_POSITIONS;
 					  move.enpassant = ENPASSANT_UPLEFT;
 					  moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
 				  }
-
+*/
                   move = generateDiagonalUpRightMove(isolatedPiece, boardState, colorType, 1);
                   move.pieceType = pieceType;
 
@@ -1383,6 +1384,7 @@ int pieceType = BOARD_TYPE_ALL_PAWN_POSITIONS;
                       move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
                       moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
                   }
+                  /*
 				  else if ((boardState->enpassantFlags[moveLevel - 1] & (move.initialPosition >> 1))
 					  ) //Potentially enpassant
 				  {
@@ -1390,7 +1392,7 @@ int pieceType = BOARD_TYPE_ALL_PAWN_POSITIONS;
 					  move.enpassant = ENPASSANT_UPRIGHT;
 					  moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
 				  }
-
+                    */
 
          } //if white
 
@@ -1446,6 +1448,7 @@ int pieceType = BOARD_TYPE_ALL_PAWN_POSITIONS;
                       move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
                       moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
                   }
+
 				  else if ((boardState->enpassantFlags[moveLevel - 1] & (move.initialPosition >> 1))
 					  ) //Potentially enpassant
 				  {
@@ -2340,25 +2343,25 @@ int findRow(Bitboard initialPosition)
       // if upper most
       if(initialPosition & 0xff00000000000000)
         return 8;
-      
+
       // else in 2nd upper most
       else
         return 7;
     }
-    
+
     // else in 3rd and 4th from upper most
     else
     {
       // if in 3rd from upper most
       if(initialPosition & 0x0000ff0000000000)
         return 6;
-      
+
       // else in 4th from upper most
       else
         return 5;
     }
   }
-  
+
   // else piece is in bottom half
   else
   {
@@ -2368,19 +2371,19 @@ int findRow(Bitboard initialPosition)
       // if in 5th from upper most
       if(initialPosition & 0x00000000ff000000)
         return 4;
-      
+
       // else 6th from upper most
       else
         return 3;
     }
-    
+
     // else in 7th and 8th from upper most
     else
     {
       // if 7th from upper most
       if(initialPosition & 0x000000000000ff00)
         return 2;
-      
+
       // else 8th from upper most
       else
         return 1;
