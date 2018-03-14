@@ -9,9 +9,11 @@
 
 
 #include "eval.h"
-
+#include "bitboard.h"
+#include "move.h"
+#define attackingPiecesCount 7
 const int weights[] = {100, 500, 300, 325, 900, 5000};
-
+const int attackWeight[attackingPiecesCount] = { 0,50,75,88,94,97,99 };
 
 
 
@@ -180,7 +182,6 @@ int countNumPieces(Bitboard bitboard)
 int materialEval(BoardState* boardState)
 {
 
-  const int NUM_PIECES = 6;
 
   int numWhitePieces[6] = {-1, -1, -1, -1, -1, -1};
   int numBlackPieces[6] = {-1, -1, -1, -1, -1, -1};
@@ -219,7 +220,7 @@ int centerControlEval(BoardState* boardState)
   int numWhitePieces = countNumPieces(whitePiecesInCenter);
   int numBlackPieces = countNumPieces(blackPiecesInCenter);
 
-  const int CENTER_CONTROL_WEIGHT = 200;
+  const int CENTER_CONTROL_WEIGHT = 100;
 
   return CENTER_CONTROL_WEIGHT * (numWhitePieces - numBlackPieces);
 }
@@ -379,10 +380,64 @@ int bishopPairEval(BoardState* boardState)
   return score;
 }
 
+int findKingZone(BoardState* boardState, enum BitboardType colortype)
+{
+	int64_t kingZone = 0;
+	int64_t kingPosition = 0;
+	const int MAX_KING_MOVES = 8; //no castling
+	kingPosition = boardState->boards[BOARD_TYPE_ALL_KING_POSITIONS] & boardState->boards[colortype];
+
+	
+	if (colortype == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
+	{
+		Moves whiteMoves;
+		whiteMoves.numMoves[0] = whiteMoves.numMoves[1] = whiteMoves.numMoves[2] =
+		whiteMoves.numMoves[3] = whiteMoves.numMoves[4] = whiteMoves.numMoves[5] = 0;
+		generateKingMoves(boardState, kingPosition, colortype, &whiteMoves, 0);
+		for(int i = 0; i < MAX_KING_MOVES;  i++)
+		kingZone = kingZone & whiteMoves.moves[BOARD_TYPE_ALL_KING_POSITIONS - 2][i].movedPosition;
+	}
+	else
+	{
+		Moves blackMoves;
+		blackMoves.numMoves[0] = blackMoves.numMoves[1] = blackMoves.numMoves[2] =
+		blackMoves.numMoves[3] = blackMoves.numMoves[4] = blackMoves.numMoves[5] = 0;
+		generateKingMoves(boardState, kingPosition, colortype, &blackMoves, 0);
+		for (int i = 0; i < MAX_KING_MOVES; i++)
+		kingZone = kingZone & blackMoves.moves[BOARD_TYPE_ALL_KING_POSITIONS - 2][i].movedPosition;
+	}
+	return kingZone;
+
+}
+
+
+int kingSafety(BoardState* boardState)
+{
+	int whiteAttack = 0;
+	int blackAttack = 0;
+	int64_t blackKingZone;
+	int64_t whiteKingZone;
+	/*Find Black King's zone for White*/
+	blackKingZone = findKingZone(boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS);
+	/*Find White King's zone for Black*/
+	whiteKingZone = findKingZone(boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
+	
+	
+	/*Value of attacks: 
+	Queen: 80
+	Rook: 40
+	Bishop: 20
+	Knight: */
+	//(valueOfAttacks * attackWeight[attackingPiecesCount]) / 100.
+
+
+
+	return whiteAttack - blackAttack;
+}
 
 int eval(BoardState* boardState)
 {
-  return materialEval(boardState) + centerControlEval(boardState) + pieceSquareEval(boardState);
+  return materialEval(boardState) + centerControlEval(boardState) + pieceSquareEval(boardState) + kingSafety(boardState);
 }
 
 
