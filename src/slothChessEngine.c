@@ -22,6 +22,14 @@ void initSlothChessEngine(SlothChessEngine* engine, BoardState* boardState, enum
 }
 
 
+void setEngineColor(SlothChessEngine* engine, enum BitboardType playerType)
+{
+	engine->playerType = playerType;
+}
+
+
+
+
 void cleanUpSlothEngine(SlothChessEngine* engine)
 {
   // FILL THIS IN LATER

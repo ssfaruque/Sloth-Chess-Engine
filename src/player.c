@@ -493,36 +493,116 @@ int getPieceType(Bitboard isolatedBoard, enum BitboardType color, BoardState* bo
 
 
 
-
-
-
-
 void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
 {
   /* user entered a move */
-  if(cmd[1] >= '1' && cmd[1] <= '8')
+  if(cmd[1] >= '1' && cmd[1] <= '8' || strcmp(cmd, "go") == 0)
   {
     int beforeCol = cmd[0] - 'a' + 1;
     int beforeRow = cmd[1] - '0';
     int afterCol = cmd[2] - 'a' + 1;
     int afterRow = cmd[3] - '0';
+
+	Move move;
+	Bitboard initialPiece = ((int64_t)1) << ((beforeRow  - 1) * 8 + (8 - beforeCol));
+    	Bitboard movedPiece = ((int64_t)1) << ((afterRow  - 1) * 8 + (8 - afterCol));
+
+	int color = chessGame->slothChessEngine->playerType;
+
+    /* pawn promotion (NOT FINISHED)*/
+    if(strlen(cmd) == 5)
+    {
+    	char pieceChar = cmd[4];
+	int promotedPiece = -1;
+
+	switch(promotedPiece)
+	{
+		case 'n':
+		promotedPiece = BOARD_TYPE_ALL_KNIGHT_POSITIONS;
+		break;
+		
+		case 'b':
+		promotedPiece = BOARD_TYPE_ALL_BISHOP_POSITIONS;
+		break;
+		
+		case 'r':
+		promotedPiece = BOARD_TYPE_ALL_ROOK_POSITIONS;
+		break;
+	
+		case 'q':
+		promotedPiece = BOARD_TYPE_ALL_QUEEN_POSITIONS;
+		break;
+	}
+    }
+
+
+    	/* castling */
+	else if(strcmp(cmd, "e1g1") == 0)		/* white king's side */
+	{
+    		move.initialPosition = initialPiece;
+    		move.movedPosition = movedPiece;
+    		move.castling = KINGS_SIDE;
+    		move.enpassant = 0;
+    		move.pieceType =   BOARD_TYPE_ALL_KING_POSITIONS;
+    		move.capturedPiece = 0;
+
+		fprintf(file, "Xboard: Performed castling!\n");
+	}
+
+	else if(strcmp(cmd, "e1c1") == 0)	/* white queen's side */
+	{
+		move.initialPosition = initialPiece;
+    		move.movedPosition = movedPiece;
+    		move.castling = QUEENS_SIDE;
+    		move.enpassant = 0;
+    		move.pieceType =   BOARD_TYPE_ALL_KING_POSITIONS;
+    		move.capturedPiece = 0;
+
+		fprintf(file, "Xboard: Performed castling!\n");
+	}
+
+	else if(strcmp(cmd, "e8g8") == 0)	/* black king's side */
+	{
+		move.initialPosition = initialPiece;
+    		move.movedPosition = movedPiece;
+    		move.castling = KINGS_SIDE;
+    		move.enpassant = 0;
+    		move.pieceType =   BOARD_TYPE_ALL_KING_POSITIONS;
+    		move.capturedPiece = 0;
+
+		fprintf(file, "Xboard: Performed castling!\n");
+	}
+
+	else if(strcmp(cmd, "e8c8") == 0)	/* black queen's side */
+	{
+		move.initialPosition = initialPiece;
+    		move.movedPosition = movedPiece;
+    		move.castling = QUEENS_SIDE;
+    		move.enpassant = 0;
+    		move.pieceType =   BOARD_TYPE_ALL_KING_POSITIONS;
+    		move.capturedPiece = 0;
+
+		fprintf(file, "Xboard: Performed castling!\n");
+	}
+
+	/* normal move */
+	else
+	{
+    		move.initialPosition = initialPiece;
+  	 	move.movedPosition = movedPiece;
+   	 	move.castling = 0;
+   		move.enpassant = 0;
+   		move.pieceType = getPieceType(initialPiece, color, chessGame->boardState);
+    		move.capturedPiece = findCapturedPiece(chessGame->boardState, movedPiece, color);
+	}
+
+
     
-    Bitboard initialPiece = ((int64_t)1) << ((beforeRow  - 1) * 8 + (8 - beforeCol));
-    Bitboard movedPiece = ((int64_t)1) << ((afterRow  - 1) * 8 + (8 - afterCol));
+    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, color, move.pieceType, move.castling, move.enpassant, move.capturedPiece, 0);
     
-    Move move;
-    move.initialPosition = initialPiece;
-    move.movedPosition = movedPiece;
-    move.castling = 0;
-    move.enpassant = 0;
-    move.pieceType = getPieceType(initialPiece, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, chessGame->boardState);
-    move.capturedPiece = findCapturedPiece(chessGame->boardState, movedPiece, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
+    move = generateMove(chessGame->boardState, !color, MAX_RECURSION_DEPTH);
     
-    updateBoardState(chessGame->boardState, initialPiece, movedPiece, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, move.pieceType, move.castling, move.enpassant, move.capturedPiece, 0);
-    
-    move = generateMove(chessGame->boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, MAX_RECURSION_DEPTH);
-    
-    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, move.pieceType, move.castling, move.enpassant, move.capturedPiece, 0);
+    updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, !color, move.pieceType, move.castling, move.enpassant, move.capturedPiece, 0);
     
     beforeRow = findRow(move.initialPosition);
     beforeCol = findCol(move.initialPosition);
@@ -567,6 +647,17 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
     initChessGame(chessGame);
     chessGame->running = 1;
   }
+
+  else if(strcmp(cmd, "white") == 0)
+  {
+    setEngineColor(chessGame->slothChessEngine, 0);
+  }
+
+  else if(strcmp(cmd, "black") == 0)
+  {
+    setEngineColor(chessGame->slothChessEngine, 1);
+  }
+
   
   
   fflush(stdout);
