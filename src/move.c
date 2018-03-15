@@ -812,17 +812,17 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
             if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
             {
                 if (moves.moves[i][j].movedPosition == 0x0000000000000080)
-                     boardState->castlingFlags[0][WHITE_QUEENS_SIDE] = 0;
+                     boardState->castlingFlags[MAX_RECURSION_DEPTH - depthleft + 1][WHITE_QUEENS_SIDE] = 0;
                 else if (moves.moves[i][j].movedPosition == 0x0000000000000001)
-                    boardState->castlingFlags[0][WHITE_KINGS_SIDE] = 0;
+                    boardState->castlingFlags[MAX_RECURSION_DEPTH - depthleft + 1][WHITE_KINGS_SIDE] = 0;
             }
 
             else
             {
                 if (moves.moves[i][j].initialPosition == 0x8000000000000000)
-                    boardState->castlingFlags[0][BLACK_QUEENS_SIDE] = 0;
+                    boardState->castlingFlags[MAX_RECURSION_DEPTH - depthleft + 1][BLACK_QUEENS_SIDE] = 0;
                 else if (moves.moves[i][j].initialPosition == 0x0100000000000000)
-                    boardState->castlingFlags[0][BLACK_KINGS_SIDE] = 0;
+                    boardState->castlingFlags[MAX_RECURSION_DEPTH - depthleft + 1][BLACK_KINGS_SIDE] = 0;
             }
         }
 
@@ -990,17 +990,17 @@ if (moves.moves[i][j].castling)
             if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
             {
                 if (moves.moves[i][j].movedPosition == 0x0000000000000080)
-                     boardState->castlingFlags[0][WHITE_QUEENS_SIDE] = 0;
+                     boardState->castlingFlags[MAX_RECURSION_DEPTH - depthleft + 1][WHITE_QUEENS_SIDE] = 0;
                 else if (moves.moves[i][j].movedPosition == 0x0000000000000001)
-                    boardState->castlingFlags[0][WHITE_KINGS_SIDE] = 0;
+                    boardState->castlingFlags[MAX_RECURSION_DEPTH - depthleft + 1][WHITE_KINGS_SIDE] = 0;
             }
 
             else
             {
                 if (moves.moves[i][j].initialPosition == 0x8000000000000000)
-                    boardState->castlingFlags[0][BLACK_QUEENS_SIDE] = 0;
+                    boardState->castlingFlags[MAX_RECURSION_DEPTH - depthleft + 1][BLACK_QUEENS_SIDE] = 0;
                 else if (moves.moves[i][j].initialPosition == 0x0100000000000000)
-                    boardState->castlingFlags[0][BLACK_KINGS_SIDE] = 0;
+                    boardState->castlingFlags[MAX_RECURSION_DEPTH - depthleft + 1][BLACK_KINGS_SIDE] = 0;
             }
         }
 
@@ -1145,17 +1145,17 @@ Move generateMove(BoardState* boardState,
             if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
             {
                 if (firstMoves.moves[i][j].movedPosition == 0x0000000000000080)
-                     boardState->castlingFlags[0][WHITE_QUEENS_SIDE] = 0;
+                     boardState->castlingFlags[1][WHITE_QUEENS_SIDE] = 0;
                 else if (firstMoves.moves[i][j].movedPosition == 0x0000000000000001)
-                    boardState->castlingFlags[0][WHITE_KINGS_SIDE] = 0;
+                    boardState->castlingFlags[1][WHITE_KINGS_SIDE] = 0;
             }
 
             else
             {
                 if (firstMoves.moves[i][j].initialPosition == 0x8000000000000000)
-                    boardState->castlingFlags[0][BLACK_QUEENS_SIDE] = 0;
+                    boardState->castlingFlags[1][BLACK_QUEENS_SIDE] = 0;
                 else if (firstMoves.moves[i][j].initialPosition == 0x0100000000000000)
-                    boardState->castlingFlags[0][BLACK_KINGS_SIDE] = 0;
+                    boardState->castlingFlags[1][BLACK_KINGS_SIDE] = 0;
             }
         }
 
