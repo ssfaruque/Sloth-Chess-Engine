@@ -421,7 +421,7 @@ int findKingZone(BoardState* boardState, enum BitboardType colortype)
 	const int MAX_KING_MOVES = 8; //no castling
 	kingPosition = boardState->boards[BOARD_TYPE_ALL_KING_POSITIONS] & boardState->boards[colortype];
 
-	
+
 	if (colortype == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
 	{
 		Moves whiteMoves;
@@ -460,12 +460,12 @@ int kingSafety(BoardState* boardState)
 	int totalWhitePieces = 0; int whiteRook = 0; int whiteQueen = 0; int whiteBishop = 0; int whiteKnight = 0;
 	int64_t blackKingZone;
 	int64_t whiteKingZone;
-	
+
 	/*Find Black King's zone for White*/
 	blackKingZone = findKingZone(boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS);
 	/*Find White King's zone for Black*/
 	whiteKingZone = findKingZone(boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
-	
+
 	Moves blackMoves;
 	blackMoves.numMoves[0] = blackMoves.numMoves[1] = blackMoves.numMoves[2] =
 	blackMoves.numMoves[3] = blackMoves.numMoves[4] = blackMoves.numMoves[5] = 0;
@@ -476,7 +476,7 @@ int kingSafety(BoardState* boardState)
 		{
 			switch (i)
 			{
-			case (BOARD_TYPE_ALL_BISHOP_POSITIONS - 2): 
+			case (BOARD_TYPE_ALL_BISHOP_POSITIONS - 2):
 				if (blackMoves.moves[i][j].movedPosition & whiteKingZone)
 					blackBishop++;
 				break;
@@ -492,7 +492,7 @@ int kingSafety(BoardState* boardState)
 				if (blackMoves.moves[i][j].movedPosition & whiteKingZone)
 					blackKnight++;
 				break;
-			default: 
+			default:
 				break;
 			}
 		}
@@ -546,10 +546,108 @@ int kingSafety(BoardState* boardState)
 	return whiteAttack - blackAttack;
 }
 
+int isPawnInCol(Bitboard colorPawn, int col)
+{
+    colorPawn = colorPawn >> (16 - col);
+    if ((colorPawn % 2) == 1)
+        return 1;
+
+    colorPawn = colorPawn >> 8;
+    if ((colorPawn % 2) == 1)
+        return 1;
+
+    colorPawn = colorPawn >> 8;
+    if ((colorPawn % 2) == 1)
+        return 1;
+
+    colorPawn = colorPawn >> 8;
+    if ((colorPawn % 2) == 1)
+        return 1;
+
+    colorPawn = colorPawn >> 8;
+    if ((colorPawn % 2) == 1)
+        return 1;
+
+    colorPawn = colorPawn >> 8;
+    if ((colorPawn % 2) == 1)
+        return 1;
+
+    return 0;
+}
+
+
+int pawnIslandEval(BoardState* boardState)
+{
+    //white
+    Bitboard whitePawns = boardState->boards[BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS] & boardState->boards[BOARD_TYPE_ALL_PAWN_POSITIONS];
+    int i;
+    uint16_t fileSet = 0; //8 bits
+    uint16_t westFiles = 0; //8 bits
+    uint16_t isolated = 0;
+    int num_white_islands = 0;
+
+    for (i = 1; i < 8; i ++)
+    {
+        if (isPawnInCol(whitePawns, i))
+            fileSet += 1;
+        fileSet = fileSet << 1;
+    }
+
+    if (isPawnInCol(whitePawns, 8))
+            fileSet += 1;
+
+    westFiles = fileSet & ~(fileSet << 1);
+
+    while (westFiles)
+    {
+            isolated = westFiles & ~westFiles;
+            num_white_islands ++;
+            westFiles &= westFiles - 1;
+    }
+
+
+
+
+    Bitboard blackPawns = boardState->boards[BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS] & boardState->boards[BOARD_TYPE_ALL_PAWN_POSITIONS];
+
+    fileSet = 0; //8 bits
+    westFiles = 0; //8 bits
+    isolated = 0;
+    int num_black_islands = 0;
+
+    for (i = 1; i < 8; i ++)
+    {
+        if (isPawnInCol(blackPawns, i))
+            fileSet += 1;
+        fileSet = fileSet << 1;
+    }
+
+    if (isPawnInCol(blackPawns, 8))
+            fileSet += 1;
+
+    westFiles = fileSet & ~(fileSet << 1);
+
+    while (westFiles)
+    {
+            isolated = westFiles & ~westFiles;
+            num_black_islands ++;
+            westFiles &= westFiles - 1;
+    }
+
+    // fewer islands, better
+    int diff = num_black_islands - num_white_islands;
+
+    return diff*20;
+
+}
+
+
+
+
 int eval(BoardState* boardState)
 {
   return materialEval(boardState) + centerControlEval(boardState) + pieceSquareEval(boardState) + kingSafety(boardState)
-   +bishopPairEval(boardState);
+   +bishopPairEval(boardState) + pawnIslandEval(boardState);
 }
 
 
