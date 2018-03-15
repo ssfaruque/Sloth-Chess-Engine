@@ -595,7 +595,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
    		move.pieceType = getPieceType(initialPiece, color, chessGame->boardState);
     		move.capturedPiece = findCapturedPiece(chessGame->boardState, movedPiece, color);
 	}
-
+/*
 //update castling flags if user moved a king
 	if (move.pieceType == BOARD_TYPE_ALL_KING_POSITIONS)
     {
@@ -652,7 +652,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
                     chessGame->boardState->castlingFlags[0][BLACK_KINGS_SIDE] = 0;
             }
         }
-
+*/
     updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, color, move.pieceType, move.castling, move.enpassant, move.capturedPiece, 0);
 
     move = generateMove(chessGame->boardState, !color, MAX_RECURSION_DEPTH);
@@ -764,7 +764,7 @@ void playerPlayChess(ChessGame* chessGame)
 
   //setBoardStateWithFEN(chessGame->slothChessEngine, "rnb1k1nr/pp3ppp/2p2q2/2bpp3/4P2P/2N2N2/PPPP1PPR/R1BQKB2");
 
-  //runXboard(chessGame);
+  runXboard(chessGame);
 
 
 
