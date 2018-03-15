@@ -1301,6 +1301,19 @@ void generateAllMoves(BoardState* boardState,
   orderCaptureMoves(moves);
 }
 
+void generateCoreMoves(BoardState* boardState,
+	enum BitboardType colorType,
+	Moves* moves, int moveLevel)
+{
+
+	generateAllRookMoves(boardState, colorType, moves);
+	generateAllKnightMoves(boardState, colorType, moves);
+	generateAllBishopMoves(boardState, colorType, moves);
+	generateAllQueenMoves(boardState, colorType, moves);
+
+
+	orderCaptureMoves(moves);
+}
 
 void generateAllPawnMoves(BoardState* boardState,
                           enum BitboardType colorType,

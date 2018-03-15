@@ -413,24 +413,101 @@ int findKingZone(BoardState* boardState, enum BitboardType colortype)
 
 int kingSafety(BoardState* boardState)
 {
-	int whiteAttack = 0;
-	int blackAttack = 0;
-	int64_t blackKingZone;
-	int64_t whiteKingZone;
-	/*Find Black King's zone for White*/
-	blackKingZone = findKingZone(boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS);
-	/*Find White King's zone for Black*/
-	whiteKingZone = findKingZone(boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
-	
-	
-	/*Value of attacks: 
+	/*Value of attacks:
 	Queen: 80
 	Rook: 40
 	Bishop: 20
 	Knight: */
 	//(valueOfAttacks * attackWeight[attackingPiecesCount]) / 100.
 
-
+	int whiteAttack = 0;
+	int blackAttack = 0;
+	int totalBlackPieces = 0; int blackRook = 0; int blackQueen = 0; int blackBishop = 0; int blackKnight = 0;
+	int totalWhitePieces = 0; int whiteRook = 0; int whiteQueen = 0; int whiteBishop = 0; int whiteKnight = 0;
+	int64_t blackKingZone;
+	int64_t whiteKingZone;
+	
+	/*Find Black King's zone for White*/
+	blackKingZone = findKingZone(boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS);
+	/*Find White King's zone for Black*/
+	whiteKingZone = findKingZone(boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
+	
+	Moves blackMoves;
+	blackMoves.numMoves[0] = blackMoves.numMoves[1] = blackMoves.numMoves[2] =
+	blackMoves.numMoves[3] = blackMoves.numMoves[4] = blackMoves.numMoves[5] = 0;
+	generateCoreMoves(boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, &blackMoves, 0);
+	for (int i = 0; i < NUM_PIECES; i++)
+	{
+		for (int j = 0; j < MAX_NUM_MOVES; j++)
+		{
+			switch (i)
+			{
+			case (BOARD_TYPE_ALL_BISHOP_POSITIONS - 2): 
+				if (blackMoves.moves[i][j].movedPosition & whiteKingZone)
+					blackBishop++;
+				break;
+			case (BOARD_TYPE_ALL_ROOK_POSITIONS - 2):
+				if (blackMoves.moves[i][j].movedPosition & whiteKingZone)
+					blackRook++;
+				break;
+			case (BOARD_TYPE_ALL_QUEEN_POSITIONS - 2):
+				if (blackMoves.moves[i][j].movedPosition & whiteKingZone)
+					blackQueen++;
+				break;
+			case (BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2):
+				if (blackMoves.moves[i][j].movedPosition & whiteKingZone)
+					blackKnight++;
+				break;
+			default: 
+				break;
+			}
+		}
+	}
+	Moves whiteMoves;
+	whiteMoves.numMoves[0] = whiteMoves.numMoves[1] = whiteMoves.numMoves[2] =
+	whiteMoves.numMoves[3] = whiteMoves.numMoves[4] = whiteMoves.numMoves[5] = 0;
+	generateCoreMoves(boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, &whiteMoves, 0);
+	for (int i = 0; i < NUM_PIECES; i++)
+	{
+		for (int j = 0; j < MAX_NUM_MOVES; j++)
+		{
+			switch (i)
+			{
+			case (BOARD_TYPE_ALL_BISHOP_POSITIONS - 2):
+				if (whiteMoves.moves[i][j].movedPosition & blackKingZone)
+					whiteBishop++;
+				break;
+			case (BOARD_TYPE_ALL_ROOK_POSITIONS - 2):
+				if (whiteMoves.moves[i][j].movedPosition & blackKingZone)
+					whiteRook++;
+				break;
+			case (BOARD_TYPE_ALL_QUEEN_POSITIONS - 2):
+				if (whiteMoves.moves[i][j].movedPosition & blackKingZone)
+					whiteQueen++;
+				break;
+			case (BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2):
+				if (whiteMoves.moves[i][j].movedPosition & blackKingZone)
+					whiteKnight++;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	totalBlackPieces = blackBishop + blackKnight + blackQueen + blackRook;
+	totalWhitePieces = whiteBishop + whiteKnight + whiteQueen + whiteRook;
+	whiteAttack = (
+		(20 * whiteKnight * attackWeight[totalWhitePieces]) +
+		(20 * whiteBishop * attackWeight[totalWhitePieces]) +
+		(40 * whiteRook * attackWeight[totalWhitePieces])  +
+		(40 * whiteQueen * attackWeight[totalWhitePieces])
+	) / 100;
+	blackAttack = (
+		(20 * blackKnight * attackWeight[totalBlackPieces]) +
+		(20 * blackBishop * attackWeight[totalBlackPieces]) +
+		(40 * blackRook * attackWeight[totalBlackPieces]) +
+		(40 * blackQueen * attackWeight[totalBlackPieces])
+		) / 100;
 
 	return whiteAttack - blackAttack;
 }
