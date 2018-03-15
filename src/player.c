@@ -545,7 +545,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
     		move.enpassant = 0;
     		move.pieceType =   BOARD_TYPE_ALL_KING_POSITIONS;
     		move.capturedPiece = 0;
-
+            chessGame->boardState->castlingFlags[0][WHITE_KINGS_SIDE] = 0;
 		fprintf(file, "Xboard: Performed castling!\n");
 	}
 
@@ -557,7 +557,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
     		move.enpassant = 0;
     		move.pieceType =   BOARD_TYPE_ALL_KING_POSITIONS;
     		move.capturedPiece = 0;
-
+            chessGame->boardState->castlingFlags[0][WHITE_QUEENS_SIDE] = 0;
 		fprintf(file, "Xboard: Performed castling!\n");
 	}
 
@@ -569,7 +569,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
     		move.enpassant = 0;
     		move.pieceType =   BOARD_TYPE_ALL_KING_POSITIONS;
     		move.capturedPiece = 0;
-
+            chessGame->boardState->castlingFlags[0][BLACK_KINGS_SIDE] = 0;
 		fprintf(file, "Xboard: Performed castling!\n");
 	}
 
@@ -581,7 +581,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
     		move.enpassant = 0;
     		move.pieceType =   BOARD_TYPE_ALL_KING_POSITIONS;
     		move.capturedPiece = 0;
-
+            chessGame->boardState->castlingFlags[0][BlACK_QUEENS_SIDE] = 0;
 		fprintf(file, "Xboard: Performed castling!\n");
 	}
 
