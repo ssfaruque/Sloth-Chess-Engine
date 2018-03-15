@@ -595,7 +595,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
    		move.pieceType = getPieceType(initialPiece, color, chessGame->boardState);
     		move.capturedPiece = findCapturedPiece(chessGame->boardState, movedPiece, color);
 	}
-/*
+
 //update castling flags if user moved a king
 	if (move.pieceType == BOARD_TYPE_ALL_KING_POSITIONS)
     {
@@ -652,7 +652,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
                     chessGame->boardState->castlingFlags[0][BLACK_KINGS_SIDE] = 0;
             }
         }
-*/
+
     updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, color, move.pieceType, move.castling, move.enpassant, move.capturedPiece, 0);
 
     move = generateMove(chessGame->boardState, !color, MAX_RECURSION_DEPTH);
