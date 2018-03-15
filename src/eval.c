@@ -646,7 +646,7 @@ int pawnIslandEval(BoardState* boardState)
 
 int eval(BoardState* boardState)
 {
-  return materialEval(boardState) + centerControlEval(boardState) + pieceSquareEval(boardState) + kingSafety(boardState)
+  return materialEval(boardState) + centerControlEval(boardState) + pieceSquareEval(boardState)
    +bishopPairEval(boardState) + pawnIslandEval(boardState);
 }
 
