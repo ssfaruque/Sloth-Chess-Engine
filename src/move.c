@@ -806,6 +806,26 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
                         }
                     }
 
+                                        //if rook is captured, update castling flags
+        if (moves.moves[i][j].capturedPiece == BOARD_TYPE_ALL_ROOK_POSITIONS)
+        {
+            if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
+            {
+                if (moves.moves[i][j].movedPosition == 0x0000000000000080)
+                     boardState->castlingFlags[0][WHITE_QUEENS_SIDE] = 0;
+                else if (moves.moves[i][j].movedPosition == 0x0000000000000001)
+                    boardState->castlingFlags[0][WHITE_KINGS_SIDE] = 0;
+            }
+
+            else
+            {
+                if (moves.moves[i][j].initialPosition == 0x8000000000000000)
+                    boardState->castlingFlags[0][BLACK_QUEENS_SIDE] = 0;
+                else if (moves.moves[i][j].initialPosition == 0x0100000000000000)
+                    boardState->castlingFlags[0][BLACK_KINGS_SIDE] = 0;
+            }
+        }
+
 			if (moves.moves[i][j].pieceType == BOARD_TYPE_ALL_PAWN_POSITIONS
 						&& (moves.moves[i][j].movedPosition & 0x000000ffff000000)
 						&& (moves.moves[i][j].initialPosition & 0x00ff00000000ff00))
@@ -964,6 +984,26 @@ if (moves.moves[i][j].castling)
                         }
                     }
 
+                    //if rook is captured, update castling flags
+        if (moves.moves[i][j].capturedPiece == BOARD_TYPE_ALL_ROOK_POSITIONS)
+        {
+            if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
+            {
+                if (moves.moves[i][j].movedPosition == 0x0000000000000080)
+                     boardState->castlingFlags[0][WHITE_QUEENS_SIDE] = 0;
+                else if (moves.moves[i][j].movedPosition == 0x0000000000000001)
+                    boardState->castlingFlags[0][WHITE_KINGS_SIDE] = 0;
+            }
+
+            else
+            {
+                if (moves.moves[i][j].initialPosition == 0x8000000000000000)
+                    boardState->castlingFlags[0][BLACK_QUEENS_SIDE] = 0;
+                else if (moves.moves[i][j].initialPosition == 0x0100000000000000)
+                    boardState->castlingFlags[0][BLACK_KINGS_SIDE] = 0;
+            }
+        }
+
 					//Check if Pawn moved to update Enpassant flag
 					if (moves.moves[i][j].pieceType == BOARD_TYPE_ALL_PAWN_POSITIONS
 						&& (moves.moves[i][j].movedPosition & 0x000000ffff000000)
@@ -1099,6 +1139,27 @@ Move generateMove(BoardState* boardState,
                     boardState->castlingFlags[1][WHITE_KINGS_SIDE] = 0;
             }
         }
+
+        if (firstMoves.moves[i][j].capturedPiece == BOARD_TYPE_ALL_ROOK_POSITIONS)
+        {
+            if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
+            {
+                if (firstMoves.moves[i][j].movedPosition == 0x0000000000000080)
+                     boardState->castlingFlags[0][WHITE_QUEENS_SIDE] = 0;
+                else if (firstMoves.moves[i][j].movedPosition == 0x0000000000000001)
+                    boardState->castlingFlags[0][WHITE_KINGS_SIDE] = 0;
+            }
+
+            else
+            {
+                if (firstMoves.moves[i][j].initialPosition == 0x8000000000000000)
+                    boardState->castlingFlags[0][BLACK_QUEENS_SIDE] = 0;
+                else if (firstMoves.moves[i][j].initialPosition == 0x0100000000000000)
+                    boardState->castlingFlags[0][BLACK_KINGS_SIDE] = 0;
+            }
+        }
+
+
 		//Check if Pawn moved to update Enpassant flag
 		if (firstMoves.moves[i][j].pieceType == BOARD_TYPE_ALL_PAWN_POSITIONS
 			&& (firstMoves.moves[i][j].movedPosition & 0x000000ffff000000)
@@ -1223,6 +1284,27 @@ Move generateMove(BoardState* boardState,
                     boardState->castlingFlags[0][WHITE_KINGS_SIDE] = 0;
             }
         }
+
+        //if rook is captured, update castling flags
+        if (move.capturedPiece == BOARD_TYPE_ALL_ROOK_POSITIONS)
+        {
+            if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
+            {
+                if (move.movedPosition == 0x0000000000000080)
+                     boardState->castlingFlags[0][WHITE_QUEENS_SIDE] = 0;
+                else if (move.movedPosition == 0x0000000000000001)
+                    boardState->castlingFlags[0][WHITE_KINGS_SIDE] = 0;
+            }
+
+            else
+            {
+                if (move.initialPosition == 0x8000000000000000)
+                    boardState->castlingFlags[0][BLACK_QUEENS_SIDE] = 0;
+                else if (move.initialPosition == 0x0100000000000000)
+                    boardState->castlingFlags[0][BLACK_KINGS_SIDE] = 0;
+            }
+        }
+
 	if (move.pieceType == BOARD_TYPE_ALL_PAWN_POSITIONS
 			&& (move.movedPosition & 0x000000ffff000000)
 			&& (move.initialPosition & 0x00ff00000000ff00))
