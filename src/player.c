@@ -581,7 +581,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
     		move.enpassant = 0;
     		move.pieceType =   BOARD_TYPE_ALL_KING_POSITIONS;
     		move.capturedPiece = 0;
-            chessGame->boardState->castlingFlags[0][BlACK_QUEENS_SIDE] = 0;
+            chessGame->boardState->castlingFlags[0][BLACK_QUEENS_SIDE] = 0;
 		fprintf(file, "Xboard: Performed castling!\n");
 	}
 
@@ -596,7 +596,62 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
     		move.capturedPiece = findCapturedPiece(chessGame->boardState, movedPiece, color);
 	}
 
+//update castling flags if user moved a king
+	if (move.pieceType == BOARD_TYPE_ALL_KING_POSITIONS)
+    {
+        if (color == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
+        {
+            chessGame->boardState->castlingFlags[0][BLACK_QUEENS_SIDE] = 0;
+            chessGame->boardState->castlingFlags[0][BLACK_KINGS_SIDE] = 0;
 
+        }
+
+        else
+        {
+            chessGame->boardState->castlingFlags[0][WHITE_QUEENS_SIDE] = 0;
+            chessGame->boardState->castlingFlags[0][WHITE_KINGS_SIDE] = 0;
+        }
+    }
+
+    //check if user moved rook to update flags
+
+        if (move.pieceType == BOARD_TYPE_ALL_ROOK_POSITIONS)
+        {
+            if (color == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
+            {
+                if (move.initialPosition == 0x8000000000000000)
+                    chessGame->boardState->castlingFlags[0][BLACK_QUEENS_SIDE] = 0;
+                else if (move.initialPosition == 0x0100000000000000)
+                    chessGame->boardState->castlingFlags[0][BLACK_KINGS_SIDE] = 0;
+            }
+            else //white
+            {
+                if (move.initialPosition == 0x0000000000000080)
+                    chessGame->boardState->castlingFlags[0][WHITE_QUEENS_SIDE] = 0;
+                else if (move.initialPosition == 0x0000000000000001)
+                    chessGame->boardState->castlingFlags[0][WHITE_KINGS_SIDE] = 0;
+            }
+        }
+
+        //if user captured rook, update castling flags
+        if (move.capturedPiece == BOARD_TYPE_ALL_ROOK_POSITIONS)
+        {
+            if (color == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
+            {
+                if (move.movedPosition == 0x0000000000000080)
+                     chessGame->boardState->castlingFlags[0][WHITE_QUEENS_SIDE] = 0;
+                else if (move.movedPosition == 0x0000000000000001)
+                    chessGame->boardState->castlingFlags[0][WHITE_KINGS_SIDE] = 0;
+            }
+
+            else
+            {
+                if (move.initialPosition == 0x8000000000000000)
+                    chessGame->boardState->castlingFlags[0][BLACK_QUEENS_SIDE] = 0;
+                else if (move.initialPosition == 0x0100000000000000)
+                    chessGame->boardState->castlingFlags[0][BLACK_KINGS_SIDE] = 0;
+            }
+        }
 
     updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, color, move.pieceType, move.castling, move.enpassant, move.capturedPiece, 0);
 
@@ -709,7 +764,7 @@ void playerPlayChess(ChessGame* chessGame)
 
   //setBoardStateWithFEN(chessGame->slothChessEngine, "rnb1k1nr/pp3ppp/2p2q2/2bpp3/4P2P/2N2N2/PPPP1PPR/R1BQKB2");
 
-  runXboard(chessGame);
+  //runXboard(chessGame);
 
 
 
