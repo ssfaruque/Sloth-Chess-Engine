@@ -375,7 +375,41 @@ int pieceSquareEval(BoardState* boardState)
 int bishopPairEval(BoardState* boardState)
 {
   int score = 0;
+  int numBishops = 0;
 
+  Bitboard whiteBishops = boardState->boards[BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS] & boardState->boards[BOARD_TYPE_ALL_BISHOP_POSITIONS];
+
+  while(whiteBishops)
+  {
+    Bitboard isolatedPiece = whiteBishops & -whiteBishops;
+
+    ++numBishops;
+
+    // reset ls1b
+
+    whiteBishops &= whiteBishops - 1;
+  }
+
+  if(numBishops == 2)
+    score += 150;
+
+  numBishops = 0;
+
+  Bitboard blackBishops = boardState->boards[BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS] & boardState->boards[BOARD_TYPE_ALL_BISHOP_POSITIONS];
+
+  while(blackBishops)
+  {
+    Bitboard isolatedPiece = blackBishops & -blackBishops;
+
+    ++numBishops;
+
+    // reset ls1b
+
+    blackBishops &= blackBishops - 1;
+  }
+
+  if(numBishops == 2)
+    score -= 150;
 
   return score;
 }
@@ -514,7 +548,8 @@ int kingSafety(BoardState* boardState)
 
 int eval(BoardState* boardState)
 {
-  return materialEval(boardState) + centerControlEval(boardState) + pieceSquareEval(boardState) + kingSafety(boardState);
+  return materialEval(boardState) + centerControlEval(boardState) + pieceSquareEval(boardState) + kingSafety(boardState)
+   +bishopPairEval(boardState);
 }
 
 
