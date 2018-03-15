@@ -1062,7 +1062,7 @@ Move generateMove(BoardState* boardState,
       {
         // do the move
         updateBoardState(boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, firstMoves.moves[i][j].castling, firstMoves.moves[i][j].enpassant, firstMoves.moves[i][j].capturedPiece, 0);
-        firstMovesEval = eval(boardState);
+        //firstMovesEval = eval(boardState);
 
         //check if king and castle to update flags
         if (firstMoves.moves[i][j].pieceType == BOARD_TYPE_ALL_KING_POSITIONS)
@@ -1146,7 +1146,7 @@ Move generateMove(BoardState* boardState,
 
             }
 
-            score = firstMovesEval/64 + score;
+            //score = firstMovesEval/64 + score;
 
             if(score > maxScore)
             {
@@ -1168,7 +1168,7 @@ Move generateMove(BoardState* boardState,
 
             }
 
-            score = -firstMovesEval/64 + score;
+            //score = -firstMovesEval/64 + score;
 
             if(score < minScore)
             {
@@ -2353,25 +2353,25 @@ int findRow(Bitboard initialPosition)
       // if upper most
       if(initialPosition & 0xff00000000000000)
         return 8;
-      
+
       // else in 2nd upper most
       else
         return 7;
     }
-    
+
     // else in 3rd and 4th from upper most
     else
     {
       // if in 3rd from upper most
       if(initialPosition & 0x0000ff0000000000)
         return 6;
-      
+
       // else in 4th from upper most
       else
         return 5;
     }
   }
-  
+
   // else piece is in bottom half
   else
   {
@@ -2381,19 +2381,19 @@ int findRow(Bitboard initialPosition)
       // if in 5th from upper most
       if(initialPosition & 0x00000000ff000000)
         return 4;
-      
+
       // else 6th from upper most
       else
         return 3;
     }
-    
+
     // else in 7th and 8th from upper most
     else
     {
       // if 7th from upper most
       if(initialPosition & 0x000000000000ff00)
         return 2;
-      
+
       // else 8th from upper most
       else
         return 1;
