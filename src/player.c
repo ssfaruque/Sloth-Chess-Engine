@@ -668,7 +668,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
 void runXboard(ChessGame* chessGame)
 {
   const int BUFFER_SIZE = 512;
-  char buffer[BUFFER_SIZE];
+  char buffer[512];
   
   //setbuf(stdout, NULL);
   setbuf(stdin, NULL);
@@ -709,7 +709,7 @@ void playerPlayChess(ChessGame* chessGame)
 
   //setBoardStateWithFEN(chessGame->slothChessEngine, "rnb1k1nr/pp3ppp/2p2q2/2bpp3/4P2P/2N2N2/PPPP1PPR/R1BQKB2");
   
-  runXboard(chessGame);
+ // runXboard(chessGame);
   
   
 
@@ -729,7 +729,7 @@ void playerPlayChess(ChessGame* chessGame)
 
     uint64_t one = 1;
 
-    Move playerMove;
+	Move playerMove = { 0,0,0,0,0,0,0 };
     playerMove.initialPosition = (one << spaceNumInitial);
     playerMove.movedPosition = (one << spaceNumMoved);
 
@@ -763,7 +763,7 @@ void playerPlayChess(ChessGame* chessGame)
     // ------------------------------------------
 
 
-    Move move;
+    Move move = {0, 0, 0, 0, 0, 0, 0};
     move = generateMove(chessGame->boardState, engineColor, MAX_RECURSION_DEPTH);
 
 
