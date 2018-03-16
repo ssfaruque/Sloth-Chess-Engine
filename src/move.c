@@ -373,7 +373,7 @@ int isRookinCheck(BoardState* boardState, enum BitboardType colorType, enum Cast
 }
 
 /* Skeleton functions to fill out */
-
+/*
 void generateAllSlidingMoves(BoardState* boardState,
                                   Bitboard isolatedPiece,
                                   int pieceType,
@@ -707,7 +707,7 @@ void generateAllDiagonalMoves(BoardState* boardState,
 } //generate all diagonal moves
 
 
-
+*/
 
 
 int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType colorType, int depthleft)
@@ -825,7 +825,7 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
                     boardState->castlingFlags[MAX_RECURSION_DEPTH - depthleft + 1][BLACK_KINGS_SIDE] = 0;
             }
         }
-
+/*
 			if (moves.moves[i][j].pieceType == BOARD_TYPE_ALL_PAWN_POSITIONS
 						&& (moves.moves[i][j].movedPosition & 0x000000ffff000000)
 						&& (moves.moves[i][j].initialPosition & 0x00ff00000000ff00))
@@ -836,7 +836,7 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
 				}
 					else
 						boardState->enpassantFlags[MAX_RECURSION_DEPTH - depthleft + 1] = 0x0000000000000000;
-
+*/
 /*
                 if (isKingInCheck(boardState, colorType, MAX_RECURSION_DEPTH - depthleft+2)) // the player's move leaves the player's king in check
                 {
@@ -919,30 +919,7 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
 
             if (moves.moves[i][j].capturedPiece == BOARD_TYPE_ALL_KING_POSITIONS) //if the captured piece is the opponent's king
                 return 999999999; //check if opponent's king is in check
-/*
-if (moves.moves[i][j].castling)
-{
-    if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
-    {
-        if (moves.moves[i][j].castling == QUEENS_SIDE)
-            rooktoCheck = 0x1000000000000000;
-        else    //KINGS_SIDE
-            rooktoCheck = 0x0400000000000000;
-    }
 
-    else if (colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
-    {
-        if (moves.moves[i][j].castling == QUEENS_SIDE)
-            rooktoCheck = 0x0000000000000010;
-        else    //KINGS_SIDE
-            rooktoCheck = 0x0000000000000004;
-    }
-
-            if (moves.moves[i][j].capturedPiece == BOARD_TYPE_ALL_ROOK_POSITIONS
-                && moves.moves[i][j].movedPosition == rooktoCheck) //if the captured piece is the opponent's king
-                    return 999999999;
-}
- */
 
             if(moves.moves[i][j].initialPosition) //if valid
             {
@@ -1305,13 +1282,14 @@ Move generateMove(BoardState* boardState,
             }
         }
 
+        /*
 	if (move.pieceType == BOARD_TYPE_ALL_PAWN_POSITIONS
 			&& (move.movedPosition & 0x000000ffff000000)
 			&& (move.initialPosition & 0x00ff00000000ff00))
 			boardState->enpassantFlags[0] =  move.movedPosition;
 		else//if not, reset Enpassant flags
 			boardState->enpassantFlags[0] =  0x0000000000000000;
-
+*/
   return move;
 }
 
@@ -1462,6 +1440,7 @@ int pieceType = BOARD_TYPE_ALL_PAWN_POSITIONS;
                       move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
                       moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
                   }
+                  /*
 				  else if( (boardState->enpassantFlags[moveLevel-1] & (move.initialPosition << 1))
 					  ) //Potentially enpassant
 				  {
@@ -1469,7 +1448,7 @@ int pieceType = BOARD_TYPE_ALL_PAWN_POSITIONS;
 					  move.enpassant = ENPASSANT_UPLEFT;
 					  moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
 				  }
-
+                */
                   move = generateDiagonalUpRightMove(isolatedPiece, boardState, colorType, 1);
                   move.pieceType = pieceType;
 
@@ -1478,6 +1457,7 @@ int pieceType = BOARD_TYPE_ALL_PAWN_POSITIONS;
                       move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
                       moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
                   }
+                  /*
 				  else if ((boardState->enpassantFlags[moveLevel - 1] & (move.initialPosition >> 1))
 					  ) //Potentially enpassant
 				  {
@@ -1485,7 +1465,7 @@ int pieceType = BOARD_TYPE_ALL_PAWN_POSITIONS;
 					  move.enpassant = ENPASSANT_UPRIGHT;
 					  moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
 				  }
-
+                */
 
          } //if white
 
@@ -1523,7 +1503,7 @@ int pieceType = BOARD_TYPE_ALL_PAWN_POSITIONS;
                       move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
                       moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
                   }
-
+/*
 				  else if ((boardState->enpassantFlags[moveLevel - 1] & (move.initialPosition << 1))
 					  ) //Potentially enpassant
 				  {
@@ -1532,7 +1512,7 @@ int pieceType = BOARD_TYPE_ALL_PAWN_POSITIONS;
 					  moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
 
 				  }
-
+*/
 				  move = generateDiagonalDownRightMove(isolatedPiece, boardState, colorType, 1);
                   move.pieceType = pieceType;
 
@@ -1541,6 +1521,7 @@ int pieceType = BOARD_TYPE_ALL_PAWN_POSITIONS;
                       move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
                       moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
                   }
+                  /*
 				  else if ((boardState->enpassantFlags[moveLevel - 1] & (move.initialPosition >> 1))
 					  ) //Potentially enpassant
 				  {
@@ -1549,7 +1530,7 @@ int pieceType = BOARD_TYPE_ALL_PAWN_POSITIONS;
 					  moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
 
 				  }
-
+                */
             } //color black
 
 

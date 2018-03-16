@@ -13,7 +13,7 @@
 #include <stdint.h>
 #include <string.h>
 
-
+XBOARD = 1;
 
 char board[8][8];
 
@@ -537,7 +537,10 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
 
 
     	/* castling */
-	else if(strcmp(cmd, "e1g1") == 0)		/* white king's side */
+    	else if (getPieceType(initialPiece, color, chessGame->boardState) == BOARD_TYPE_ALL_KING_POSITIONS)
+{
+
+	if(strcmp(cmd, "e1g1") == 0)		/* white king's side */
 	{
     		move.initialPosition = initialPiece;
     		move.movedPosition = movedPiece;
@@ -584,7 +587,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
             chessGame->boardState->castlingFlags[0][BLACK_QUEENS_SIDE] = 0;
 		fprintf(file, "Xboard: Performed castling!\n");
 	}
-
+}
 	/* normal move */
 	else
 	{
@@ -652,6 +655,15 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
                     chessGame->boardState->castlingFlags[0][BLACK_KINGS_SIDE] = 0;
             }
         }
+
+        if (move.pieceType == BOARD_TYPE_ALL_PAWN_POSITIONS
+			&& (move.movedPosition & 0x00000000ff000000)
+			&& (move.initialPosition & 0x000000000000ff00))
+
+			chessGame->boardState->enpassantFlags[0] =  move.movedPosition;
+		else//if not, reset Enpassant flags
+			chessGame->boardState->enpassantFlags[0] =  0x0000000000000000;
+
 
     updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, color, move.pieceType, move.castling, move.enpassant, move.capturedPiece, 0);
 
@@ -764,7 +776,8 @@ void playerPlayChess(ChessGame* chessGame)
 
   //setBoardStateWithFEN(chessGame->slothChessEngine, "rnb1k1nr/pp3ppp/2p2q2/2bpp3/4P2P/2N2N2/PPPP1PPR/R1BQKB2");
 
-  runXboard(chessGame);
+  if (XBOARD)
+    runXboard(chessGame);
 
 
 
@@ -817,6 +830,27 @@ void playerPlayChess(ChessGame* chessGame)
                     chessGame->boardState->castlingFlags[0][WHITE_KINGS_SIDE] = 0;
 
         }
+
+        //if user captured rook, update castling flags
+        if (playerMove.capturedPiece == BOARD_TYPE_ALL_ROOK_POSITIONS)
+        {
+            if (playerColor == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
+            {
+                if (playerMove.movedPosition == 0x0000000000000080)
+                     chessGame->boardState->castlingFlags[0][WHITE_QUEENS_SIDE] = 0;
+                else if (playerMove.movedPosition == 0x0000000000000001)
+                    chessGame->boardState->castlingFlags[0][WHITE_KINGS_SIDE] = 0;
+            }
+
+            else
+            {
+                if (playerMove.initialPosition == 0x8000000000000000)
+                    chessGame->boardState->castlingFlags[0][BLACK_QUEENS_SIDE] = 0;
+                else if (playerMove.initialPosition == 0x0100000000000000)
+                    chessGame->boardState->castlingFlags[0][BLACK_KINGS_SIDE] = 0;
+            }
+        }
+
 
 	if (playerMove.pieceType == BOARD_TYPE_ALL_PAWN_POSITIONS
 			&& (playerMove.movedPosition & 0x00000000ff000000)
