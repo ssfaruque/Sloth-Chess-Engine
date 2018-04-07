@@ -55,6 +55,9 @@ typedef struct
  */
 void initSlothChessEngine(SlothChessEngine* engine, BoardState* boardState, enum BitboardType playerType);
 
+void setEngineColor(SlothChessEngine* engine, enum BitboardType playerType);
+
+
 
 /**
  *  @brief Cleans up all of the resources allocated for the chess engine

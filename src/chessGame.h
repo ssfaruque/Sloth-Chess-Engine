@@ -18,22 +18,12 @@ typedef struct
   int running;
   BoardState* boardState;
   SlothChessEngine* slothChessEngine;
-
 } ChessGame;
 
 
 void initChessGame(ChessGame* chessGame);
 void runChessGame(ChessGame* chessGame);
 void cleanUpChessGame(ChessGame* chessGame);
-
-
-void setBoardStateWithFEN(SlothChessEngine* engine, char* FEN);
-void playChess(ChessGame* chessGame);
-void generateFEN(SlothChessEngine* slothChessEngine);
-void printBoardGUI(BoardState* boardState);
-char getSymbol(enum BitboardType color, enum BitboardType pieceType);
-
-
 
 
 #endif /* chessGame_h */

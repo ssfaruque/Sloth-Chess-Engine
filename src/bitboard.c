@@ -86,10 +86,10 @@ void initBoardState(BoardState* boardState)
   boardState->flagState                                     = 0x0000000000000000;
 
     int i,j;
-/*Initialize Castling Flag*/  
+/*Initialize Castling Flag*/
 for (i = 0; i < MAX_RECURSION_DEPTH+1; i ++)
     for (j = 0; j < 4; j ++)
-        boardState->castlingFlags[i][j] = 1;
+        boardState->castlingFlags[i][j] = 0;
 /*Initialize Enpassant Flag*/
   for (i = 0; i < MAX_RECURSION_DEPTH + 1; i++)
 	  boardState->enpassantFlags[i] = 0x0000000000000000;
