@@ -11,6 +11,11 @@
 
 #include "xboard.h"
 
+void setEngineColor(SlothChessEngine* engine, enum BitboardType playerType)
+{
+	engine->playerType = playerType;
+}
+
 
 
 void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
@@ -277,11 +282,5 @@ void playChessWithXboard(ChessGame* chessGame)
         fclose(file);
     }
     
-}
-
-
-void setEngineColor(SlothChessEngine* engine, enum BitboardType playerType)
-{
-	engine->playerType = playerType;
 }
 
