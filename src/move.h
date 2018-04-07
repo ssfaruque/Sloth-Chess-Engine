@@ -238,9 +238,6 @@ Move generateMove(BoardState* boardState,
                   int recurseDepth);
 
 
-void generateCoreMoves(BoardState* boardState,
-	enum BitboardType colorType,
-	Moves* moves, int moveLevel);
 
 void generateAllMoves(BoardState* boardState,
                       enum BitboardType colorType,
