@@ -280,4 +280,8 @@ void playChessWithXboard(ChessGame* chessGame)
 }
 
 
+void setEngineColor(SlothChessEngine* engine, enum BitboardType playerType)
+{
+	engine->playerType = playerType;
+}
 
