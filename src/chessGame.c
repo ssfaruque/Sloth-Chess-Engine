@@ -40,7 +40,7 @@ void runChessGame(ChessGame* chessGame)
     // set new game
     setBoardStateWithFEN(chessGame->slothChessEngine, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq");
     
-    int runXboard = 1;
+    int runXboard = 0;
     
     if(runXboard)
         playChessWithXboard(chessGame);
@@ -550,7 +550,7 @@ void playChess(ChessGame* chessGame)
         
         uint64_t one = 1;
         
-        Move playerMove;
+		Move playerMove = { 0,0,0,0,0,0,0 };
         playerMove.initialPosition = (one << spaceNumInitial);
         playerMove.movedPosition = (one << spaceNumMoved);
         
@@ -584,7 +584,7 @@ void playChess(ChessGame* chessGame)
         // ------------------------------------------
         
         
-        Move move;
+		Move move = { 0,0,0,0,0,0,0 };
         move = generateMove(chessGame->boardState, engineColor, MAX_RECURSION_DEPTH);
         
         

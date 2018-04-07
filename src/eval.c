@@ -9,9 +9,11 @@
 
 
 #include "eval.h"
-
+#include "bitboard.h"
+#include "move.h"
+#define attackingPiecesCount 7
 const int weights[] = {100, 500, 300, 325, 900, 5000};
-
+const int attackWeight[attackingPiecesCount] = { 0,50,75,88,94,97,99 };
 
 
 
@@ -180,7 +182,6 @@ int countNumPieces(Bitboard bitboard)
 int materialEval(BoardState* boardState)
 {
 
-  const int NUM_PIECES = 6;
 
   int numWhitePieces[6] = {-1, -1, -1, -1, -1, -1};
   int numBlackPieces[6] = {-1, -1, -1, -1, -1, -1};
@@ -219,7 +220,7 @@ int centerControlEval(BoardState* boardState)
   int numWhitePieces = countNumPieces(whitePiecesInCenter);
   int numBlackPieces = countNumPieces(blackPiecesInCenter);
 
-  const int CENTER_CONTROL_WEIGHT = 200;
+  const int CENTER_CONTROL_WEIGHT = 100;
 
   return CENTER_CONTROL_WEIGHT * (numWhitePieces - numBlackPieces);
 }
@@ -374,15 +375,279 @@ int pieceSquareEval(BoardState* boardState)
 int bishopPairEval(BoardState* boardState)
 {
   int score = 0;
+  int numBishops = 0;
 
+  Bitboard whiteBishops = boardState->boards[BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS] & boardState->boards[BOARD_TYPE_ALL_BISHOP_POSITIONS];
+
+  while(whiteBishops)
+  {
+    Bitboard isolatedPiece = whiteBishops & -whiteBishops;
+
+    ++numBishops;
+
+    // reset ls1b
+
+    whiteBishops &= whiteBishops - 1;
+  }
+
+  if(numBishops == 2)
+    score += 150;
+
+  numBishops = 0;
+
+  Bitboard blackBishops = boardState->boards[BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS] & boardState->boards[BOARD_TYPE_ALL_BISHOP_POSITIONS];
+
+  while(blackBishops)
+  {
+    Bitboard isolatedPiece = blackBishops & -blackBishops;
+
+    ++numBishops;
+
+    // reset ls1b
+
+    blackBishops &= blackBishops - 1;
+  }
+
+  if(numBishops == 2)
+    score -= 150;
 
   return score;
 }
 
+int findKingZone(BoardState* boardState, enum BitboardType colortype)
+{
+	int64_t kingZone = 0;
+	int64_t kingPosition = 0;
+	const int MAX_KING_MOVES = 8; //no castling
+	kingPosition = boardState->boards[BOARD_TYPE_ALL_KING_POSITIONS] & boardState->boards[colortype];
+
+
+	if (colortype == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
+	{
+		Moves whiteMoves;
+		whiteMoves.numMoves[0] = whiteMoves.numMoves[1] = whiteMoves.numMoves[2] =
+		whiteMoves.numMoves[3] = whiteMoves.numMoves[4] = whiteMoves.numMoves[5] = 0;
+		generateKingMoves(boardState, kingPosition, colortype, &whiteMoves, 0);
+		for(int i = 0; i < MAX_KING_MOVES;  i++)
+		kingZone = kingZone & whiteMoves.moves[BOARD_TYPE_ALL_KING_POSITIONS - 2][i].movedPosition;
+	}
+	else
+	{
+		Moves blackMoves;
+		blackMoves.numMoves[0] = blackMoves.numMoves[1] = blackMoves.numMoves[2] =
+		blackMoves.numMoves[3] = blackMoves.numMoves[4] = blackMoves.numMoves[5] = 0;
+		generateKingMoves(boardState, kingPosition, colortype, &blackMoves, 0);
+		for (int i = 0; i < MAX_KING_MOVES; i++)
+		kingZone = kingZone & blackMoves.moves[BOARD_TYPE_ALL_KING_POSITIONS - 2][i].movedPosition;
+	}
+	return kingZone;
+
+}
+
+
+int kingSafety(BoardState* boardState)
+{
+	/*Value of attacks:
+	Queen: 80
+	Rook: 40
+	Bishop: 20
+	Knight: */
+	//(valueOfAttacks * attackWeight[attackingPiecesCount]) / 100.
+
+	int whiteAttack = 0;
+	int blackAttack = 0;
+	int totalBlackPieces = 0; int blackRook = 0; int blackQueen = 0; int blackBishop = 0; int blackKnight = 0;
+	int totalWhitePieces = 0; int whiteRook = 0; int whiteQueen = 0; int whiteBishop = 0; int whiteKnight = 0;
+	int64_t blackKingZone;
+	int64_t whiteKingZone;
+
+	/*Find Black King's zone for White*/
+	blackKingZone = findKingZone(boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS);
+	/*Find White King's zone for Black*/
+	whiteKingZone = findKingZone(boardState, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS);
+
+	Moves blackMoves;
+	blackMoves.numMoves[0] = blackMoves.numMoves[1] = blackMoves.numMoves[2] =
+	blackMoves.numMoves[3] = blackMoves.numMoves[4] = blackMoves.numMoves[5] = 0;
+	generateCoreMoves(boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, &blackMoves, 0);
+	for (int i = 0; i < NUM_PIECES; i++)
+	{
+		for (int j = 0; j < MAX_NUM_MOVES; j++)
+		{
+			switch (i)
+			{
+			case (BOARD_TYPE_ALL_BISHOP_POSITIONS - 2):
+				if (blackMoves.moves[i][j].movedPosition & whiteKingZone)
+					blackBishop++;
+				break;
+			case (BOARD_TYPE_ALL_ROOK_POSITIONS - 2):
+				if (blackMoves.moves[i][j].movedPosition & whiteKingZone)
+					blackRook++;
+				break;
+			case (BOARD_TYPE_ALL_QUEEN_POSITIONS - 2):
+				if (blackMoves.moves[i][j].movedPosition & whiteKingZone)
+					blackQueen++;
+				break;
+			case (BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2):
+				if (blackMoves.moves[i][j].movedPosition & whiteKingZone)
+					blackKnight++;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	Moves whiteMoves;
+	whiteMoves.numMoves[0] = whiteMoves.numMoves[1] = whiteMoves.numMoves[2] =
+	whiteMoves.numMoves[3] = whiteMoves.numMoves[4] = whiteMoves.numMoves[5] = 0;
+	generateCoreMoves(boardState, BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS, &whiteMoves, 0);
+	for (int i = 0; i < NUM_PIECES; i++)
+	{
+		for (int j = 0; j < MAX_NUM_MOVES; j++)
+		{
+			switch (i)
+			{
+			case (BOARD_TYPE_ALL_BISHOP_POSITIONS - 2):
+				if (whiteMoves.moves[i][j].movedPosition & blackKingZone)
+					whiteBishop++;
+				break;
+			case (BOARD_TYPE_ALL_ROOK_POSITIONS - 2):
+				if (whiteMoves.moves[i][j].movedPosition & blackKingZone)
+					whiteRook++;
+				break;
+			case (BOARD_TYPE_ALL_QUEEN_POSITIONS - 2):
+				if (whiteMoves.moves[i][j].movedPosition & blackKingZone)
+					whiteQueen++;
+				break;
+			case (BOARD_TYPE_ALL_KNIGHT_POSITIONS - 2):
+				if (whiteMoves.moves[i][j].movedPosition & blackKingZone)
+					whiteKnight++;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	totalBlackPieces = blackBishop + blackKnight + blackQueen + blackRook;
+	totalWhitePieces = whiteBishop + whiteKnight + whiteQueen + whiteRook;
+	whiteAttack = (
+		(20 * whiteKnight * attackWeight[totalWhitePieces]) +
+		(20 * whiteBishop * attackWeight[totalWhitePieces]) +
+		(40 * whiteRook * attackWeight[totalWhitePieces])  +
+		(40 * whiteQueen * attackWeight[totalWhitePieces])
+	) / 100;
+	blackAttack = (
+		(20 * blackKnight * attackWeight[totalBlackPieces]) +
+		(20 * blackBishop * attackWeight[totalBlackPieces]) +
+		(40 * blackRook * attackWeight[totalBlackPieces]) +
+		(40 * blackQueen * attackWeight[totalBlackPieces])
+		) / 100;
+
+	return whiteAttack - blackAttack;
+}
+
+int isPawnInCol(Bitboard colorPawn, int col)
+{
+    colorPawn = colorPawn >> (16 - col);
+    if ((colorPawn % 2) == 1)
+        return 1;
+
+    colorPawn = colorPawn >> 8;
+    if ((colorPawn % 2) == 1)
+        return 1;
+
+    colorPawn = colorPawn >> 8;
+    if ((colorPawn % 2) == 1)
+        return 1;
+
+    colorPawn = colorPawn >> 8;
+    if ((colorPawn % 2) == 1)
+        return 1;
+
+    colorPawn = colorPawn >> 8;
+    if ((colorPawn % 2) == 1)
+        return 1;
+
+    colorPawn = colorPawn >> 8;
+    if ((colorPawn % 2) == 1)
+        return 1;
+
+    return 0;
+}
+
+
+int pawnIslandEval(BoardState* boardState)
+{
+    //white
+    Bitboard whitePawns = boardState->boards[BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS] & boardState->boards[BOARD_TYPE_ALL_PAWN_POSITIONS];
+    int i;
+    uint16_t fileSet = 0; //8 bits
+    uint16_t westFiles = 0; //8 bits
+    uint16_t isolated = 0;
+    int num_white_islands = 0;
+
+    for (i = 1; i < 8; i ++)
+    {
+        if (isPawnInCol(whitePawns, i))
+            fileSet += 1;
+        fileSet = fileSet << 1;
+    }
+
+    if (isPawnInCol(whitePawns, 8))
+            fileSet += 1;
+
+    westFiles = fileSet & ~(fileSet << 1);
+
+    while (westFiles)
+    {
+            isolated = westFiles & ~westFiles;
+            num_white_islands ++;
+            westFiles &= westFiles - 1;
+    }
+
+
+
+
+    Bitboard blackPawns = boardState->boards[BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS] & boardState->boards[BOARD_TYPE_ALL_PAWN_POSITIONS];
+
+    fileSet = 0; //8 bits
+    westFiles = 0; //8 bits
+    isolated = 0;
+    int num_black_islands = 0;
+
+    for (i = 1; i < 8; i ++)
+    {
+        if (isPawnInCol(blackPawns, i))
+            fileSet += 1;
+        fileSet = fileSet << 1;
+    }
+
+    if (isPawnInCol(blackPawns, 8))
+            fileSet += 1;
+
+    westFiles = fileSet & ~(fileSet << 1);
+
+    while (westFiles)
+    {
+            isolated = westFiles & ~westFiles;
+            num_black_islands ++;
+            westFiles &= westFiles - 1;
+    }
+
+    // fewer islands, better
+    int diff = num_black_islands - num_white_islands;
+
+    return diff*20;
+
+}
+
+
+
 
 int eval(BoardState* boardState)
 {
-  return materialEval(boardState) + centerControlEval(boardState) + pieceSquareEval(boardState);
+  return materialEval(boardState) + centerControlEval(boardState) + pieceSquareEval(boardState)
+   +bishopPairEval(boardState) + pawnIslandEval(boardState);
 }
 
 

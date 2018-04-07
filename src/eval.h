@@ -84,8 +84,8 @@ int pieceSquareEval(BoardState* boardState);
 
 int bishopPairEval(BoardState* boardState);
 
-
-
+int kingSafety(BoardState* boardState);
+int findKingZone(BoardState* boardState, enum BitboardType colortype);
 
 /**
  *  @brief Finds a value based on the current state of the game

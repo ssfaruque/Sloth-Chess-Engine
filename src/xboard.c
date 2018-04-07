@@ -95,7 +95,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
 void playChessWithXboard(ChessGame* chessGame)
 {
     const int BUFFER_SIZE = 512;
-    char buffer[BUFFER_SIZE];
+    char buffer[512];
     
     FILE* file = fopen("xboard_debug.txt", "w");
     fclose(file);
