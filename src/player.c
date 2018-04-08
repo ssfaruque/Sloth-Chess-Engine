@@ -13,7 +13,7 @@
 #include <stdint.h>
 #include <string.h>
 
-static int XBOARD = 1;
+static int XBOARD = 0;
 
 char board[8][8];
 
@@ -693,6 +693,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
 
     fprintf(file, "Engine (produced): initial->%lu, moved->%lu\n", move.initialPosition, move.movedPosition);
     fprintf(file, "Engine (sent): %s\n", sendMove);
+	fclose(file);
     printf("%s\n", sendMove);
 
 
