@@ -13,7 +13,7 @@
 #include <stdint.h>
 #include <string.h>
 
-static int XBOARD = 0;
+static int XBOARD = 1;
 
 char board[8][8];
 
@@ -537,7 +537,9 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
 
 
     	/* castling */
-    	else if (getPieceType(initialPiece, color, chessGame->boardState) == BOARD_TYPE_ALL_KING_POSITIONS)
+    	else if (getPieceType(initialPiece, color, chessGame->boardState) == BOARD_TYPE_ALL_KING_POSITIONS
+			&& (strcmp(cmd, "e1g1") == 0 || strcmp(cmd, "e1c1") == 0 || strcmp(cmd, "e8g8") == 0 || strcmp(cmd, "e8c8") == 0)
+			)
 {
 
 	if(strcmp(cmd, "e1g1") == 0)		/* white king's side */
@@ -693,7 +695,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
 
     fprintf(file, "Engine (produced): initial->%lu, moved->%lu\n", move.initialPosition, move.movedPosition);
     fprintf(file, "Engine (sent): %s\n", sendMove);
-	fclose(file);
+	
     printf("%s\n", sendMove);
 
 
