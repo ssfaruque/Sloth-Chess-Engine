@@ -505,39 +505,27 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
 
 	Move move;
 	Bitboard initialPiece = ((int64_t)1) << ((beforeRow  - 1) * 8 + (8 - beforeCol));
-    	Bitboard movedPiece = ((int64_t)1) << ((afterRow  - 1) * 8 + (8 - afterCol));
+    Bitboard movedPiece = ((int64_t)1) << ((afterRow  - 1) * 8 + (8 - afterCol));
 
 	int color = chessGame->slothChessEngine->playerType;
 
     /* pawn promotion (NOT FINISHED)*/
-    if(strlen(cmd) == 5)
+    if( (cmd[3] == 1 || cmd[3] == 8) && getPieceType(initialPiece, color, chessGame->boardState) 
+		== BOARD_TYPE_ALL_PAWN_POSITIONS)
     {
-    	char pieceChar = cmd[4];
-	int promotedPiece = -1;
-
-	switch(promotedPiece)
-	{
-		case 'n':
-		promotedPiece = BOARD_TYPE_ALL_KNIGHT_POSITIONS;
-		break;
-
-		case 'b':
 		promotedPiece = BOARD_TYPE_ALL_BISHOP_POSITIONS;
-		break;
-
-		case 'r':
-		promotedPiece = BOARD_TYPE_ALL_ROOK_POSITIONS;
-		break;
-
-		case 'q':
-		promotedPiece = BOARD_TYPE_ALL_QUEEN_POSITIONS;
-		break;
-	}
+		move.initialPosition = initialPiece;
+		move.movedPosition = movedPiece;
+		move.castling = 0;
+		move.enpassant = 0;
+		move.pieceType = getPieceType(initialPiece, color, chessGame->boardState);
+		move.capturedPiece = findCapturedPiece(chessGame->boardState, movedPiece, color);
+	
     }
 
 
     	/* castling */
-    	else if (getPieceType(initialPiece, color, chessGame->boardState) == BOARD_TYPE_ALL_KING_POSITIONS
+	else if (getPieceType(initialPiece, color, chessGame->boardState) == BOARD_TYPE_ALL_KING_POSITIONS
 			&& (strcmp(cmd, "e1g1") == 0 || strcmp(cmd, "e1c1") == 0 || strcmp(cmd, "e8g8") == 0 || strcmp(cmd, "e8c8") == 0)
 			)
 {
@@ -593,7 +581,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
 	/* normal move */
 	else
 	{
-    		move.initialPosition = initialPiece;
+    	move.initialPosition = initialPiece;
   	 	move.movedPosition = movedPiece;
    	 	move.castling = 0;
    		move.enpassant = 0;
