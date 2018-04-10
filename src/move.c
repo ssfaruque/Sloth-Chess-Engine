@@ -150,9 +150,10 @@ int updateBoardState(BoardState* boardState,
 			  boardState->boards[colorType] = ((boardState->boards[colorType] ^ movedPiece) | initialPiece);
 			  boardState->boards[!colorType] = ((boardState->boards[!colorType]) | movedPiece);
 			  boardState->boards[pieceType] = (boardState->boards[pieceType] | initialPiece);
-			  boardState->boards[capturedPiece] = (boardState->boards[capturedPiece]) | movedPiece;
 			  boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] =
 				  (boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] ^ movedPiece);
+			  boardState->boards[capturedPiece] = (boardState->boards[capturedPiece]) | movedPiece;
+			
 
 		  } //Promote capture undo
 

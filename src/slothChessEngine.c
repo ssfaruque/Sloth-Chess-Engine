@@ -18,7 +18,7 @@ void initSlothChessEngine(SlothChessEngine* engine, BoardState* boardState, enum
 
     //initial
     setBoardStateWithFEN(engine, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq");
-//setBoardStateWithFEN(engine, "rnb1kbnr/ppp3pp/8/8/2N2p2/3P4/PP1P1PqP/RNBQKR2 w Qkq");
+//setBoardStateWithFEN(engine, "rnb1kbnr/pp2qppp/2p5/3p4/3Pp3/3BPN2/PPP2PPP/RNBQK2R w KQkq");
 
 }
 
