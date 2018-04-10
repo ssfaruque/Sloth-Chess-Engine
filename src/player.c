@@ -513,7 +513,6 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
     if( (cmd[3] == 1 || cmd[3] == 8) && getPieceType(initialPiece, color, chessGame->boardState) 
 		== BOARD_TYPE_ALL_PAWN_POSITIONS)
     {
-		promotedPiece = BOARD_TYPE_ALL_BISHOP_POSITIONS;
 		move.initialPosition = initialPiece;
 		move.movedPosition = movedPiece;
 		move.castling = 0;
