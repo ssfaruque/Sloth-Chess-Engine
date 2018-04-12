@@ -764,8 +764,8 @@ void playerPlayChess(ChessGame* chessGame)
   int playerColor = BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS;
   int engineColor = BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS;
 
-  //setBoardStateWithFEN(chessGame->slothChessEngine, "rnb1k1nr/pp3ppp/2p2q2/2bpp3/4P2P/2N2N2/PPPP1PPR/R1BQKB2");
-if (XBOARD)
+  //setBoardStateWithFEN(chessGame->slothChessEngine, "1n6/5k1K/8/2n5/8/8/1p6/8 w -");
+if (0)
     runXboard(chessGame);
 
 
@@ -805,7 +805,7 @@ if (XBOARD)
                 playerMove.castling = KINGS_SIDE;
 
             else if (playerMove.movedPosition == playerMove.initialPosition << 2)
-                playerMove.castling = KINGS_SIDE;
+                playerMove.castling = QUEENS_SIDE;
         }
 
         //check if rook to update flags
