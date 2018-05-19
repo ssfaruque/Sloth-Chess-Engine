@@ -16,7 +16,7 @@
 #include <time.h>
 
 
-#define NUM_TABLE_ENTRIES 10000000
+#define NUM_TABLE_ENTRIES 8388608
 
 
 typedef struct
@@ -135,13 +135,15 @@ void initTransTable()
 void addToTable(BoardState* boardState, int eval)
 {
     uint64_t hashVal = genHash(boardState);
-    int index = hashVal % NUM_TABLE_ENTRIES;
-
-    if(table.entries[index].eval == TABLE_ENTRY_INVALID)
-    {
+    //int index = hashVal % NUM_TABLE_ENTRIES;
+    int index = hashVal & 0x00000000007fffff;
+    
+    
+    //if(table.entries[index].eval == TABLE_ENTRY_INVALID)
+    //{
         table.entries[index].hashVal = hashVal;
         table.entries[index].eval = eval;
-    }
+    //}
 }
 
 

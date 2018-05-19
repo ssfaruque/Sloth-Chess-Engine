@@ -20,7 +20,7 @@
 
 
 void initChessGame(ChessGame* chessGame)
-{    
+{
   chessGame->running = 0;
 
   chessGame->boardState = (BoardState*) malloc(sizeof(BoardState));
@@ -38,6 +38,8 @@ void runChessGame(ChessGame* chessGame)
   playerPlayChess(chessGame);
 
   //setBoardStateWithFEN(chessGame->slothChessEngine, "rnb1k1nr/pp1p1ppp/2p5/4P3/1q2PP2/3Q2PN/PKP4P/RN3B1R w kq");
+
+#if 0
 
   Move move;
 
@@ -83,7 +85,7 @@ void runChessGame(ChessGame* chessGame)
 
 
   }
-    
+
 
   /*
 	Move move;
@@ -104,11 +106,10 @@ void runChessGame(ChessGame* chessGame)
 	updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS, BOARD_TYPE_ALL_PAWN_POSITIONS, 0, BOARD_TYPE_ALL_KNIGHT_POSITIONS, 1);
 	printBoardState(chessGame->boardState);
 */
-
+#endif
 
 }
 
 void cleanUpChessGame(ChessGame* chessGame)
 {
 }
-

@@ -511,7 +511,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
 	int color = chessGame->slothChessEngine->playerType;
 
     /* pawn promotion (NOT FINISHED)*/
-    if( (cmd[3] == 1 || cmd[3] == 8) && getPieceType(initialPiece, color, chessGame->boardState) 
+    if( (cmd[3] == 1 || cmd[3] == 8) && getPieceType(initialPiece, color, chessGame->boardState)
 		== BOARD_TYPE_ALL_PAWN_POSITIONS)
     {
 		move.initialPosition = initialPiece;
@@ -520,7 +520,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
 		move.enpassant = 0;
 		move.pieceType = getPieceType(initialPiece, color, chessGame->boardState);
 		move.capturedPiece = findCapturedPiece(chessGame->boardState, movedPiece, color);
-	
+
     }
 
 
@@ -683,7 +683,7 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
 
     fprintf(file, "Engine (produced): initial->%lu, moved->%lu\n", move.initialPosition, move.movedPosition);
     fprintf(file, "Engine (sent): %s\n", sendMove);
-	
+
     printf("%s\n", sendMove);
 
 
@@ -759,7 +759,8 @@ void runXboard(ChessGame* chessGame)
 void playerPlayChess(ChessGame* chessGame)
 {
     double totalEngineTime = 0.0;
-    
+    double averageTimePerTurn = 0.0;
+
   int i = 0;
 
   char moveString[10];
@@ -768,15 +769,17 @@ void playerPlayChess(ChessGame* chessGame)
   int engineColor = BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS;
 
   //setBoardStateWithFEN(chessGame->slothChessEngine, "1n6/5k1K/8/2n5/8/8/1p6/8 w -");
-if (0)
+if (1)
     runXboard(chessGame);
 
 
 
-  printBoardGUI(chessGame->boardState);
+  //printBoardGUI(chessGame->boardState);
 
   while(1)
   {
+
+    #if 0
     printf("Turn white %d\n", chessGame->slothChessEngine->turn);
 
     generateFEN(chessGame->slothChessEngine);
@@ -871,28 +874,95 @@ if (0)
 
     i++;
     chessGame->slothChessEngine->turn++;
+#endif
+
+/*if(chessGame->slothChessEngine->turn >= 50)
+{
+  printf("Average time per move is %lf seconds\n", averageTimePerTurn);
+  break;
+}*/
 
 
+
+engineColor = BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS;
+
+
+chessGame->slothChessEngine->turn++;
+
+
+printf("Turn white %d\n", chessGame->slothChessEngine->turn);
+
+generateFEN(chessGame->slothChessEngine);
+printf("%s\n", chessGame->slothChessEngine->FEN);
+printBoardGUI(chessGame->boardState);
+
+
+Move move = {0, 0, 0, 0, 0, 0, 0};
+
+  startTimer();
+
+  move = generateMove(chessGame->boardState, engineColor, MAX_RECURSION_DEPTH);
+
+  double elapsedTime = getElapsedTime();
+  totalEngineTime += elapsedTime;
+  averageTimePerTurn = totalEngineTime  / chessGame->slothChessEngine->turn;
+
+  printf("Generating Move took %lf seconds\n", elapsedTime);
+  printf("Average time per move is %lf seconds\n", averageTimePerTurn);
+
+
+
+if(isKingInCheck(chessGame->boardState, engineColor, 1))
+{
+  if(move.initialPosition == 0)
+  {
+    printf("Checkmate, white loses\n");
+    break;
+  }
+}
+
+
+updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, engineColor,
+move.pieceType, move.castling, move.enpassant, move.capturedPiece, 0);
+
+
+printf("Score = %d\n", eval(chessGame->boardState));
+printf("Piece type: %c\n", getSymbol(engineColor, move.pieceType));
+printf("Captured piece type: %c\n", getSymbol(!engineColor, move.capturedPiece));
 
 
 
     // ------------------------------------------
 
+
+    engineColor = BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS;
+
+
     chessGame->slothChessEngine->turn++;
-      
-    Move move = {0, 0, 0, 0, 0, 0, 0};
-      
+
+
+    printf("Turn black: %d\n", chessGame->slothChessEngine->turn);
+
+
+    generateFEN(chessGame->slothChessEngine);
+    printf("%s\n", chessGame->slothChessEngine->FEN);
+    printBoardGUI(chessGame->boardState);
+
+
+
+      //move = {0, 0, 0, 0, 0, 0, 0};
+
       startTimer();
-      
-    move = generateMove(chessGame->boardState, engineColor, MAX_RECURSION_DEPTH);
-    
-      double elapsedTime = getElapsedTime();
+
+      move = generateMove(chessGame->boardState, engineColor, MAX_RECURSION_DEPTH);
+
+      elapsedTime = getElapsedTime();
       totalEngineTime += elapsedTime;
-      double averageTimePerTurn = totalEngineTime  / (chessGame->slothChessEngine->turn / 2);
-      
+      averageTimePerTurn = totalEngineTime  / chessGame->slothChessEngine->turn;
+
       printf("Generating Move took %lf seconds\n", elapsedTime);
       printf("Average time per move is %lf seconds\n", averageTimePerTurn);
-      
+
 
 
     if(isKingInCheck(chessGame->boardState, engineColor, 1))
@@ -908,12 +978,10 @@ if (0)
     updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, engineColor,
 		move.pieceType, move.castling, move.enpassant, move.capturedPiece, 0);
 
-    
 
-    printf("Turn black: %d\n", chessGame->slothChessEngine->turn);
     printf("Score = %d\n", eval(chessGame->boardState));
     printf("Piece type: %c\n", getSymbol(engineColor, move.pieceType));
-    printf("Captured piece type: %c\n", getSymbol(playerColor, move.capturedPiece));
+    printf("Captured piece type: %c\n", getSymbol(!engineColor, move.capturedPiece));
 
     // ---------------------------------------------
 

@@ -157,7 +157,7 @@ int updateBoardState(BoardState* boardState,
 			  boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] =
 				  (boardState->boards[BOARD_TYPE_ALL_QUEEN_POSITIONS] ^ movedPiece);
 			  boardState->boards[capturedPiece] = (boardState->boards[capturedPiece]) | movedPiece;
-			
+
 
 		  } //Promote capture undo
 
@@ -384,15 +384,7 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
 {
     if (depthleft == 0)
     {
-        
         int evalScore = eval(boardState);
-        
-#if USE_TRANS_TABLE
-        
-        addToTable(boardState, evalScore);
-        
-#endif
-        
         return evalScore;
     }
 
@@ -418,25 +410,33 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
     {
         for(j = 0; j < moves.numMoves[i]; ++j)
         {
-            
-#if USE_TRANS_TABLE
-            
-            int tableVal = findInTable(boardState);
-            
-            if(tableVal != TABLE_ENTRY_INVALID)
-                return tableVal;
-            
-#endif
 
-            
-    
-    
             if (moves.moves[i][j].capturedPiece == BOARD_TYPE_ALL_KING_POSITIONS) //if the captured piece is the opponent's rook
                 return -999999999; //check if opponent's king is in check
 
 
             if(moves.moves[i][j].initialPosition) //if valid
             {
+                
+                
+#if USE_TRANS_TABLE
+                
+                int tableVal = findInTable(boardState);
+                
+                if(tableVal != TABLE_ENTRY_INVALID)
+                {
+                    score = tableVal;
+                }
+                
+                else
+                {
+
+#endif
+                
+                
+                
+                
+                
                 updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant ,moves.moves[i][j].capturedPiece, 0);
                 //moveEval = eval(boardState);
 
@@ -512,6 +512,15 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
 
                 //score = moveEval + alphaBetaMin(boardState, alpha, beta, !colorType, depthleft - 1);
                 score = alphaBetaMin(boardState, alpha, beta, !colorType, depthleft - 1);
+                    
+                    
+#if USE_TRANS_TABLE
+                    
+                addToTable(boardState, score);
+                    
+#endif
+                    
+                    
 
                 if (score == 999999999)
                 {
@@ -523,29 +532,43 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
 
 
                 updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant, moves.moves[i][j].capturedPiece, 1);
+                    
+                    
+                    
+#if USE_TRANS_TABLE
+                    
+                }
+#endif
+                    
+                    
+                    
 
                 if (score >= beta)
                     return beta;
-
+                
+                
+                
                 if (score > alpha)
                     alpha = score;
             }
         }
     }
+    
 
     return alpha;
 }
+
 
 int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType colorType, int depthleft)
 {
     if (depthleft == 0)
     {
         int evalScore = eval(boardState);
-        
+
 #if USE_TRANS_TABLE
-        
+
         addToTable(boardState, evalScore);
-        
+
 #endif
         return evalScore;
     }
@@ -574,22 +597,28 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
     {
         for(j = 0; j < moves.numMoves[i]; ++j)
         {
-            
-#if USE_TRANS_TABLE
-            
-            int tableVal = findInTable(boardState);
-            
-            if(tableVal != TABLE_ENTRY_INVALID)
-                return tableVal;
-#endif
-            
-
             if (moves.moves[i][j].capturedPiece == BOARD_TYPE_ALL_KING_POSITIONS) //if the captured piece is the opponent's king
                 return 999999999; //check if opponent's king is in check
 
 
             if(moves.moves[i][j].initialPosition) //if valid
             {
+                
+#if USE_TRANS_TABLE
+                
+                int tableVal = findInTable(boardState);
+                
+                if(tableVal != TABLE_ENTRY_INVALID)
+                {
+                    score = tableVal;
+                }
+                
+                else
+                {
+                    
+#endif
+                
+                
                 updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant, moves.moves[i][j].capturedPiece, 0);
                 //moveEval = eval(boardState);
                     //check if king and castle to update flags
@@ -675,6 +704,16 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
 
                 //score = moveEval + alphaBetaMax(boardState, alpha, beta, !colorType, depthleft - 1);
                 score = alphaBetaMax(boardState, alpha, beta, !colorType, depthleft - 1);
+                    
+                    
+                    
+#if USE_TRANS_TABLE
+                    
+                addToTable(boardState, score);
+                    
+#endif
+                    
+                    
 
                 if (score == -999999999)
                 {
@@ -685,6 +724,13 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
                 }
 
                 updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant, moves.moves[i][j].capturedPiece, 1);
+                    
+                    
+#if USE_TRANS_TABLE
+                    
+                }
+#endif
+                
 
                 if (score <= alpha)
                     return alpha;
@@ -846,7 +892,7 @@ Move generateMove(BoardState* boardState,
         {
             score = alphaBetaMax(boardState, alpha, beta, !colorType, recurseDepth - 1);
 
-            
+
             if (score == -999999999)
             {
             //don't recurse down, undo and go to next move
@@ -933,10 +979,10 @@ Move generateMove(BoardState* boardState,
 
 #if USE_TRANS_TABLE
 
-  clearTable();
-    
+  //clearTable();
+
 #endif
-    
+
   return move;
 }
 
@@ -1006,7 +1052,7 @@ void generateAllMoves(BoardState* boardState,
   generateAllKingMoves(boardState, colorType, moves, moveLevel);
 
   orderCaptureMoves(moves);
-  
+
 }
 
 void generateCoreMoves(BoardState* boardState,
@@ -2136,8 +2182,3 @@ int isKingInCheck(BoardState* boardState, enum BitboardType colorType, int moveL
 
   return 0;
 }
-
-
-
-
-
