@@ -135,8 +135,8 @@ void initTransTable()
 void addToTable(BoardState* boardState, int eval)
 {
     uint64_t hashVal = genHash(boardState);
-    //int index = hashVal % NUM_TABLE_ENTRIES;
-    int index = hashVal & 0x00000000007fffff;
+    int index = hashVal % NUM_TABLE_ENTRIES;
+    //int index = hashVal & 0x00000000007fffff;
     
     
     //if(table.entries[index].eval == TABLE_ENTRY_INVALID)
@@ -157,6 +157,7 @@ int findInTable(BoardState* boardState)
 {
     uint64_t hashVal = genHash(boardState);
     int index = hashVal % NUM_TABLE_ENTRIES;
+    //int index = hashVal & 0x00000000007fffff;
 
     if(table.entries[index].hashVal == hashVal)
     {

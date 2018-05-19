@@ -385,6 +385,14 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
     if (depthleft == 0)
     {
         int evalScore = eval(boardState);
+        
+#if USE_TRANS_TABLE
+        
+        addToTable(boardState, evalScore);
+        
+#endif
+        
+        
         return evalScore;
     }
 
@@ -419,6 +427,16 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
             {
                 
                 
+
+                
+                
+                
+                
+                
+                updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant ,moves.moves[i][j].capturedPiece, 0);
+                //moveEval = eval(boardState);
+                
+                
 #if USE_TRANS_TABLE
                 
                 int tableVal = findInTable(boardState);
@@ -430,15 +448,8 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
                 
                 else
                 {
-
+                    
 #endif
-                
-                
-                
-                
-                
-                updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant ,moves.moves[i][j].capturedPiece, 0);
-                //moveEval = eval(boardState);
 
 
                     //check if king and castle to update flags
@@ -529,16 +540,19 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
                     continue;
 
                 }
-
-
-                updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant, moves.moves[i][j].capturedPiece, 1);
-                    
                     
                     
 #if USE_TRANS_TABLE
                     
                 }
 #endif
+
+
+                updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant, moves.moves[i][j].capturedPiece, 1);
+                    
+                    
+                    
+
                     
                     
                     
@@ -604,6 +618,10 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
             if(moves.moves[i][j].initialPosition) //if valid
             {
                 
+                
+                updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant, moves.moves[i][j].capturedPiece, 0);
+                
+                
 #if USE_TRANS_TABLE
                 
                 int tableVal = findInTable(boardState);
@@ -619,7 +637,10 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
 #endif
                 
                 
-                updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant, moves.moves[i][j].capturedPiece, 0);
+                
+                
+                
+                
                 //moveEval = eval(boardState);
                     //check if king and castle to update flags
                     if (moves.moves[i][j].pieceType == BOARD_TYPE_ALL_KING_POSITIONS)
@@ -722,14 +743,19 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
                     continue;
 
                 }
-
-                updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant, moves.moves[i][j].capturedPiece, 1);
+                    
                     
                     
 #if USE_TRANS_TABLE
                     
                 }
 #endif
+                
+
+                updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant, moves.moves[i][j].capturedPiece, 1);
+                    
+                    
+
                 
 
                 if (score <= alpha)
