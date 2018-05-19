@@ -25,7 +25,7 @@
 #define slothChessEngine_h
 
 #include "bitboard.h"
-#include "move.h"
+#include "transpositionTable.h"
 
 #define MAX_FEN_LENGTH 100
 

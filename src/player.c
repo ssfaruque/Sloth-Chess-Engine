@@ -10,6 +10,9 @@
 
 #include "slothChessEngine.h"
 
+#include "timer.h"
+
+
 #include <stdint.h>
 #include <string.h>
 
@@ -412,8 +415,6 @@ void setBoardStateWithFEN(SlothChessEngine* engine, char* FEN)
 
 
 
-
-
 char getSymbol(enum BitboardType color, enum BitboardType pieceType)
 {
   char offset = 0;
@@ -757,6 +758,8 @@ void runXboard(ChessGame* chessGame)
 
 void playerPlayChess(ChessGame* chessGame)
 {
+    double totalEngineTime = 0.0;
+    
   int i = 0;
 
   char moveString[10];
@@ -875,9 +878,21 @@ if (0)
 
     // ------------------------------------------
 
-
+    chessGame->slothChessEngine->turn++;
+      
     Move move = {0, 0, 0, 0, 0, 0, 0};
+      
+      startTimer();
+      
     move = generateMove(chessGame->boardState, engineColor, MAX_RECURSION_DEPTH);
+    
+      double elapsedTime = getElapsedTime();
+      totalEngineTime += elapsedTime;
+      double averageTimePerTurn = totalEngineTime  / (chessGame->slothChessEngine->turn / 2);
+      
+      printf("Generating Move took %lf seconds\n", elapsedTime);
+      printf("Average time per move is %lf seconds\n", averageTimePerTurn);
+      
 
 
     if(isKingInCheck(chessGame->boardState, engineColor, 1))
@@ -893,7 +908,7 @@ if (0)
     updateBoardState(chessGame->boardState, move.initialPosition, move.movedPosition, engineColor,
 		move.pieceType, move.castling, move.enpassant, move.capturedPiece, 0);
 
-    chessGame->slothChessEngine->turn++;
+    
 
     printf("Turn black: %d\n", chessGame->slothChessEngine->turn);
     printf("Score = %d\n", eval(chessGame->boardState));

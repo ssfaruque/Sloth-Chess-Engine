@@ -26,8 +26,6 @@
 
 
 
-
-
 /**
  @brief The color of the player (white or black).
  */

@@ -16,10 +16,11 @@
 
 #include "player.h"
 
+#include "transpositionTable.h"
 
 
 void initChessGame(ChessGame* chessGame)
-{
+{    
   chessGame->running = 0;
 
   chessGame->boardState = (BoardState*) malloc(sizeof(BoardState));
@@ -82,6 +83,7 @@ void runChessGame(ChessGame* chessGame)
 
 
   }
+    
 
   /*
 	Move move;

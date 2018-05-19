@@ -10,7 +10,6 @@
 #ifndef chessGame_h
 #define chessGame_h
 
-#include "bitboard.h"
 #include "slothChessEngine.h"
 
 typedef struct

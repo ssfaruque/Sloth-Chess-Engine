@@ -12,11 +12,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <inttypes.h>
+
 #include "move.h"
 #include "eval.h"
+#include "transpositionTable.h"
 
 
+static int numNodes = 0;
 
+#define USE_TRANS_TABLE 1
 
 
 typedef Move* (*moveGeneration)(BoardState* boardState,
@@ -373,347 +377,24 @@ int isRookinCheck(BoardState* boardState, enum BitboardType colorType, enum Cast
 
 }
 
-/* Skeleton functions to fill out */
-/*
-void generateAllSlidingMoves(BoardState* boardState,
-                                  Bitboard isolatedPiece,
-                                  int pieceType,
-                                  enum BitboardType colorType,
-                                  Moves* moves, int moveLevel)
-{
-  Move move = {0, 0, 0, 0, 0, 0, 0};
-    int offset;
-    int i = 0;
-    switch (pieceType)
-    {
-        case BOARD_TYPE_ALL_PAWN_POSITIONS:
-            if (colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
-            {
-                move = generateSlideUpMove(isolatedPiece, boardState, colorType, 1);
-                move.pieceType = pieceType;
 
-                //If valid and is not capture
-                if (move.movedPosition &&
-                    !(move.movedPosition & boardState->boards[!colorType]))
-                    moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
-
-                if (((isolatedPiece & 0x000000000000ff00) != 0 ) &&
-					!((isolatedPiece << 8) & boardState->boards[!colorType] ) &&
-					!((isolatedPiece << 8) & boardState->boards[colorType]) ) //if in initial position, move up by 2
-                {
-                    move = generateSlideUpMove(isolatedPiece, boardState, colorType, 2);
-                    move.pieceType = pieceType;
-
-                    //If valid and is not capture
-                    if (move.movedPosition &&
-                        !(move.movedPosition & boardState->boards[!colorType]))
-                            moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
-
-                } //pawn in initial position
-            } //if white
-
-            else if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
-            {
-                move = generateSlideDownMove(isolatedPiece, boardState, colorType, 1);
-                move.pieceType = pieceType;
-
-                //If valid and is not capture
-                if (move.movedPosition &&
-                    !(move.movedPosition & boardState->boards[!colorType]))
-                    moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
-
-                if ((isolatedPiece & 0x00ff000000000000) != 0	&&
-					!((isolatedPiece >> 8) & boardState->boards[!colorType]) &&
-					!((isolatedPiece >> 8) & boardState->boards[colorType])) //if in initial position
-                {
-                    move = generateSlideDownMove(isolatedPiece, boardState, colorType, 2);
-                    move.pieceType = pieceType;
-
-                    //If valid and is not capture
-                    if (move.movedPosition &&
-                        !(move.movedPosition & boardState->boards[!colorType]))
-                            moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
-
-                } //initial pawn position
-            } //color black
-
-        break; //pawns
-
-        case BOARD_TYPE_ALL_ROOK_POSITIONS :
-        case BOARD_TYPE_ALL_QUEEN_POSITIONS :
-
-            for( i = 0; i < sizeof(rookMoveGenerate) / sizeof(rookMoveGenerate[0]); ++i)
-            {
-                offset = 1;
-
-                while(1)
-                {
-                    move = rookMoveGenerate[i](isolatedPiece, boardState, colorType, offset++);
-                    move.pieceType = pieceType;
-
-                    if (move.movedPosition) // if valid
-                    {
-                        if (move.movedPosition & boardState->boards[!colorType]) //if capture
-                        {
-                            move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
-
-                            if (pieceType == BOARD_TYPE_ALL_ROOK_POSITIONS)
-                                moves->moves[pieceType - 2][moves->numRookMoves++] = move;
-                            else
-                                moves->moves[pieceType - 2][moves->numQueenMoves++] = move;
-                            break;
-                        } //if capture
-
-                        else //quiet move
-                        {
-                            if (pieceType == BOARD_TYPE_ALL_ROOK_POSITIONS)
-                            {
-                                moves->moves[pieceType - 2][moves->numRookMoves++] = move;
-
-                            } // Rook
-
-                            else //QUEEN
-                                moves->moves[pieceType - 2][moves->numQueenMoves++] = move;
-                        }
-
-                    } //if valid
-
-                else
-                    break;
-                } //while 1
-            } // looping through rookMoveGenerate
-        break; //rooks and queens
-
-        case BOARD_TYPE_ALL_KING_POSITIONS :
-
-            for( i = 0; i < sizeof(rookMoveGenerate) / sizeof(rookMoveGenerate[0]); ++i)
-            {
-                move = rookMoveGenerate[i](isolatedPiece, boardState, colorType, 1);
-                move.pieceType = pieceType;
-
-                if (move.movedPosition) // if valid
-                {
-                    if (move.movedPosition & boardState->boards[!colorType]) //if capture
-                        move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
-
-                    moves->moves[pieceType - 2][moves->numKingMoves++] = move;
-
-                                //castling
-                   // if (moveLevel != MAX_RECURSION_DEPTH)
-                   // {
-
-                   if (!(move.movedPosition & boardState->boards[!colorType]))
-                   {
-
-
-                    if (boardState->castlingFlags[moveLevel-1][WHITE_KINGS_SIDE] && colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS && i == 1) //White kingsside
-                    {
-                        move = generateSlideRightMove(isolatedPiece, boardState, colorType, 2);
-                        move.pieceType = pieceType;
-
-                        if (move.movedPosition && !(move.movedPosition & boardState->boards[!colorType])) // if valid and not capture
-                        {
-
-                            //printf("White Kings Side. %d. Movelevel: %d. initial Position: %" PRIu64 ". moved Position: %" PRIu64 "\n", boardState->castlingFlags[moveLevel-1][WHITE_KINGS_SIDE], moveLevel, isolatedPiece, move.movedPosition);
-                            //printBoardState(boardState);
-                            move.castling = KINGS_SIDE;
-                            moves->moves[pieceType - 2][moves->numKingMoves++] = move;
-
-                        }
-                    }
-
-                    if (boardState->castlingFlags[moveLevel-1][WHITE_QUEENS_SIDE] && colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS && i == 0) //white queensside
-                    {
-                        move = generateSlideLeftMove(isolatedPiece, boardState, colorType, 3);
-                        move.pieceType = pieceType;
-
-                        if (move.movedPosition && !(move.movedPosition & boardState->boards[!colorType])) // if valid and not capture
-                        {
-
-                            move = generateSlideLeftMove(isolatedPiece, boardState, colorType, 2);
-                            move.pieceType = pieceType;
-
-                            if (move.movedPosition && !(move.movedPosition & boardState->boards[!colorType])) // if valid and not capture
-                            {
-                                //printf("White Queens Side. %d. Movelevel: %d. initial Position: %" PRIu64 ". moved Position: %" PRIu64" \n", boardState->castlingFlags[moveLevel-1][WHITE_QUEENS_SIDE], moveLevel, isolatedPiece, move.movedPosition);
-                       //printBoardGUI(boardState);
-                                move.castling = QUEENS_SIDE;
-                                moves->moves[pieceType - 2][moves->numKingMoves++] = move;
-                            }
-                        }
-                    }
-
-                    if (boardState->castlingFlags[moveLevel-1][BLACK_KINGS_SIDE] && colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS && i == 1) //black kingsside
-                    {
-                        move = generateSlideRightMove(isolatedPiece, boardState, colorType, 2);
-                        move.pieceType = pieceType;
-                        if (move.movedPosition && !(move.movedPosition & boardState->boards[!colorType])) // if valid and not capture
-                        {
-                            //printf("Black Kings Side. %d. Movelevel: %d. initial Position: %" PRIu64 ". moved Position: %" PRIu64"\n", boardState->castlingFlags[moveLevel-1][BLACK_KINGS_SIDE], moveLevel, isolatedPiece, move.movedPosition);
-               //printBoardGUI(boardState);
-                            move.castling = KINGS_SIDE;
-                            moves->moves[pieceType - 2][moves->numKingMoves++] = move;
-                        }
-                    }
-
-                    if (boardState->castlingFlags[moveLevel-1][BLACK_QUEENS_SIDE] && colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS && i == 0) //black queensside
-                    {
-                        move = generateSlideLeftMove(isolatedPiece, boardState, colorType, 3);
-                        move.pieceType = pieceType;
-                        if (move.movedPosition && !(move.movedPosition & boardState->boards[!colorType])) // if valid and not capture
-                        {
-                            move = generateSlideLeftMove(isolatedPiece, boardState, colorType, 2);
-                            move.pieceType = pieceType;
-                            if (move.movedPosition && !(move.movedPosition & boardState->boards[!colorType])) // if valid and not capture
-                            {
-                             //printf("Black Queens Side. %d. Movelevel: %d. initial Position: %" PRIu64 ". moved Position: %" PRIu64"\n", boardState->castlingFlags[moveLevel-1][BLACK_QUEENS_SIDE], moveLevel, isolatedPiece, move.movedPosition);
-                       //printBoardGUI(boardState);
-                                move.castling = QUEENS_SIDE;
-                                moves->moves[pieceType - 2][moves->numKingMoves++] = move;
-                            }
-                        }
-                    }
-                    } //if not capture
-
-                } //if valid
-
-            } // looping through rookMoveGenerate
-
-
-        break; //king
-
-    } //switch Piecetype
-
-} //generate all sliding moves
-
-
-
-void generateAllDiagonalMoves(BoardState* boardState,
-                                   Bitboard isolatedPiece,
-                                   int pieceType,
-                                   enum BitboardType colorType,
-                                   Moves* moves)
-{
-    Move move = {0, 0, 0, 0, 0, 0, 0};
-    int offset;
-    int i = 0;
-    switch (pieceType)
-    {
-        case BOARD_TYPE_ALL_PAWN_POSITIONS:
-            if (colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
-            {
-                  move = generateDiagonalUpLeftMove(isolatedPiece, boardState, colorType, 1);
-                  move.pieceType = pieceType;
-
-                  if (move.movedPosition & boardState->boards[!colorType]) //if capture
-                  {
-                      move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
-                      moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
-                  }
-
-                  move = generateDiagonalUpRightMove(isolatedPiece, boardState, colorType, 1);
-                  move.pieceType = pieceType;
-
-                  if (move.movedPosition & boardState->boards[!colorType]) //if capture
-                  {
-                      move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
-                      moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
-                  }
-            } // white color
-
-            else if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
-            {
-                  move = generateDiagonalDownLeftMove(isolatedPiece, boardState, colorType, 1);
-                  move.pieceType = pieceType;
-
-                  if (move.movedPosition & boardState->boards[!colorType])
-                  {
-                      move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
-                      moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
-                  }
-
-                  move = generateDiagonalDownRightMove(isolatedPiece, boardState, colorType, 1);
-                  move.pieceType = pieceType;
-
-                  if (move.movedPosition & boardState->boards[!colorType])
-                  {
-                      move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
-                      moves->moves[pieceType - 2][moves->numPawnMoves++] = move;
-                  }
-            } // black color
-
-        break; //pawns
-
-        case BOARD_TYPE_ALL_BISHOP_POSITIONS:
-        case BOARD_TYPE_ALL_QUEEN_POSITIONS:
-            for(i = 0; i < sizeof(bishopMoveGenerate) / sizeof(bishopMoveGenerate[0]); ++i)
-            {
-                offset = 1;
-
-                while(1)
-                {
-                    move = bishopMoveGenerate[i](isolatedPiece, boardState, colorType, offset++);
-                    move.pieceType = pieceType;
-
-                    if (move.movedPosition) // if valid
-                    {
-                        if (move.movedPosition & boardState->boards[!colorType]) //if capture
-                        {
-                            move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
-
-                            if (pieceType == BOARD_TYPE_ALL_BISHOP_POSITIONS)
-                                moves->moves[pieceType - 2][moves->numBishopMoves++] = move;
-                            else
-                                moves->moves[pieceType - 2][moves->numQueenMoves++] = move;
-
-                            break;
-                        } // if capture
-
-                        else //quiet move
-                        {
-                           if (pieceType == BOARD_TYPE_ALL_BISHOP_POSITIONS)
-                                moves->moves[pieceType - 2][moves->numBishopMoves++] = move;
-                            else
-                                moves->moves[pieceType - 2][moves->numQueenMoves++] = move;
-                        }
-
-                    } //if valid
-
-                else
-                    break;
-                } //while 1
-            } // looping through rookMoveGenerate
-        break; //rooks and queens
-
-        case BOARD_TYPE_ALL_KING_POSITIONS :
-
-            for(i = 0; i < sizeof(bishopMoveGenerate) / sizeof(bishopMoveGenerate[0]); ++i)
-            {
-                move = bishopMoveGenerate[i](isolatedPiece, boardState, colorType, 1);
-                move.pieceType = pieceType;
-
-                if (move.movedPosition) // if valid
-                {
-                    if (move.movedPosition & boardState->boards[!colorType]) //if capture
-                        move.capturedPiece = findCapturedPiece(boardState, move.movedPosition, colorType);
-
-                    moves->moves[pieceType - 2][moves->numKingMoves++] = move;
-                } //if valid
-
-            } // looping through rookMoveGenerate
-        break; //king
-
-    } //switch Piecetype
-
-} //generate all diagonal moves
-
-
-*/
 
 
 int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType colorType, int depthleft)
 {
-    if (depthleft == 0) return eval(boardState);
+    if (depthleft == 0)
+    {
+        
+        int evalScore = eval(boardState);
+        
+#if USE_TRANS_TABLE
+        
+        addToTable(boardState, evalScore);
+        
+#endif
+        
+        return evalScore;
+    }
 
     //int max = -11111111;
 
@@ -737,33 +418,22 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
     {
         for(j = 0; j < moves.numMoves[i]; ++j)
         {
+            
+#if USE_TRANS_TABLE
+            
+            int tableVal = findInTable(boardState);
+            
+            if(tableVal != TABLE_ENTRY_INVALID)
+                return tableVal;
+            
+#endif
+
+            
+    
+    
             if (moves.moves[i][j].capturedPiece == BOARD_TYPE_ALL_KING_POSITIONS) //if the captured piece is the opponent's rook
                 return -999999999; //check if opponent's king is in check
-/*
-            if (moves.moves[i][j].castling)
-            {
-                  if (colorType == BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS)
-    {
-        if (moves.moves[i][j].castling == QUEENS_SIDE)
-            rooktoCheck = 0x1000000000000000;
-        else    //KINGS_SIDE
-            rooktoCheck = 0x0400000000000000;
-    }
 
-    else if (colorType == BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS)
-    {
-        if (moves.moves[i][j].castling == QUEENS_SIDE)
-            rooktoCheck = 0x0000000000000010;
-        else    //KINGS_SIDE
-            rooktoCheck = 0x0000000000000004;
-    }
-
-
-            if (moves.moves[i][j].capturedPiece == BOARD_TYPE_ALL_ROOK_POSITIONS
-                && moves.moves[i][j].movedPosition == rooktoCheck) //if the captured piece is the opponent's rook
-                    return 999999999;
-            }
-*/
 
             if(moves.moves[i][j].initialPosition) //if valid
             {
@@ -826,27 +496,7 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
                     boardState->castlingFlags[MAX_RECURSION_DEPTH - depthleft + 1][BLACK_KINGS_SIDE] = 0;
             }
         }
-/*
-			if (moves.moves[i][j].pieceType == BOARD_TYPE_ALL_PAWN_POSITIONS
-						&& (moves.moves[i][j].movedPosition & 0x000000ffff000000)
-						&& (moves.moves[i][j].initialPosition & 0x00ff00000000ff00))
-				{
-						boardState->enpassantFlags[MAX_RECURSION_DEPTH - depthleft + 1] =
-							(moves.moves[i][j].movedPosition);
 
-				}
-					else
-						boardState->enpassantFlags[MAX_RECURSION_DEPTH - depthleft + 1] = 0x0000000000000000;
-*/
-/*
-                if (isKingInCheck(boardState, colorType, MAX_RECURSION_DEPTH - depthleft+2)) // the player's move leaves the player's king in check
-                {
-                //don't recurse down, undo and go to next move
-                    updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
-                    continue;
-
-                }
-*/
 
                 if (moves.moves[i][j].castling)
                 {
@@ -871,11 +521,8 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
 
                 }
 
-                //score = moveEval/64 + score;
 
                 updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant, moves.moves[i][j].capturedPiece, 1);
-                   //     printf("Undo: WHITE_KINGS_SIDE: %d, WHITE_QUEENS_SIDE: %d, BLACK_KINGS_SIDE: %d, BLACK_QUEENS_SIDE: %d \n", WHITE_KINGS_SIDE, WHITE_QUEENS_SIDE, BLACK_KINGS_SIDE, BLACK_QUEENS_SIDE);
-       // printBoardGUI(boardState);
 
                 if (score >= beta)
                     return beta;
@@ -891,7 +538,17 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
 
 int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType colorType, int depthleft)
 {
-    if (depthleft == 0) return eval(boardState);
+    if (depthleft == 0)
+    {
+        int evalScore = eval(boardState);
+        
+#if USE_TRANS_TABLE
+        
+        addToTable(boardState, evalScore);
+        
+#endif
+        return evalScore;
+    }
 
     //int max = -11111111;
 
@@ -917,6 +574,15 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
     {
         for(j = 0; j < moves.numMoves[i]; ++j)
         {
+            
+#if USE_TRANS_TABLE
+            
+            int tableVal = findInTable(boardState);
+            
+            if(tableVal != TABLE_ENTRY_INVALID)
+                return tableVal;
+#endif
+            
 
             if (moves.moves[i][j].capturedPiece == BOARD_TYPE_ALL_KING_POSITIONS) //if the captured piece is the opponent's king
                 return 999999999; //check if opponent's king is in check
@@ -996,16 +662,6 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
 
 
 
-/*
-                if (isKingInCheck(boardState, colorType, MAX_RECURSION_DEPTH - depthleft+2)) // the player's move leaves the player's king in check
-                {
-                    //don't recurse down, undo and go to next move
-                    updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].capturedPiece, 1);
-                    continue;
-
-                }
-*/
-
                 if (moves.moves[i][j].castling)
                 {
                     if (isRookinCheck(boardState, colorType, moves.moves[i][j].castling, MAX_RECURSION_DEPTH - depthleft+2))
@@ -1027,7 +683,6 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
                     continue;
 
                 }
-                //score = moveEval/64 + score;
 
                 updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant, moves.moves[i][j].capturedPiece, 1);
 
@@ -1044,6 +699,7 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
 
     return beta;
 }
+
 
 Move generateMove(BoardState* boardState,
                   enum BitboardType colorType,
@@ -1147,15 +803,6 @@ Move generateMove(BoardState* boardState,
 					boardState->enpassantFlags[1] =  0x0000000000000000;
 
 
-/*
-        if (isKingInCheck(boardState, colorType, 2)) // the player's move leaves the player's king in check
-        {
-            //don't recurse down, undo and go to next move
-                updateBoardState(boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, firstMoves.moves[i][j].castling, firstMoves.moves[i][j].capturedPiece, 1);
-                continue;
-
-        }
-*/
 
         if (firstMoves.moves[i][j].castling)
         {
@@ -1199,6 +846,7 @@ Move generateMove(BoardState* boardState,
         {
             score = alphaBetaMax(boardState, alpha, beta, !colorType, recurseDepth - 1);
 
+            
             if (score == -999999999)
             {
             //don't recurse down, undo and go to next move
@@ -1283,14 +931,12 @@ Move generateMove(BoardState* boardState,
             }
         }
 
-        /*
-	if (move.pieceType == BOARD_TYPE_ALL_PAWN_POSITIONS
-			&& (move.movedPosition & 0x000000ffff000000)
-			&& (move.initialPosition & 0x00ff00000000ff00))
-			boardState->enpassantFlags[0] =  move.movedPosition;
-		else//if not, reset Enpassant flags
-			boardState->enpassantFlags[0] =  0x0000000000000000;
-*/
+#if USE_TRANS_TABLE
+
+  clearTable();
+    
+#endif
+    
   return move;
 }
 
@@ -1360,6 +1006,7 @@ void generateAllMoves(BoardState* boardState,
   generateAllKingMoves(boardState, colorType, moves, moveLevel);
 
   orderCaptureMoves(moves);
+  
 }
 
 void generateCoreMoves(BoardState* boardState,
