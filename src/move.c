@@ -385,14 +385,6 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
     if (depthleft == 0)
     {
         int evalScore = eval(boardState);
-        
-#if USE_TRANS_TABLE
-        
-        addToTable(boardState, evalScore);
-        
-#endif
-        
-        
         return evalScore;
     }
 
@@ -425,12 +417,6 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
 
             if(moves.moves[i][j].initialPosition) //if valid
             {
-                
-                
-
-                
-                
-                
                 
                 
                 updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant ,moves.moves[i][j].capturedPiece, 0);
@@ -525,14 +511,6 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
                 score = alphaBetaMin(boardState, alpha, beta, !colorType, depthleft - 1);
                     
                     
-#if USE_TRANS_TABLE
-                    
-                addToTable(boardState, score);
-                    
-#endif
-                    
-                    
-
                 if (score == 999999999)
                 {
                     //don't recurse down, undo and go to next move
@@ -541,21 +519,17 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
 
                 }
                     
-                    
 #if USE_TRANS_TABLE
+                    
+                    addToTable(boardState, score);
+                    
                     
                 }
 #endif
 
 
                 updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant, moves.moves[i][j].capturedPiece, 1);
-                    
-                    
-                    
-
-                    
-                    
-                    
+                
 
                 if (score >= beta)
                     return beta;
@@ -578,12 +552,6 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
     if (depthleft == 0)
     {
         int evalScore = eval(boardState);
-
-#if USE_TRANS_TABLE
-
-        addToTable(boardState, evalScore);
-
-#endif
         return evalScore;
     }
 
@@ -726,15 +694,6 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
                 //score = moveEval + alphaBetaMax(boardState, alpha, beta, !colorType, depthleft - 1);
                 score = alphaBetaMax(boardState, alpha, beta, !colorType, depthleft - 1);
                     
-                    
-                    
-#if USE_TRANS_TABLE
-                    
-                addToTable(boardState, score);
-                    
-#endif
-                    
-                    
 
                 if (score == -999999999)
                 {
@@ -745,8 +704,10 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
                 }
                     
                     
-                    
 #if USE_TRANS_TABLE
+                    
+                addToTable(boardState, score);
+
                     
                 }
 #endif
