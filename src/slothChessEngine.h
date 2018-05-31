@@ -27,7 +27,7 @@
 #include "bitboard.h"
 #include "transpositionTable.h"
 
-#define MAX_FEN_LENGTH 100
+#define MAX_FEN_LENGTH 512
 
 
 /**

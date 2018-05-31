@@ -20,7 +20,7 @@ static int XBOARD = 1;
 
 char board[8][8];
 
-char enpTargetSquare[2] = "--";
+char enpTargetSquare[2] = {'-', '-'};
 
 
 void updateInternalBoard(BoardState* boardState)
@@ -160,7 +160,9 @@ void generateFEN(SlothChessEngine* engine)
        engine->FEN[index -1] != 'k' && engine->FEN[index -1] != 'q')
         
     if(enpTargetSquare[0] == '-')
+    {
         engine->FEN[index++] = '-';
+    }
     
     else
     {
@@ -548,6 +550,9 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
                     enpTargetSquare[1] = cmd[3] + 1;
                 }
             }
+            
+            else
+                enpTargetSquare[0] = '-';
         }
         
         else
@@ -556,6 +561,8 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
         
         generateFEN(chessGame->slothChessEngine);
         fprintf(file, "Before engine moves, FEN: %s\n", chessGame->slothChessEngine->FEN);
+        
+        chessGame->slothChessEngine->turn++;
         
         
         int color = chessGame->slothChessEngine->playerType;
@@ -741,6 +748,9 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
                     enpTargetSquare[1] = cmd[3] + 1;
                 }
             }
+            
+            else
+                enpTargetSquare[0] = '-';
         }
         
         else
