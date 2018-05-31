@@ -741,16 +741,16 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
         {
             if((afterRow - beforeRow) == -2 || (afterRow - beforeRow) == 2)
             {
-                enpTargetSquare[0] = cmd[2];
+                enpTargetSquare[0] = 'a' + beforeCol - 1;
                 
                 if(initialPiece & chessGame->boardState->boards[BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS])
                 {
-                    enpTargetSquare[1] = cmd[3] - 1;
+                    enpTargetSquare[1] = '0' + beforeRow - 1;
                 }
                 
                 else
                 {
-                    enpTargetSquare[1] = cmd[3] + 1;
+                    enpTargetSquare[1] = '0' + beforeRow + 1;
                 }
             }
             
