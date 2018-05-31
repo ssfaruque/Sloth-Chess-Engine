@@ -158,6 +158,12 @@ void generateFEN(SlothChessEngine* engine)
     
     if(engine->FEN[index -1] != 'K' && engine->FEN[index -1] != 'Q' &&
        engine->FEN[index -1] != 'k' && engine->FEN[index -1] != 'q')
+    {
+        engine->FEN[index++] = '-';
+    }
+    
+    engine->FEN[index++] = ' ';
+    
         
     if(enpTargetSquare[0] == '-')
     {
@@ -169,7 +175,6 @@ void generateFEN(SlothChessEngine* engine)
         engine->FEN[index++] = enpTargetSquare[0];
         engine->FEN[index++] = enpTargetSquare[1];
     }
-        
         
     
     engine->FEN[index] = '\0';
