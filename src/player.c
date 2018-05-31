@@ -782,7 +782,7 @@ void playerPlayChess(ChessGame* chessGame)
   int engineColor = BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS;
 
   //setBoardStateWithFEN(chessGame->slothChessEngine, "1n6/5k1K/8/2n5/8/8/1p6/8 w -");
-if (0)
+if (XBOARD)
     runXboard(chessGame);
 
 

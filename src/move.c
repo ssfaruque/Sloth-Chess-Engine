@@ -20,7 +20,7 @@
 
 static int numNodes = 0;
 
-#define USE_TRANS_TABLE 1
+#define USE_TRANS_TABLE 0
 
 
 typedef Move* (*moveGeneration)(BoardState* boardState,
