@@ -734,10 +734,10 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
         
         
         
-        initialPiece = ((int64_t)1) << ((beforeRow  - 1) * 8 + (8 - beforeCol));
+        movedPiece = ((int64_t)1) << ((afterRow  - 1) * 8 + (8 - afterCol));
         
         // if pawn moved 2 spaces
-        if(initialPiece & chessGame->boardState->boards[BOARD_TYPE_ALL_PAWN_POSITIONS])
+        if(movedPiece & chessGame->boardState->boards[BOARD_TYPE_ALL_PAWN_POSITIONS])
         {
             if((afterRow - beforeRow) == -2 || (afterRow - beforeRow) == 2)
             {
@@ -745,12 +745,12 @@ void processXboardCmd(ChessGame* chessGame, const char* cmd, FILE* file)
                 
                 if(initialPiece & chessGame->boardState->boards[BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS])
                 {
-                    enpTargetSquare[1] = '0' + beforeRow - 1;
+                    enpTargetSquare[1] = '0' + afterRow - 1;
                 }
                 
                 else
                 {
-                    enpTargetSquare[1] = '0' + beforeRow + 1;
+                    enpTargetSquare[1] = '0' + afterRow + 1;
                 }
             }
             
