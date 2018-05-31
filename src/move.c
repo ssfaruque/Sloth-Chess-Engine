@@ -417,24 +417,24 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
 
             if(moves.moves[i][j].initialPosition) //if valid
             {
-                
-                
+
+
                 updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant ,moves.moves[i][j].capturedPiece, 0);
                 //moveEval = eval(boardState);
-                
-                
+
+
 #if USE_TRANS_TABLE
-                
+
                 int tableVal = findInTable(boardState);
-                
+
                 if(tableVal != TABLE_ENTRY_INVALID)
                 {
                     score = tableVal;
                 }
-                
+
                 else
                 {
-                    
+
 #endif
 
 
@@ -497,7 +497,7 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
 
                 if (moves.moves[i][j].castling)
                 {
-                    if (isRookinCheck(boardState, colorType, moves.moves[i][j].castling, MAX_RECURSION_DEPTH - depthleft+2))
+                    if (isRookinCheck(boardState, colorType, moves.moves[i][j].castling, MAX_RECURSION_DEPTH - depthleft+2)|| isKingInCheck(boardState, colorType, MAX_RECURSION_DEPTH - depthleft+1))
                     {
                         // dont recurse down
                         updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant, moves.moves[i][j].capturedPiece, 1);
@@ -509,8 +509,8 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
 
                 //score = moveEval + alphaBetaMin(boardState, alpha, beta, !colorType, depthleft - 1);
                 score = alphaBetaMin(boardState, alpha, beta, !colorType, depthleft - 1);
-                    
-                    
+
+
                 if (score == 999999999)
                 {
                     //don't recurse down, undo and go to next move
@@ -518,30 +518,30 @@ int alphaBetaMax(BoardState* boardState, int alpha, int beta, enum BitboardType 
                     continue;
 
                 }
-                    
+
 #if USE_TRANS_TABLE
-                    
+
                     addToTable(boardState, score);
-                    
-                    
+
+
                 }
 #endif
 
 
                 updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant, moves.moves[i][j].capturedPiece, 1);
-                
+
 
                 if (score >= beta)
                     return beta;
-                
-                
-                
+
+
+
                 if (score > alpha)
                     alpha = score;
             }
         }
     }
-    
+
 
     return alpha;
 }
@@ -585,30 +585,30 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
 
             if(moves.moves[i][j].initialPosition) //if valid
             {
-                
-                
+
+
                 updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant, moves.moves[i][j].capturedPiece, 0);
-                
-                
+
+
 #if USE_TRANS_TABLE
-                
+
                 int tableVal = findInTable(boardState);
-                
+
                 if(tableVal != TABLE_ENTRY_INVALID)
                 {
                     score = tableVal;
                 }
-                
+
                 else
                 {
-                    
+
 #endif
-                
-                
-                
-                
-                
-                
+
+
+
+
+
+
                 //moveEval = eval(boardState);
                     //check if king and castle to update flags
                     if (moves.moves[i][j].pieceType == BOARD_TYPE_ALL_KING_POSITIONS)
@@ -682,7 +682,7 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
 
                 if (moves.moves[i][j].castling)
                 {
-                    if (isRookinCheck(boardState, colorType, moves.moves[i][j].castling, MAX_RECURSION_DEPTH - depthleft+2))
+                    if (isRookinCheck(boardState, colorType, moves.moves[i][j].castling, MAX_RECURSION_DEPTH - depthleft+2) || isKingInCheck(boardState, colorType, MAX_RECURSION_DEPTH - depthleft+1))
                     {
                     // dont recurse down
                         updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant, moves.moves[i][j].capturedPiece, 1);
@@ -693,7 +693,7 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
 
                 //score = moveEval + alphaBetaMax(boardState, alpha, beta, !colorType, depthleft - 1);
                 score = alphaBetaMax(boardState, alpha, beta, !colorType, depthleft - 1);
-                    
+
 
                 if (score == -999999999)
                 {
@@ -702,22 +702,22 @@ int alphaBetaMin(BoardState* boardState, int alpha, int beta, enum BitboardType 
                     continue;
 
                 }
-                    
-                    
+
+
 #if USE_TRANS_TABLE
-                    
+
                 addToTable(boardState, score);
 
-                    
+
                 }
 #endif
-                
+
 
                 updateBoardState(boardState, moves.moves[i][j].initialPosition, moves.moves[i][j].movedPosition, colorType, moves.moves[i][j].pieceType, moves.moves[i][j].castling, moves.moves[i][j].enpassant, moves.moves[i][j].capturedPiece, 1);
-                    
-                    
 
-                
+
+
+
 
                 if (score <= alpha)
                     return alpha;
@@ -839,7 +839,7 @@ Move generateMove(BoardState* boardState,
 
         if (firstMoves.moves[i][j].castling)
         {
-            if (isRookinCheck(boardState, colorType, firstMoves.moves[i][j].castling, 2))
+            if (isRookinCheck(boardState, colorType, firstMoves.moves[i][j].castling, 2) || isKingInCheck(boardState, colorType, 1))
             {
                 // dont recurse down
                 updateBoardState(boardState, firstMoves.moves[i][j].initialPosition, firstMoves.moves[i][j].movedPosition, colorType, firstMoves.moves[i][j].pieceType, firstMoves.moves[i][j].castling, firstMoves.moves[i][j].enpassant, firstMoves.moves[i][j].capturedPiece, 1);
