@@ -31,7 +31,7 @@
  *  @brief Length of a chess board
  */
 #define BOARD_LENGTH 8
-#define MAX_RECURSION_DEPTH 5
+#define MAX_RECURSION_DEPTH 4
 
 /**
  *  @brief Type of Bitboard

@@ -88,9 +88,10 @@ void updateInternalBoard(BoardState* boardState)
 }
 
 
+char enpTargetSquare[2] = "**";
+
 void generateFEN(SlothChessEngine* engine)
 {
-
   updateInternalBoard(engine->boardState);
 
   int row;
@@ -129,7 +130,17 @@ void generateFEN(SlothChessEngine* engine)
   }
 
   engine->FEN[index++] = ' ';
-  engine->FEN[index++] = 'w';
+    
+  char color = '*'; // no color
+    
+    if(engine->turn % 2 == 1)
+        color = 'w';
+    
+    else
+        color = 'b';
+    
+    
+  engine->FEN[index++] = color;
   engine->FEN[index++] = ' ';
 
   if(engine->boardState->castlingFlags[0][WHITE_KINGS_SIDE])
@@ -146,7 +157,9 @@ void generateFEN(SlothChessEngine* engine)
 
   if(engine->FEN[index -1] != 'K' && engine->FEN[index -1] != 'Q' &&
      engine->FEN[index -1] != 'k' && engine->FEN[index -1] != 'q')
-      engine->FEN[index++] = '-';
+      
+      
+  engine->FEN[index++] = '-';
 
 
   engine->FEN[index] = '\0';
