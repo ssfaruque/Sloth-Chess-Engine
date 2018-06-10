@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 
 #include "chessGame.h"
@@ -9,10 +8,9 @@
 
 int main(int argc, const char * argv[])
 {
-  ChessGame chessGame;
-  initChessGame(&chessGame);
-  runChessGame(&chessGame);
-  cleanUpChessGame(&chessGame);
-
-  return 0;
+    ChessGame chessGame;
+    initChessGame(&chessGame);
+    runChessGame(&chessGame);
+    
+    return 0;
 }

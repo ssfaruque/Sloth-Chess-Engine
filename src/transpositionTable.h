@@ -1,11 +1,3 @@
-//
-//  transpositionTable.h
-//  ChessEngine
-//
-//  Created by Sahil Faruque on 5/8/18.
-//  Copyright © 2018 Sahil Faruque. All rights reserved.
-//
-
 #ifndef transpositionTable_h
 #define transpositionTable_h
 

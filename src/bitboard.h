@@ -41,16 +41,16 @@
  */
 enum BitboardType
 {
-  BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS,
-  BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS,
-  BOARD_TYPE_ALL_PAWN_POSITIONS,
-  BOARD_TYPE_ALL_ROOK_POSITIONS,
-  BOARD_TYPE_ALL_KNIGHT_POSITIONS,
-  BOARD_TYPE_ALL_BISHOP_POSITIONS,
-  BOARD_TYPE_ALL_QUEEN_POSITIONS,
-  BOARD_TYPE_ALL_KING_POSITIONS,
-
-  NUM_BITBOARDS
+    BOARD_TYPE_ALL_WHITE_PIECES_POSITIONS,
+    BOARD_TYPE_ALL_BLACK_PIECES_POSITIONS,
+    BOARD_TYPE_ALL_PAWN_POSITIONS,
+    BOARD_TYPE_ALL_ROOK_POSITIONS,
+    BOARD_TYPE_ALL_KNIGHT_POSITIONS,
+    BOARD_TYPE_ALL_BISHOP_POSITIONS,
+    BOARD_TYPE_ALL_QUEEN_POSITIONS,
+    BOARD_TYPE_ALL_KING_POSITIONS,
+    
+    NUM_BITBOARDS
 };
 
 
@@ -79,10 +79,10 @@ typedef uint64_t Bitboard;
  */
 typedef struct
 {
-	Bitboard boards[NUM_BITBOARDS];
-	Bitboard flagState;
-	int8_t castlingFlags[MAX_RECURSION_DEPTH + 1][4];
-	Bitboard enpassantFlags[MAX_RECURSION_DEPTH + 1];
+    Bitboard boards[NUM_BITBOARDS];
+    Bitboard flagState;
+    int8_t castlingFlags[MAX_RECURSION_DEPTH + 1][4];
+    Bitboard enpassantFlags[MAX_RECURSION_DEPTH + 1];
 } BoardState;
 
 
@@ -118,20 +118,20 @@ void copyBoardState(BoardState* dst, BoardState* src);
  *  @return void
  *
  *  @verbatim
-
-    Example of printing out the Bitboard of all black pieces starting out
-
-    8 |1|1|1|1|1|1|1|1|
-    7 |1|1|1|1|1|1|1|1|
-    6 |0|0|0|0|0|0|0|0|
-    5 |0|0|0|0|0|0|0|0|
-    4 |0|0|0|0|0|0|0|0|
-    3 |0|0|0|0|0|0|0|0|
-    2 |0|0|0|0|0|0|0|0|
-    1 |0|0|0|0|0|0|0|0|
-       a b c d e f g h
-
-    @endverbatim
+ 
+ Example of printing out the Bitboard of all black pieces starting out
+ 
+ 8 |1|1|1|1|1|1|1|1|
+ 7 |1|1|1|1|1|1|1|1|
+ 6 |0|0|0|0|0|0|0|0|
+ 5 |0|0|0|0|0|0|0|0|
+ 4 |0|0|0|0|0|0|0|0|
+ 3 |0|0|0|0|0|0|0|0|
+ 2 |0|0|0|0|0|0|0|0|
+ 1 |0|0|0|0|0|0|0|0|
+ a b c d e f g h
+ 
+ @endverbatim
  *
  */
 void printBitboard(Bitboard bitboard);
@@ -142,102 +142,102 @@ void printBitboard(Bitboard bitboard);
  *   with their corresponding titles
  *  @param boardState The BoardState that we want to print out
  *  @return void
-    @verbatim
-
-   Example of printing out the entire BoardState at the start of the game
-
-   --- Printing out board state ---
-
-   All White Pieces
-   8 |0|0|0|0|0|0|0|0|
-   7 |0|0|0|0|0|0|0|0|
-   6 |0|0|0|0|0|0|0|0|
-   5 |0|0|0|0|0|0|0|0|
-   4 |0|0|0|0|0|0|0|0|
-   3 |0|0|0|0|0|0|0|0|
-   2 |1|1|1|1|1|1|1|1|
-   1 |1|1|1|1|1|1|1|1|
-      a b c d e f g h
-
-   All Black Pieces
-   8 |1|1|1|1|1|1|1|1|
-   7 |1|1|1|1|1|1|1|1|
-   6 |0|0|0|0|0|0|0|0|
-   5 |0|0|0|0|0|0|0|0|
-   4 |0|0|0|0|0|0|0|0|
-   3 |0|0|0|0|0|0|0|0|
-   2 |0|0|0|0|0|0|0|0|
-   1 |0|0|0|0|0|0|0|0|
-      a b c d e f g h
-
-   All Pawn Positions
-   8 |0|0|0|0|0|0|0|0|
-   7 |1|1|1|1|1|1|1|1|
-   6 |0|0|0|0|0|0|0|0|
-   5 |0|0|0|0|0|0|0|0|
-   4 |0|0|0|0|0|0|0|0|
-   3 |0|0|0|0|0|0|0|0|
-   2 |1|1|1|1|1|1|1|1|
-   1 |0|0|0|0|0|0|0|0|
-      a b c d e f g h
-
-   All Rook Positions
-   8 |1|0|0|0|0|0|0|1|
-   7 |0|0|0|0|0|0|0|0|
-   6 |0|0|0|0|0|0|0|0|
-   5 |0|0|0|0|0|0|0|0|
-   4 |0|0|0|0|0|0|0|0|
-   3 |0|0|0|0|0|0|0|0|
-   2 |0|0|0|0|0|0|0|0|
-   1 |1|0|0|0|0|0|0|1|
-      a b c d e f g h
-
-   All Knight Positions
-   8 |0|1|0|0|0|0|1|0|
-   7 |0|0|0|0|0|0|0|0|
-   6 |0|0|0|0|0|0|0|0|
-   5 |0|0|0|0|0|0|0|0|
-   4 |0|0|0|0|0|0|0|0|
-   3 |0|0|0|0|0|0|0|0|
-   2 |0|0|0|0|0|0|0|0|
-   1 |0|1|0|0|0|0|1|0|
-      a b c d e f g h
-
-   All Bishop Positions
-   8 |0|0|1|0|0|1|0|0|
-   7 |0|0|0|0|0|0|0|0|
-   6 |0|0|0|0|0|0|0|0|
-   5 |0|0|0|0|0|0|0|0|
-   4 |0|0|0|0|0|0|0|0|
-   3 |0|0|0|0|0|0|0|0|
-   2 |0|0|0|0|0|0|0|0|
-   1 |0|0|1|0|0|1|0|0|
-      a b c d e f g h
-
-   All Queen Positions
-   8 |0|0|0|1|0|0|0|0|
-   7 |0|0|0|0|0|0|0|0|
-   6 |0|0|0|0|0|0|0|0|
-   5 |0|0|0|0|0|0|0|0|
-   4 |0|0|0|0|0|0|0|0|
-   3 |0|0|0|0|0|0|0|0|
-   2 |0|0|0|0|0|0|0|0|
-   1 |0|0|0|1|0|0|0|0|
-      a b c d e f g h
-
-   All King Positions
-   8 |0|0|0|0|1|0|0|0|
-   7 |0|0|0|0|0|0|0|0|
-   6 |0|0|0|0|0|0|0|0|
-   5 |0|0|0|0|0|0|0|0|
-   4 |0|0|0|0|0|0|0|0|
-   3 |0|0|0|0|0|0|0|0|
-   2 |0|0|0|0|0|0|0|0|
-   1 |0|0|0|0|1|0|0|0|
-      a b c d e f g h
-
-   --------------------------------
-    @endverbatim
+ @verbatim
+ 
+ Example of printing out the entire BoardState at the start of the game
+ 
+ --- Printing out board state ---
+ 
+ All White Pieces
+ 8 |0|0|0|0|0|0|0|0|
+ 7 |0|0|0|0|0|0|0|0|
+ 6 |0|0|0|0|0|0|0|0|
+ 5 |0|0|0|0|0|0|0|0|
+ 4 |0|0|0|0|0|0|0|0|
+ 3 |0|0|0|0|0|0|0|0|
+ 2 |1|1|1|1|1|1|1|1|
+ 1 |1|1|1|1|1|1|1|1|
+ a b c d e f g h
+ 
+ All Black Pieces
+ 8 |1|1|1|1|1|1|1|1|
+ 7 |1|1|1|1|1|1|1|1|
+ 6 |0|0|0|0|0|0|0|0|
+ 5 |0|0|0|0|0|0|0|0|
+ 4 |0|0|0|0|0|0|0|0|
+ 3 |0|0|0|0|0|0|0|0|
+ 2 |0|0|0|0|0|0|0|0|
+ 1 |0|0|0|0|0|0|0|0|
+ a b c d e f g h
+ 
+ All Pawn Positions
+ 8 |0|0|0|0|0|0|0|0|
+ 7 |1|1|1|1|1|1|1|1|
+ 6 |0|0|0|0|0|0|0|0|
+ 5 |0|0|0|0|0|0|0|0|
+ 4 |0|0|0|0|0|0|0|0|
+ 3 |0|0|0|0|0|0|0|0|
+ 2 |1|1|1|1|1|1|1|1|
+ 1 |0|0|0|0|0|0|0|0|
+ a b c d e f g h
+ 
+ All Rook Positions
+ 8 |1|0|0|0|0|0|0|1|
+ 7 |0|0|0|0|0|0|0|0|
+ 6 |0|0|0|0|0|0|0|0|
+ 5 |0|0|0|0|0|0|0|0|
+ 4 |0|0|0|0|0|0|0|0|
+ 3 |0|0|0|0|0|0|0|0|
+ 2 |0|0|0|0|0|0|0|0|
+ 1 |1|0|0|0|0|0|0|1|
+ a b c d e f g h
+ 
+ All Knight Positions
+ 8 |0|1|0|0|0|0|1|0|
+ 7 |0|0|0|0|0|0|0|0|
+ 6 |0|0|0|0|0|0|0|0|
+ 5 |0|0|0|0|0|0|0|0|
+ 4 |0|0|0|0|0|0|0|0|
+ 3 |0|0|0|0|0|0|0|0|
+ 2 |0|0|0|0|0|0|0|0|
+ 1 |0|1|0|0|0|0|1|0|
+ a b c d e f g h
+ 
+ All Bishop Positions
+ 8 |0|0|1|0|0|1|0|0|
+ 7 |0|0|0|0|0|0|0|0|
+ 6 |0|0|0|0|0|0|0|0|
+ 5 |0|0|0|0|0|0|0|0|
+ 4 |0|0|0|0|0|0|0|0|
+ 3 |0|0|0|0|0|0|0|0|
+ 2 |0|0|0|0|0|0|0|0|
+ 1 |0|0|1|0|0|1|0|0|
+ a b c d e f g h
+ 
+ All Queen Positions
+ 8 |0|0|0|1|0|0|0|0|
+ 7 |0|0|0|0|0|0|0|0|
+ 6 |0|0|0|0|0|0|0|0|
+ 5 |0|0|0|0|0|0|0|0|
+ 4 |0|0|0|0|0|0|0|0|
+ 3 |0|0|0|0|0|0|0|0|
+ 2 |0|0|0|0|0|0|0|0|
+ 1 |0|0|0|1|0|0|0|0|
+ a b c d e f g h
+ 
+ All King Positions
+ 8 |0|0|0|0|1|0|0|0|
+ 7 |0|0|0|0|0|0|0|0|
+ 6 |0|0|0|0|0|0|0|0|
+ 5 |0|0|0|0|0|0|0|0|
+ 4 |0|0|0|0|0|0|0|0|
+ 3 |0|0|0|0|0|0|0|0|
+ 2 |0|0|0|0|0|0|0|0|
+ 1 |0|0|0|0|1|0|0|0|
+ a b c d e f g h
+ 
+ --------------------------------
+ @endverbatim
  */
 void printBoardState(BoardState* boardState);
 

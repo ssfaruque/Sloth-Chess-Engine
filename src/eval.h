@@ -1,22 +1,3 @@
-/********************************************************************************
- * Copyright (C) 2018 by Sahil Faruque, Delvin Huynh, Henry Tran                *
- *                                                                              *
- * Sloth Chess Engine                                                           *
- *                                                                              *
- * A Chess AI that can play chess                                               *
- ********************************************************************************/
-
-
-/**
- *  @file eval.h
- *  @author Sahil Faruque
- *  @author Delvin Huynh
- *  @author Henry Tran
- *  @date 21 Jan 2018
- *  @brief Evaluation of a BoardState and
- */
-
-
 #ifndef eval_h
 #define eval_h
 
@@ -25,12 +6,12 @@
 
 enum PieceWeight
 {
-  WEIGHT_PAWN,
-  WEIGHT_ROOK,
-  WEIGHT_KNIGHT,
-  WEIGHT_BISHOP,
-  WEIGHT_QUEEN,
-  WEIGHT_KING
+    WEIGHT_PAWN,
+    WEIGHT_ROOK,
+    WEIGHT_KNIGHT,
+    WEIGHT_BISHOP,
+    WEIGHT_QUEEN,
+    WEIGHT_KING
 };
 
 
@@ -70,13 +51,6 @@ int centerControlEval(BoardState* boardState);
 
 int spaceScore(enum BitboardType colorType, int space, int pieceType);
 
-// material difference
-// mobility
-// center control
-// bishop pairs
-
-
-
 
 int pieceSquareEval(BoardState* boardState);
 
@@ -85,6 +59,8 @@ int pieceSquareEval(BoardState* boardState);
 int bishopPairEval(BoardState* boardState);
 
 int kingSafety(BoardState* boardState);
+
+
 int findKingZone(BoardState* boardState, enum BitboardType colortype);
 
 /**
@@ -95,9 +71,6 @@ int findKingZone(BoardState* boardState, enum BitboardType colortype);
  *          means good for black
  */
 int eval(BoardState* boardState);
-
-
-
 
 
 

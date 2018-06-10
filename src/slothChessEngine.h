@@ -1,26 +1,3 @@
-
-/********************************************************************************
- * Copyright (C) 2018 by Sahil Faruque, Delvin Huynh, Henry Tran                *
- *                                                                              *
- * Sloth Chess Engine                                                           *
- *                                                                              *
- * A Chess AI that can play chess                                               *
- ********************************************************************************/
-
-
-
-/**
- *  @file slothChessEngine.h
- *  @author Sahil Faruque
- *  @author Delvin Huynh
- *  @author Henry Tran
- *  @date 21 Jan 2018
- *  @brief The chess engine that decides what moves to make when playing a game of chess.
- *  @bug No known bugs
- *
- */
-
-
 #ifndef slothChessEngine_h
 #define slothChessEngine_h
 
@@ -35,10 +12,10 @@
  */
 typedef struct
 {
-  BoardState* boardState;         /**< The current state of the game  */
-  char FEN[MAX_FEN_LENGTH];
-  enum BitboardType playerType;     /**< The color that the chess engine is currently playing as  */
-  int turn;
+    BoardState* boardState;         /**< The current state of the game  */
+    char FEN[MAX_FEN_LENGTH];
+    enum BitboardType playerType;     /**< The color that the chess engine is currently playing as  */
+    int turn;
 } SlothChessEngine;
 
 
@@ -57,14 +34,6 @@ void initSlothChessEngine(SlothChessEngine* engine, BoardState* boardState, enum
 
 void setEngineColor(SlothChessEngine* engine, enum BitboardType playerType);
 
-
-
-/**
- *  @brief Cleans up all of the resources allocated for the chess engine
- *  @param engine The chess engine that we want to clean up
- *  @return void
- */
-void cleanUpSlothEngine(SlothChessEngine* engine);
 
 
 #endif /* slothChessEngine_h */
